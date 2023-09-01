@@ -1,4 +1,4 @@
-export const FONTS = {
+const FONTS = {
   display_large: {
     lineHeight: 64,
     fontSize: 57,
@@ -104,3 +104,5 @@ export const FONTS = {
     fontFamily: 'Roboto-Regular',
   },
 };
+
+export default FONTS;

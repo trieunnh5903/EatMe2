@@ -1,4 +1,4 @@
-export const COLORS = {
+const COLORS = {
   primary: 'rgb(255, 108, 68)', //orange
   transparentPrimray: 'rgba(227, 120, 75, 0.4)',
   orange: '#FFA133',
@@ -24,3 +24,5 @@ export const COLORS = {
   transparentBlack1: 'rgba(0, 0, 0, 0.1)',
   transparentBlack7: 'rgba(0, 0, 0, 0.7)',
 };
+
+export default COLORS;

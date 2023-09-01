@@ -1,6 +1,6 @@
 import {Dimensions} from 'react-native';
 const {width, height} = Dimensions.get('window');
-export const SIZES = {
+const SIZES = {
   // global sizes
   spacing: 10,
   font: 14,
@@ -12,3 +12,5 @@ export const SIZES = {
   width,
   height,
 };
+
+export default SIZES;
