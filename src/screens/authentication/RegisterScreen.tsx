@@ -15,8 +15,9 @@ import {
 } from '../../components';
 import {COLORS, FONTS, SIZES, icons, images} from '../../config';
 import validate from '../../utils/validate';
+import {RegisterNavigationProps} from '../../navigation/types';
 
-const RegisterScreen = () => {
+const RegisterScreen = ({navigation}: RegisterNavigationProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [password, setPassword] = useState('');
@@ -134,7 +135,7 @@ const RegisterScreen = () => {
 
           <ButtonText
             disabled={!isEnableSignIn()}
-            //   onPress={() => navigation.navigate('ConfirmOtp')}
+            onPress={() => navigation.navigate('ConfirmOtp')}
             label={'Đăng ký'}
             labelStyle={styles.btnRegisterLabel}
             containerStyle={[
@@ -166,7 +167,7 @@ const RegisterScreen = () => {
             color: COLORS.primary,
             ...FONTS.title_medium,
           }}
-          //   onPress={() => navigation.goBack()}
+          onPress={() => navigation.goBack()}
         />
       </AuthLayout>
     </SafeAreaView>

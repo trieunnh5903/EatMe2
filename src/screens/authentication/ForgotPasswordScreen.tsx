@@ -15,15 +15,16 @@ import {
   TextInputCustom,
 } from '../../components';
 import validate from '../../utils/validate';
+import {ForgotPasswordNavigationProps} from '../../navigation/types';
 
-const ForgotPasswordScreen = () => {
+const ForgotPasswordScreen = ({navigation}: ForgotPasswordNavigationProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const isEnableButton = () => {
     return phoneNumber !== '' && phoneNumberError === '';
   };
   const onSendPassword = () => {
-    // navigation.goBack();
+    navigation.goBack();
   };
   const onClearPhoneNumberPress = () => {
     setPhoneNumber('');
@@ -36,7 +37,7 @@ const ForgotPasswordScreen = () => {
         <HeaderCustom
           leftComponent={
             <TouchableOpacity
-              //   onPress={() => navigation.goBack()}
+              onPress={() => navigation.goBack()}
               style={styles.btnBack}>
               <Image source={icons.arrow_back} style={styles.icon} />
             </TouchableOpacity>

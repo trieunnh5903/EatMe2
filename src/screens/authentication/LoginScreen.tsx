@@ -15,8 +15,9 @@ import {
   ButtonText,
   TextInputCustom,
 } from '../../components';
+import {LoginNavigationProps} from '../../navigation/types';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}: LoginNavigationProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [password, setPassword] = useState('');
@@ -112,8 +113,7 @@ const LoginScreen = () => {
 
           <TouchableOpacity
             style={{alignSelf: 'flex-start'}}
-            //   onPress={() => navigation.navigate('ForgotPassword')}
-          >
+            onPress={() => navigation.navigate('ForgotPassword')}>
             <Text
               style={[
                 {
@@ -129,7 +129,7 @@ const LoginScreen = () => {
           {/* button group */}
           <ButtonText
             disabled={!isEnableSignIn()}
-            //   onPress={() => navigation.navigate('ConfirmOtp')}
+            onPress={() => navigation.navigate('ConfirmOtp')}
             label={'Đăng nhập'}
             labelStyle={{
               color: COLORS.white,
@@ -175,7 +175,7 @@ const LoginScreen = () => {
             color: COLORS.primary,
             ...FONTS.title_medium,
           }}
-          // onPress={() => navigation.navigate('Register')}
+          onPress={() => navigation.navigate('Register')}
         />
       </AuthLayout>
     </SafeAreaView>

@@ -19,6 +19,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import ButtonText from '../../components/button/ButtonText';
+import {OnBoardingNavigationProps} from '../../navigation/types';
 
 interface ItemFlatlist {
   id: number;
@@ -28,11 +29,11 @@ interface ItemFlatlist {
   description: string;
 }
 
-const OnBoardingScreen = () => {
+const OnBoardingScreen = ({navigation}: OnBoardingNavigationProps) => {
+  // const navigation = useNavigation<OnBoardingNavigationProps>();
   const flastListRef = useRef<Animated.FlatList<any> & FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const scrollX = useRef(useSharedValue<number>(0)).current;
-
   const onNextPress = useCallback(() => {
     let nextIndex = currentIndex + 1;
     setCurrentIndex(nextIndex);
@@ -142,17 +143,16 @@ const OnBoardingScreen = () => {
       {/* button */}
       <View style={styles.btnSkipContainer}>
         <ButtonText
-          // onPress={() => navigation.navigate('Login')}
+          onPress={() => navigation.navigate('Login')}
           label={'Bỏ qua'}
           labelStyle={[FONTS.title_medium, {color: COLORS.gray}]}
         />
         <ButtonText
           onPress={() => {
             if (currentIndex < 2) {
-              console.log(currentIndex);
               onNextPress();
             } else {
-              // navigation.navigate('Login');
+              navigation.navigate('Login');
             }
           }}
           label={'Tiếp tục'}
