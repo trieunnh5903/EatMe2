@@ -14,6 +14,7 @@ import {
 import {FONTS} from '../config';
 
 const Tab = createBottomTabNavigator<BottomTabNavigatorParamList>();
+
 const TabNavigator = () => {
   return (
     <Tab.Navigator
@@ -35,7 +36,7 @@ const TabNavigator = () => {
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person';
           }
-          return <Ionicons name={iconName} size={24} color={color} />;
+          return <Ionicons name={iconName} size={size} color={color} />;
         },
         headerShown: false,
         tabBarActiveTintColor: 'tomato',
