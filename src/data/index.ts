@@ -378,7 +378,7 @@ const carousel = [
     image: images.carousel_1,
   },
 ];
-export default data = {
+const data = {
   myProfile,
   menu,
   categories,
@@ -392,3 +392,5 @@ export default data = {
   allCards,
   carousel,
 };
+
+export default data;

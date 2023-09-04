@@ -103,7 +103,11 @@ const ConfirmOtpScreen = ({navigation}: ConfirmOtpNavigationProps) => {
             styles.btnContinue,
             !isEnableButton() && {opacity: 0.5},
           ]}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() =>
+            navigation.navigate('Main', {
+              screen: 'Home',
+            })
+          }
         />
         <View style={styles.policyWrapper}>
           <Text

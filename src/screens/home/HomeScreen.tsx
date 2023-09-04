@@ -11,7 +11,7 @@ import {
   GestureResponderEvent,
   ViewStyle,
 } from 'react-native';
-import React, {ReactNode, useCallback, useEffect, useState} from 'react';
+import React, {ReactNode, useCallback, useEffect, useState, memo} from 'react';
 import {icons, COLORS, SIZES, FONTS, images} from '../../config';
 import data from '../../data';
 import Carousel from 'react-native-reanimated-carousel';
@@ -23,9 +23,9 @@ import {
   VerticalFoodCard,
 } from '../../components';
 import {nanoid} from '@reduxjs/toolkit';
-import {HomeNavigationProps} from '../../navigation/types';
 import {useNavigation} from '@react-navigation/native';
 import {FoodArrayProps, FoodObjectProps} from '../types';
+import {HomeScreenNavigationProp, HomeScreenProp} from '../../navigation/types';
 
 interface SectionProps {
   title: string;
@@ -70,7 +70,7 @@ const Categories = () => (
 );
 
 const RecommendedSection: React.FC<FoodArrayProps> = ({data: recommends}) => {
-  const navigation = useNavigation<HomeNavigationProps>();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   return (
     <Section
       title={'Gợi ý'}
@@ -107,7 +107,7 @@ const RecommendedSection: React.FC<FoodArrayProps> = ({data: recommends}) => {
 };
 
 const PopularSection: React.FC<FoodArrayProps> = ({data}) => {
-  const navigation = useNavigation<HomeNavigationProps>();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   return (
     <Section
       style={{marginTop: 0}}
@@ -165,37 +165,38 @@ const DeliveryTo = () => {
   );
 };
 
-const MyCarousel = () => {
-  return (
-    <Carousel
-      pagingEnabled
-      snapEnabled={false}
-      mode="parallax"
-      loop
-      width={SIZES.width}
-      height={200}
-      autoPlay={true}
-      autoPlayInterval={1500}
-      data={data.carousel}
-      scrollAnimationDuration={3500}
-      // onSnapToItem={(index) => console.log('current index:', index)}
-      renderItem={({item}) => (
-        <TouchableOpacity
-          onPress={() => console.log(item.id)}
-          style={{
-            flex: 1,
-          }}>
-          <Image
-            source={item.image}
-            resizeMode="cover"
-            style={styles.carouselImage}
-          />
-        </TouchableOpacity>
-      )}
-    />
-  );
-};
-const HomeScreen = ({navigation}: HomeNavigationProps) => {
+const CarouselItem = memo(
+  ({
+    item,
+    index,
+  }: {
+    item: {
+      id: number;
+      image: any;
+    };
+    index: number;
+  }) => {
+    const marginRight = index === data.carousel.length - 1 ? 10 : 0;
+    const marginLeft = index === 0 ? SIZES.padding : 10;
+    return (
+      <TouchableOpacity
+        onPress={() => console.log(item.id)}
+        style={{
+          width: SIZES.width - 2 * SIZES.padding,
+          height: SIZES.width / 2,
+          marginRight: marginRight,
+          marginLeft: marginLeft,
+        }}>
+        <Image
+          source={item.image}
+          resizeMode="cover"
+          style={styles.carouselImage}
+        />
+      </TouchableOpacity>
+    );
+  },
+);
+const HomeScreen = ({navigation}: HomeScreenProp) => {
   const _enerateArray = useCallback((n: number) => {
     let data = new Array<FoodObjectProps>(n);
     for (let i = 0; i < n; i++) {
@@ -265,7 +266,18 @@ const HomeScreen = ({navigation}: HomeNavigationProps) => {
         {/* delivery to */}
         <DeliveryTo />
         {/* carousel */}
-        <MyCarousel />
+        <FlatList
+          data={data.carousel}
+          style={{marginTop: SIZES.radius}}
+          keyExtractor={item => `${item.id}`}
+          horizontal
+          decelerationRate="fast"
+          snapToInterval={SIZES.width - 2 * SIZES.padding + 10}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item, index}) => {
+            return <CarouselItem item={item} index={index} />;
+          }}
+        />
         {/* category */}
         <Categories />
         {/* list popular */}
@@ -314,6 +326,7 @@ const styles = StyleSheet.create({
   carouselImage: {
     width: null,
     height: null,
+    borderRadius: 10,
     flex: 1,
   },
   popularImage: {

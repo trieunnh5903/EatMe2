@@ -1,14 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const Favourite = () => {
+const ProfileScreen = () => {
   return (
     <View>
-      <Text>Favourite</Text>
+      <Text>Profile</Text>
     </View>
   );
 };
 
-export default Favourite;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({});

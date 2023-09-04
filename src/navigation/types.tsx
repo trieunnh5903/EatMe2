@@ -1,17 +1,47 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import {FoodObjectProps} from '../screens/types';
+import {
+  CompositeNavigationProp,
+  CompositeScreenProps,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
+import {
+  BottomTabNavigationProp,
+  BottomTabScreenProps,
+} from '@react-navigation/bottom-tabs';
 
 export type RootStackParamList = {
   OnBoarding: undefined;
   Login: undefined;
   Register: undefined;
-  Home: undefined;
   ConfirmOtp: undefined;
+  Main: NavigatorScreenParams<BottomTabNavigatorParamList>;
   ForgotPassword: undefined;
   DetailFood: {
     foodItem: FoodObjectProps;
   };
 };
+
+export type BottomTabNavigatorParamList = {
+  Home: undefined;
+  Search: undefined;
+  Cart: undefined;
+  Favorite: undefined;
+  Profile: undefined;
+};
+
+export type HomeScreenProp = CompositeScreenProps<
+  BottomTabScreenProps<BottomTabNavigatorParamList, 'Home'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
+
+export type HomeScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<BottomTabNavigatorParamList, 'Home'>,
+  NativeStackNavigationProp<RootStackParamList>
+>;
 
 export type OnBoardingNavigationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -21,13 +51,6 @@ export type OnBoardingNavigationProps = NativeStackScreenProps<
 export type DetailFoodNavigationProps = NativeStackScreenProps<
   RootStackParamList,
   'DetailFood'
->;
-
-// export type DetailFoodRouteProp = RouteProp<RootStackParamList, 'DetailFood'>;
-
-export type HomeNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
-  'Home'
 >;
 
 export type LoginNavigationProps = NativeStackScreenProps<

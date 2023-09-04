@@ -1,14 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const Cart = () => {
+const FavoriteScreen = () => {
   return (
     <View>
-      <Text>Cart</Text>
+      <Text>Favourit</Text>
     </View>
   );
 };
 
-export default Cart;
+export default FavoriteScreen;
 
 const styles = StyleSheet.create({});

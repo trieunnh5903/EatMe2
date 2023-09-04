@@ -5,11 +5,15 @@ import ForgotPasswordScreen from './authentication/ForgotPasswordScreen';
 import ConfirmOtpScreen from './authentication/ConfirmOtpScreen';
 import HomeScreen from './home/HomeScreen';
 import DetailFoodScreen from './home/DetailFoodScreen';
-import Cart from './cart/Cart';
-import Favourite from './favourite/Favourite';
-import Profile from './profile/Profile';
-import Search from './search/Search';
+import CartScreen from './cart/CartScreen';
+import ProfileScreen from './profile/ProfileScreen';
+import SearchScreen from './search/SearchScreen';
+import FavoriteScreen from './favorite/FavoriteScreen';
 export {
+  SearchScreen,
+  FavoriteScreen,
+  CartScreen,
+  ProfileScreen,
   HomeScreen,
   LoginScreen,
   RegisterScreen,
