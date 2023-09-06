@@ -24,8 +24,10 @@ import {
 } from '../../components';
 import {nanoid} from '@reduxjs/toolkit';
 import {useNavigation} from '@react-navigation/native';
-import {FoodArrayProps, FoodObjectProps} from '../types';
+import {FoodArray, FoodObject} from '../types';
 import {HomeScreenNavigationProp, HomeScreenProp} from '../../navigation/types';
+import {useAppDispatch} from '../../utils/hooks';
+import FastImage from 'react-native-fast-image';
 
 interface SectionProps {
   title: string;
@@ -55,7 +57,7 @@ const Categories = () => (
     {data.categories.map(item => {
       return (
         <TouchableOpacity key={item.id} style={styles.categoriesItem}>
-          <Image source={item.icon} style={styles.categoryImage} />
+          <FastImage source={item.icon} style={styles.categoryImage} />
           <Text
             style={{
               color: COLORS.blackText,
@@ -69,7 +71,7 @@ const Categories = () => (
   </View>
 );
 
-const RecommendedSection: React.FC<FoodArrayProps> = ({data: recommends}) => {
+const RecommendedSection: React.FC<FoodArray> = ({data: recommends}) => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   return (
     <Section
@@ -106,7 +108,7 @@ const RecommendedSection: React.FC<FoodArrayProps> = ({data: recommends}) => {
   );
 };
 
-const PopularSection: React.FC<FoodArrayProps> = ({data}) => {
+const PopularSection: React.FC<FoodArray> = ({data}) => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   return (
     <Section
@@ -187,9 +189,9 @@ const CarouselItem = memo(
           marginRight: marginRight,
           marginLeft: marginLeft,
         }}>
-        <Image
+        <FastImage
           source={item.image}
-          resizeMode="cover"
+          resizeMode={FastImage.resizeMode.cover}
           style={styles.carouselImage}
         />
       </TouchableOpacity>
@@ -198,15 +200,15 @@ const CarouselItem = memo(
 );
 const HomeScreen = ({navigation}: HomeScreenProp) => {
   const _enerateArray = useCallback((n: number) => {
-    let data = new Array<FoodObjectProps>(n);
+    let data = new Array<FoodObject>(n);
     for (let i = 0; i < n; i++) {
       data[i] = {
         id: nanoid(),
-        name: 'Hamburger',
+        name: `Hamburger ${i}`,
         description: 'Hamburger thịt gà',
         categories: [1, 2],
-        // // favorite include id user
-        // favorite: [],
+        priceTotal: 0,
+        quantity: 0,
         price: 15.99,
         calories: 78,
         image:
@@ -215,7 +217,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
     }
     return data;
   }, []);
-  const [popular, setPopular] = useState<FoodObjectProps[]>(_enerateArray(20));
+  const [popular, setPopular] = useState<FoodObject[]>(_enerateArray(20));
   // {navigation}: HomeNavigationProps
   // const {navigation} = useNavigation<HomeNavigationProps>();
   //   const dispatch = useDispatch();

@@ -1,6 +1,4 @@
-import {HomeNavigationProps} from '../navigation/types';
-
-export type FoodObjectProps = {
+export type FoodObject = {
   id: string;
   name: string;
   description: string;
@@ -8,8 +6,10 @@ export type FoodObjectProps = {
   price: number;
   calories: number;
   image: string;
+  priceTotal: number;
+  quantity: number;
 };
 
-export interface FoodArrayProps {
-  data: FoodObjectProps[];
+export interface FoodArray {
+  data: FoodObject[];
 }

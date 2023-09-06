@@ -12,10 +12,12 @@ import {
   SearchScreen,
 } from '../screens';
 import {FONTS} from '../config';
+import {useAppSelector} from '../utils/hooks';
 
 const Tab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
 const TabNavigator = () => {
+  let badge = useAppSelector(state => state.cart.totalProductQuantity);
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -55,7 +57,11 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Cart"
         component={CartScreen}
-        options={{tabBarLabel: 'Giỏ hàng'}}
+        options={{
+          tabBarLabel: 'Giỏ hàng',
+          tabBarStyle: {display: 'none'},
+          tabBarBadge: badge === 0 ? undefined : badge,
+        }}
       />
       <Tab.Screen
         name="Favorite"

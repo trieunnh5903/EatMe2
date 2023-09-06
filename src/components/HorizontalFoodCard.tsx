@@ -3,14 +3,13 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   ViewStyle,
-  ImageStyle,
   GestureResponderEvent,
   StyleProp,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES} from '../config';
+import FastImage, {ImageStyle} from 'react-native-fast-image';
 
 interface HorizontalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;
@@ -23,7 +22,7 @@ interface HorizontalFoodCardProps {
     calories: number;
     image: string;
   };
-  imageStyle?: ImageStyle;
+  imageStyle?: StyleProp<ImageStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 }
 const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
@@ -36,7 +35,7 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
     <TouchableOpacity
       onPress={onPress}
       style={[styles.container, containerStyle]}>
-      <Image style={imageStyle} source={{uri: item.image}} />
+      <FastImage style={imageStyle} source={{uri: item.image}} />
       <View style={{flex: 1, marginTop: SIZES.radius}}>
         <Text
           numberOfLines={1}
@@ -64,7 +63,7 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
   );
 };
 
-export default HorizontalFoodCard;
+export default memo(HorizontalFoodCard);
 
 const styles = StyleSheet.create({
   icon: {

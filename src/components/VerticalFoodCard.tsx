@@ -6,11 +6,11 @@ import {
   Image,
   StyleProp,
   ViewStyle,
-  ImageStyle,
   GestureResponderEvent,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES} from '../config';
+import FastImage, {ImageStyle} from 'react-native-fast-image';
 
 interface VerticalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;
@@ -23,7 +23,7 @@ interface VerticalFoodCardProps {
     calories: number;
     image: string;
   };
-  imageStyle?: ImageStyle;
+  imageStyle?: StyleProp<ImageStyle>;
   onPress?: (event: GestureResponderEvent) => any;
 }
 const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
@@ -37,7 +37,7 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
       onPress={onPress}
       style={[styles.container, containerStyle]}>
       {/* image */}
-      <Image style={imageStyle} source={{uri: item.image}} />
+      <FastImage style={imageStyle} source={{uri: item.image}} />
       {/* info */}
       <View style={styles.info}>
         <Text style={styles.name}>{item.name}</Text>
@@ -54,7 +54,7 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
   );
 };
 
-export default VerticalFoodCard;
+export default memo(VerticalFoodCard);
 
 const styles = StyleSheet.create({
   price: {

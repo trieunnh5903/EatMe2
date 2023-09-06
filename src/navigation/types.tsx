@@ -2,7 +2,7 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {FoodObjectProps} from '../screens/types';
+import {FoodObject} from '../screens/types';
 import {
   CompositeNavigationProp,
   CompositeScreenProps,
@@ -21,7 +21,7 @@ export type RootStackParamList = {
   Main: NavigatorScreenParams<BottomTabNavigatorParamList>;
   ForgotPassword: undefined;
   DetailFood: {
-    foodItem: FoodObjectProps;
+    foodItem: FoodObject;
   };
 };
 
@@ -41,6 +41,11 @@ export type HomeScreenProp = CompositeScreenProps<
 export type HomeScreenNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<BottomTabNavigatorParamList, 'Home'>,
   NativeStackNavigationProp<RootStackParamList>
+>;
+
+export type CartScreenProp = BottomTabScreenProps<
+  BottomTabNavigatorParamList,
+  'Cart'
 >;
 
 export type OnBoardingNavigationProps = NativeStackScreenProps<

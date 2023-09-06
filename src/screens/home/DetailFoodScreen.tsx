@@ -11,12 +11,14 @@ import React, {useState} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../../config';
 import {ButtonText, HeaderCustom, QuantityInput} from '../../components';
 import {DetailFoodNavigationProps} from '../../navigation/types';
-import {FoodObjectProps} from '../types';
+import {FoodObject} from '../types';
+import {useAppDispatch, useAppSelector} from '../../utils/hooks';
+import {addItem, updateItemQuantity} from '../../redux/slice/cart.slice';
 
 interface InformationFoodProps {
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
   quantity: number;
-  item: FoodObjectProps;
+  item: FoodObject;
 }
 const TextMore = () => {
   const descText =
@@ -28,7 +30,11 @@ const TextMore = () => {
   };
   return (
     <>
-      <Text style={{color: COLORS.blackText, ...FONTS.body_large}}>
+      <Text
+        style={{
+          color: COLORS.blackText,
+          ...FONTS.body_large,
+        }}>
         {expanded ? descText : descText.substring(0, 150) + '...'}
       </Text>
       {!expanded ? (
@@ -108,12 +114,9 @@ const InformationFood: React.FC<InformationFoodProps> = ({
 );
 
 const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
-  // const dispatch = useDispatch();
-  // const cartList = useSelector(state => state.cart.cartList);
-  // const favorite = useSelector(state => state.user.favorite);
-  // const foodItem = route.params;
   const {foodItem} = route.params;
-  console.log(foodItem);
+  const {cartList} = useAppSelector(state => state.cart);
+  const dispatch = useAppDispatch();
   const isFavorite = true;
   // const isFavorite = favorite.some(product => product.id === foodItem.id);
   const [quantity, setQuantity] = useState<number>(1);
@@ -124,21 +127,30 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   //     // dispatch(addToFavorite(foodItem));
   //   }
   // };
-
-  // const onAddToCartPress = item => {
-  //   const existingItem = cartList.find(itemCart => itemCart.id === item.id);
-  //   if (existingItem) {
-  //     Toast.show('The product already exists in the cart.', Toast.LONG);
-  //     return;
-  //   }
-  //   dispatch(addItem({...item, quantity}));
-  //   navigation.goBack();
-  //   Toast.show('Add to cart successfully');
-  // };
+  const onAddToCartPress = (item: FoodObject) => {
+    const existingItem = cartList.find(itemCart => itemCart.id === item.id);
+    if (existingItem) {
+      if (quantity === 1) {
+        dispatch(
+          updateItemQuantity({...item, quantity: existingItem.quantity + 1}),
+        );
+      } else {
+        dispatch(
+          updateItemQuantity({
+            ...item,
+            quantity: existingItem.quantity + quantity,
+          }),
+        );
+      }
+    } else {
+      dispatch(addItem({...item, quantity}));
+    }
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         {/* header */}
         <HeaderCustom
           containerStyle={{
@@ -177,7 +189,7 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
         />
         {/* footer */}
         <ButtonText
-          // onPress={() => onAddToCartPress(foodItem)}
+          onPress={() => onAddToCartPress(foodItem)}
           label={'Thêm vào giỏ hàng'}
           containerStyle={styles.buttonFooter}
           labelStyle={styles.labelFooter}
@@ -200,7 +212,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray2,
   },
 
-  deliveryWrapper: {flexDirection: 'row', marginTop: SIZES.base},
+  deliveryWrapper: {
+    flexDirection: 'row',
+    marginTop: SIZES.base,
+  },
 
   quantityIconContainer: {
     backgroundColor: COLORS.primary,
@@ -208,11 +223,14 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.radius,
   },
 
-  imageFoodWrapper: {paddingHorizontal: SIZES.padding, alignItems: 'center'},
+  imageFoodWrapper: {
+    paddingHorizontal: SIZES.padding,
+    alignItems: 'center',
+  },
 
   labelFooter: {
     color: COLORS.white,
-    ...FONTS.label_medium,
+    ...FONTS.title_medium,
     fontWeight: 'bold',
   },
 
@@ -258,7 +276,6 @@ const styles = StyleSheet.create({
 
   infoFoodWrapper: {
     flex: 1,
-    backgroundColor: COLORS.white,
     paddingHorizontal: SIZES.padding,
   },
 
@@ -267,7 +284,6 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.radius,
     marginHorizontal: SIZES.padding,
     height: 50,
-    flex: 1,
     borderRadius: SIZES.padding,
     backgroundColor: COLORS.primary,
   },
