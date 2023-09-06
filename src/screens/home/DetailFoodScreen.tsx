@@ -14,6 +14,7 @@ import {DetailFoodNavigationProps} from '../../navigation/types';
 import {FoodObject} from '../types';
 import {useAppDispatch, useAppSelector} from '../../utils/hooks';
 import {addItem, updateItemQuantity} from '../../redux/slice/cart.slice';
+import {addToFavorite, removeFromFavorite} from '../../redux/slice/user.slice';
 
 interface InformationFoodProps {
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
@@ -116,17 +117,17 @@ const InformationFood: React.FC<InformationFoodProps> = ({
 const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   const {foodItem} = route.params;
   const {cartList} = useAppSelector(state => state.cart);
+  const favorite = useAppSelector(state => state.user.favorite);
   const dispatch = useAppDispatch();
-  const isFavorite = true;
-  // const isFavorite = favorite.some(product => product.id === foodItem.id);
+  const isFavorite = favorite.some(product => product.id === foodItem.id);
   const [quantity, setQuantity] = useState<number>(1);
-  // const handleToggleFavorite = () => {
-  //   if (isFavorite) {
-  //     // dispatch(removeFromFavorite(foodItem));
-  //   } else {
-  //     // dispatch(addToFavorite(foodItem));
-  //   }
-  // };
+  const handleToggleFavorite = () => {
+    if (isFavorite) {
+      dispatch(removeFromFavorite(foodItem));
+    } else {
+      dispatch(addToFavorite(foodItem));
+    }
+  };
   const onAddToCartPress = (item: FoodObject) => {
     const existingItem = cartList.find(itemCart => itemCart.id === item.id);
     if (existingItem) {
@@ -165,7 +166,7 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
           }
           rightComponent={
             <TouchableOpacity
-              // onPress={() => handleToggleFavorite()}
+              onPress={() => handleToggleFavorite()}
               style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
               <Image
                 source={isFavorite ? icons.favourite_fill : icons.favourite}
