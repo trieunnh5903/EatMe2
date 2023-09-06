@@ -14,7 +14,7 @@ import {
 import React, {ReactNode, useCallback, useEffect, useState, memo} from 'react';
 import {icons, COLORS, SIZES, FONTS, images} from '../../config';
 import data from '../../data';
-import Carousel from 'react-native-reanimated-carousel';
+import {useInfiniteQuery} from '@tanstack/react-query';
 
 import {
   BadgeButton,
@@ -26,8 +26,9 @@ import {nanoid} from '@reduxjs/toolkit';
 import {useNavigation} from '@react-navigation/native';
 import {FoodArray, FoodObject} from '../types';
 import {HomeScreenNavigationProp, HomeScreenProp} from '../../navigation/types';
-import {useAppDispatch} from '../../utils/hooks';
 import FastImage from 'react-native-fast-image';
+import axios from 'axios';
+import {fetchAllFoods} from '../../services/post.service';
 
 interface SectionProps {
   title: string;
@@ -198,6 +199,7 @@ const CarouselItem = memo(
     );
   },
 );
+
 const HomeScreen = ({navigation}: HomeScreenProp) => {
   const _enerateArray = useCallback((n: number) => {
     let data = new Array<FoodObject>(n);
@@ -218,21 +220,31 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
     return data;
   }, []);
   const [popular, setPopular] = useState<FoodObject[]>(_enerateArray(20));
-  // {navigation}: HomeNavigationProps
-  // const {navigation} = useNavigation<HomeNavigationProps>();
-  //   const dispatch = useDispatch();
-  //   const {isLoading, foodList, error} = useSelector(state => state.food);
 
-  //   const navigation = useNavigation();
-  //   useEffect(() => {
-  //     dispatch({type: 'food/fetchFoodRequested'});
-  //   }, [dispatch]);
+  const fetchFoodNearYou = async ({pageParam = 1}) => {
+    return await fetchAllFoods(pageParam);
+  };
 
-  //   const handleLoadMore = () => {
-  //     // console.log("handleLoadMore");
-  //     dispatch({type: 'food/fetchFoodRequested'});
-  //   };
+  const {
+    data: foodNearYou,
+    error,
+    fetchStatus,
+    fetchNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ['food'],
+    queryFn: fetchFoodNearYou,
+    getNextPageParam: (_lastPage, allPage) => {
+      return allPage.length + 1;
+    },
+  });
 
+  if (status === 'error') {
+    console.log(error);
+  }
+  console.log('fetchStatus', fetchStatus);
   const renderFooter = () => {
     return (
       <ActivityIndicator
@@ -287,13 +299,15 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         {/* list recommended */}
         <RecommendedSection data={popular} />
         {/* list nearby you*/}
-        <Text style={styles.headlineNearYou}>Gần bạn</Text>
         <FlatList
-          data={popular}
+          ListHeaderComponent={
+            <Text style={styles.headlineNearYou}>Gần bạn</Text>
+          }
+          data={foodNearYou?.pages.flat()}
           style={{flex: 1}}
           contentContainerStyle={{flex: 1}}
           scrollEnabled={false}
-          keyExtractor={(item, index) => `${index}`}
+          keyExtractor={(item, index) => item.id}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => {
             return (
@@ -307,8 +321,8 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
               />
             );
           }}
-          //   onEndReached={handleLoadMore}
-          //   onEndReachedThreshold={0.1}
+          onEndReached={() => fetchNextPage()}
+          onEndReachedThreshold={0.1}
           ListFooterComponent={renderFooter}
         />
       </ScrollView>
