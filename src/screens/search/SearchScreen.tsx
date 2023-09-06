@@ -111,7 +111,10 @@ const SearchScreen = () => {
       {/* list */}
       {!keyword ? (
         // before search
-        <TouchableWithoutFeedback style={{flex: 1}} onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback
+          style={{flex: 1}}
+          touchSoundDisabled
+          onPress={Keyboard.dismiss}>
           <View style={{flex: 1}}>
             <View
               style={{
