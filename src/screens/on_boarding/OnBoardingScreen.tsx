@@ -224,8 +224,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1,
-    // width: '100%',
-    // height: '100%',
     backgroundColor: COLORS.lightOrange2,
   },
 
@@ -235,11 +233,6 @@ const styles = StyleSheet.create({
   },
 
   headerLogo: {
-    // zIndex: 1,
-    // position: 'absolute',
-    // left: 0,
-    // right: 0,
-    // top: 0,
     width: '100%',
     backgroundColor: COLORS.lightOrange2,
     justifyContent: 'center',
