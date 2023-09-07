@@ -59,15 +59,13 @@ const OnBoardingScreen = ({navigation}: OnBoardingNavigationProps) => {
   const renderItem = ({item}: {item: ItemFlatlist}) => {
     return (
       <View style={styles.itemWrapper}>
-        <ImageBackground resizeMode="cover" source={item.backgroundImage}>
-          <View style={[styles.bannerImageWrapper]}>
-            <Image
-              resizeMode="contain"
-              style={[styles.bannerImage]}
-              source={item.bannerImage}
-            />
-          </View>
-        </ImageBackground>
+        <View style={[styles.bannerImageWrapper]}>
+          <Image
+            resizeMode="contain"
+            style={[styles.bannerImage]}
+            source={item.bannerImage}
+          />
+        </View>
         <View style={styles.itemContainer}>
           <Text style={styles.itemTitle}>{item.title}</Text>
           <Text style={styles.itemDescription}>{item.description}</Text>
@@ -89,6 +87,9 @@ const OnBoardingScreen = ({navigation}: OnBoardingNavigationProps) => {
       {/* image */}
       <Animated.FlatList
         ref={flastListRef}
+        contentContainerStyle={{
+          alignItems: 'flex-end',
+        }}
         onViewableItemsChanged={handleViewableItemsChanged.current}
         viewabilityConfig={{itemVisiblePercentThreshold: 50}}
         pagingEnabled
@@ -188,7 +189,6 @@ const styles = StyleSheet.create({
   },
 
   btnSkipContainer: {
-    flex: 1,
     width: SIZES.width,
     flexDirection: 'row',
     alignItems: 'center',
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     marginVertical: SIZES.padding,
     paddingHorizontal: SIZES.padding,
   },
-  itemWrapper: {width: SIZES.width},
+  itemWrapper: {width: SIZES.width, flex: 1},
   itemContainer: {
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -218,11 +218,12 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: SIZES.width * 0.65,
     height: SIZES.width * 0.65,
-    marginBottom: -10,
+    marginBottom: -30,
   },
   bannerImageWrapper: {
     justifyContent: 'flex-end',
     alignItems: 'center',
+    flex: 1,
     // width: '100%',
     // height: '100%',
     backgroundColor: COLORS.lightOrange2,
