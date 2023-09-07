@@ -2,11 +2,24 @@ const {nanoid} = require('@reduxjs/toolkit');
 var express = require('express');
 var router = express.Router();
 
+router.get('/search', (req, res) => {
+  try {
+    const {q} = req.query;
+    const filteredData = productsData.filter(item =>
+      item.name.toLowerCase().includes(q.toLowerCase()),
+    );
+    return res.status(200).json(filteredData);
+  } catch (error) {
+    res.status(404).json({message: error.message});
+  }
+});
+
 /* GET users listing. */
 router.get('/:page', function (req, res, next) {
   try {
     let page = req.params.page;
     let offset = (page - 1) * 20;
+    console.log(page);
     res.status(200).json(productsData.slice(offset, offset + 20));
   } catch (error) {
     res.status(404).json({message: error.message});

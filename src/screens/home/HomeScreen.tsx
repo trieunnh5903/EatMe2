@@ -28,7 +28,7 @@ import {FoodArray, FoodObject} from '../types';
 import {HomeScreenNavigationProp, HomeScreenProp} from '../../navigation/types';
 import FastImage from 'react-native-fast-image';
 import axios from 'axios';
-import {fetchAllFoods} from '../../services/post.service';
+import {fetchAllFoods} from '../../services/food.service';
 
 interface SectionProps {
   title: string;
@@ -244,7 +244,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
   if (status === 'error') {
     console.log(error);
   }
-  console.log('fetchStatus', fetchStatus);
+  // console.log('fetchStatus', fetchStatus);
   const renderFooter = () => {
     return (
       <ActivityIndicator
@@ -321,8 +321,9 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
               />
             );
           }}
-          onEndReached={() => fetchNextPage()}
-          onEndReachedThreshold={0.1}
+          // onEndReached tự động chạy
+          // onEndReached={() => fetchNextPage()}
+          // onEndReachedThreshold={0.1}
           ListFooterComponent={renderFooter}
         />
       </ScrollView>

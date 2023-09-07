@@ -121,6 +121,7 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   const dispatch = useAppDispatch();
   const isFavorite = favorite.some(product => product.id === foodItem.id);
   const [quantity, setQuantity] = useState<number>(1);
+
   const handleToggleFavorite = () => {
     if (isFavorite) {
       dispatch(removeFromFavorite(foodItem));
@@ -128,6 +129,7 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
       dispatch(addToFavorite(foodItem));
     }
   };
+
   const onAddToCartPress = (item: FoodObject) => {
     const existingItem = cartList.find(itemCart => itemCart.id === item.id);
     if (existingItem) {

@@ -22,6 +22,8 @@ import {
 } from '../../components';
 import {FoodObject} from '../types';
 import {nanoid} from '@reduxjs/toolkit';
+import {useQuery} from '@tanstack/react-query';
+import {fetchSearchResults} from '../../services/food.service';
 
 interface SearchInputProps {
   keyword?: string;
@@ -93,10 +95,17 @@ const SearchScreen = () => {
     }
     return data;
   }, []);
-  const [popular, setPopular] = useState(_enerateArray(20));
   const [keyword, setKeyword] = useState('');
   const navigation = useNavigation();
-  const [menuList, setMenuList] = useState(_enerateArray(15));
+
+  const {data: searchResult} = useQuery({
+    queryKey: ['search', keyword],
+    queryFn: async () => {
+      const data = await fetchSearchResults(keyword);
+      return data;
+    },
+    enabled: !!keyword,
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -109,7 +118,7 @@ const SearchScreen = () => {
         />
       </View>
       {/* list */}
-      {!keyword ? (
+      {!searchResult ? (
         // before search
         <TouchableWithoutFeedback
           style={{flex: 1}}
@@ -166,12 +175,18 @@ const SearchScreen = () => {
         // after search
         <>
           <View style={styles.filterContainer}>
-            <Text style={{color: COLORS.gray, ...FONTS.body_medium}}>
-              Tìm thấy 13+ sản phẩm
-            </Text>
+            {searchResult.length === 0 ? (
+              <Text style={{color: COLORS.gray, ...FONTS.body_medium}}>
+                Không tìm thấy sản phẩm
+              </Text>
+            ) : (
+              <Text style={{color: COLORS.gray, ...FONTS.body_medium}}>
+                Tìm thấy {searchResult.length}+ sản phẩm
+              </Text>
+            )}
           </View>
           <FlatList
-            data={menuList}
+            data={searchResult}
             keyExtractor={(item, index) => `${index}`}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => {
