@@ -52,7 +52,7 @@ const cartSlice = createSlice({
     addItem(state, action: PayloadAction<FoodObject>) {
       const newItem = action.payload;
       const priceTotal =
-        parseFloat((newItem.quantity * newItem.price).toFixed(2)) || 0;
+        parseFloat((newItem.quantity * Number(newItem.price)).toFixed(2)) || 0;
       state.cartList.push({...newItem, priceTotal});
     },
     updateItemQuantity(state, action: PayloadAction<FoodObject>) {
@@ -60,7 +60,7 @@ const cartSlice = createSlice({
       const newCartList = state.cartList.map(item => {
         if (item.id == itemId) {
           const priceTotal =
-            parseFloat((quantity * item.price).toFixed(2)) || 0;
+            parseFloat((quantity * Number(item.price)).toFixed(3)) || 0;
           return {...item, quantity, priceTotal};
         }
         return item;

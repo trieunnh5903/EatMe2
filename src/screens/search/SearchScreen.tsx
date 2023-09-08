@@ -14,16 +14,11 @@ import {
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../../config';
 import {useNavigation} from '@react-navigation/native';
-import {
-  ButtonText,
-  HorizontalFoodCard,
-  VerticalFoodCard,
-  ButtonIcon,
-} from '../../components';
-import {FoodObject} from '../types';
-import {nanoid} from '@reduxjs/toolkit';
+import {ButtonText, HorizontalFoodCard, Break} from '../../components';
 import {useQuery} from '@tanstack/react-query';
 import {fetchSearchResults} from '../../services/food.service';
+import data from '../../data';
+import {SreachScreenProp} from '../../navigation/types';
 
 interface SearchInputProps {
   keyword?: string;
@@ -76,27 +71,8 @@ const Chips = ({
   />
 );
 
-const SearchScreen = () => {
-  const _enerateArray = useCallback((n: number) => {
-    let data = new Array<FoodObject>(n);
-    for (let i = 0; i < n; i++) {
-      data[i] = {
-        id: nanoid(),
-        name: `Hamburger ${i}`,
-        description: 'Hamburger thịt gà',
-        categories: [1, 2],
-        priceTotal: 0,
-        quantity: 0,
-        price: 15.99,
-        calories: 78,
-        image:
-          'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/hamburger.png',
-      };
-    }
-    return data;
-  }, []);
+const SearchScreen = ({navigation}: SreachScreenProp) => {
   const [keyword, setKeyword] = useState('');
-  const navigation = useNavigation();
 
   const {data: searchResult} = useQuery({
     queryKey: ['search', keyword],
@@ -139,34 +115,13 @@ const SearchScreen = () => {
                 Tìm kiếm nhiều
               </Text>
               <View style={styles.chipGroup}>
-                <Chips
-                  label={'Cơm'}
-                  onPress={() => console.log('Chips press')}
-                />
-                <Chips
-                  label={'Bún'}
-                  onPress={() => console.log('Chips press')}
-                />
-                <Chips
-                  label={'Bánh mì'}
-                  onPress={() => console.log('Chips press')}
-                />
-                <Chips
-                  label={'Pizza'}
-                  onPress={() => console.log('Chips press')}
-                />
-                <Chips
-                  label={'Hamburger'}
-                  onPress={() => console.log('Chips press')}
-                />
-                <Chips
-                  label={'Bánh ngọt'}
-                  onPress={() => console.log('Chips press')}
-                />
-                <Chips
-                  label={'Coca'}
-                  onPress={() => console.log('Chips press')}
-                />
+                {data.mostSrearched.map(item => (
+                  <Chips
+                    key={item.label}
+                    label={item.label}
+                    onPress={() => console.log('Chips press', item.label)}
+                  />
+                ))}
               </View>
             </View>
           </View>
@@ -187,15 +142,21 @@ const SearchScreen = () => {
           </View>
           <FlatList
             data={searchResult}
+            ItemSeparatorComponent={() => (
+              <Break height={1} marginTop={2 * SIZES.spacing} />
+            )}
             keyExtractor={(item, index) => `${index}`}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => {
               return (
                 <HorizontalFoodCard
                   imageStyle={styles.imageCard}
-                  // onPress={() => navigation.navigate('DetailFood', item)}
+                  onPress={() =>
+                    navigation.navigate('DetailFood', {
+                      foodItem: {...item, priceTotal: 0, quantity: 0},
+                    })
+                  }
                   item={item}
-                  containerStyle={styles.horizontalFoodCard}
                 />
               );
             }}
@@ -261,13 +222,10 @@ const styles = StyleSheet.create({
   imageCard: {
     width: 110,
     height: 110,
-    marginTop: 20,
   },
 
   horizontalFoodCard: {
     height: 150,
-    marginHorizontal: SIZES.padding,
-    marginBottom: SIZES.radius,
   },
 
   icon: {

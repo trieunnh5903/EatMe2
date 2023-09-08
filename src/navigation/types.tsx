@@ -48,6 +48,11 @@ export type CartScreenProp = BottomTabScreenProps<
   'Cart'
 >;
 
+export type SreachScreenProp = CompositeScreenProps<
+  BottomTabScreenProps<BottomTabNavigatorParamList, 'Search'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
+
 export type OnBoardingNavigationProps = NativeStackScreenProps<
   RootStackParamList,
   'OnBoarding'

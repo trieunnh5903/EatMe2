@@ -7,7 +7,9 @@ import HorizontalFoodCard from './HorizontalFoodCard';
 import VerticalFoodCard from './VerticalFoodCard';
 import BadgeButton from './button/BadgeButton';
 import QuantityInput from './QuantityInput';
+import Break from './Break';
 export {
+  Break,
   BadgeButton,
   ButtonText,
   HorizontalFoodCard,

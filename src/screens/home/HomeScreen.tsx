@@ -18,6 +18,8 @@ import {useInfiniteQuery} from '@tanstack/react-query';
 
 import {
   BadgeButton,
+  Break,
+  ButtonIcon,
   HeaderCustom,
   HorizontalFoodCard,
   VerticalFoodCard,
@@ -82,28 +84,43 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends}) => {
         data={recommends}
         keyExtractor={item => `${item.id}`}
         horizontal
-        decelerationRate="fast"
-        snapToInterval={SIZES.width * 0.85 + 18}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => {
           return (
-            <HorizontalFoodCard
+            <VerticalFoodCard
               onPress={() =>
-                navigation.navigate('DetailFood', {foodItem: item})
+                navigation.navigate('DetailFood', {
+                  foodItem: {...item, priceTotal: 0, quantity: 0},
+                })
               }
-              imageStyle={styles.recommendImage}
               item={item}
               containerStyle={[
-                styles.recommendContainer,
+                styles.popularContainer,
                 {
-                  marginLeft: index === 0 ? SIZES.padding : 18,
+                  marginLeft: SIZES.padding,
                   marginRight:
-                    index === recommends.length - 1 ? SIZES.padding : 0,
+                    index == recommends.length - 1 ? SIZES.padding : 0,
                 },
               ]}
+              imageStyle={styles.popularImage}
             />
           );
         }}
+        ListFooterComponent={
+          <View style={styles.footerHorizontalListWrapper}>
+            <TouchableOpacity>
+              <ButtonIcon
+                disabled={true}
+                containerStyle={styles.btnWatchAll}
+                iconStyle={{tintColor: COLORS.primary}}
+                icon={icons.chevron_right}
+              />
+              <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
+                Xem tất cả
+              </Text>
+            </TouchableOpacity>
+          </View>
+        }
       />
     </Section>
   );
@@ -125,13 +142,15 @@ const PopularSection: React.FC<FoodArray> = ({data}) => {
           return (
             <VerticalFoodCard
               onPress={() =>
-                navigation.navigate('DetailFood', {foodItem: item})
+                navigation.navigate('DetailFood', {
+                  foodItem: {...item, priceTotal: 0, quantity: 0},
+                })
               }
               item={item}
               containerStyle={[
                 styles.popularContainer,
                 {
-                  marginLeft: index == 0 ? SIZES.padding : 18,
+                  marginLeft: SIZES.padding,
                   marginRight: index == data.length - 1 ? SIZES.padding : 0,
                 },
               ]}
@@ -139,6 +158,21 @@ const PopularSection: React.FC<FoodArray> = ({data}) => {
             />
           );
         }}
+        ListFooterComponent={
+          <View style={styles.footerHorizontalListWrapper}>
+            <TouchableOpacity>
+              <ButtonIcon
+                disabled={true}
+                containerStyle={styles.btnWatchAll}
+                iconStyle={{tintColor: COLORS.primary}}
+                icon={icons.chevron_right}
+              />
+              <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
+                Xem tất cả
+              </Text>
+            </TouchableOpacity>
+          </View>
+        }
       />
     </Section>
   );
@@ -175,7 +209,7 @@ const CarouselItem = memo(
   }: {
     item: {
       id: number;
-      image: any;
+      image: string;
     };
     index: number;
   }) => {
@@ -191,7 +225,7 @@ const CarouselItem = memo(
           marginLeft: marginLeft,
         }}>
         <FastImage
-          source={item.image}
+          source={{uri: item.image}}
           resizeMode={FastImage.resizeMode.cover}
           style={styles.carouselImage}
         />
@@ -211,15 +245,15 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         categories: [1, 2],
         priceTotal: 0,
         quantity: 0,
-        price: 15.99,
+        price: '15.99',
         calories: 78,
         image:
-          'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/hamburger.png',
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
       };
     }
     return data;
   }, []);
-  const [popular, setPopular] = useState<FoodObject[]>(_enerateArray(20));
+  const [popular, setPopular] = useState<FoodObject[]>(_enerateArray(10));
 
   const fetchFoodNearYou = async ({pageParam = 1}) => {
     return await fetchAllFoods(pageParam);
@@ -244,7 +278,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
   if (status === 'error') {
     console.log(error);
   }
-  // console.log('fetchStatus', fetchStatus);
+
   const renderFooter = () => {
     return (
       <ActivityIndicator
@@ -282,7 +316,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         {/* carousel */}
         <FlatList
           data={data.carousel}
-          style={{marginTop: SIZES.radius}}
+          style={{marginTop: SIZES.padding}}
           keyExtractor={item => `${item.id}`}
           horizontal
           decelerationRate="fast"
@@ -294,15 +328,19 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         />
         {/* category */}
         <Categories />
+        <Break marginVertical={30} />
         {/* list popular */}
         <PopularSection data={popular} />
+        <Break marginTop={30} />
         {/* list recommended */}
         <RecommendedSection data={popular} />
+        <Break marginTop={20} />
         {/* list nearby you*/}
         <FlatList
           ListHeaderComponent={
             <Text style={styles.headlineNearYou}>Gần bạn</Text>
           }
+          ItemSeparatorComponent={() => <Break height={3} />}
           data={foodNearYou?.pages.flat()}
           style={{flex: 1}}
           contentContainerStyle={{flex: 1}}
@@ -314,7 +352,9 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
               <HorizontalFoodCard
                 imageStyle={styles.imageCard}
                 onPress={() =>
-                  navigation.navigate('DetailFood', {foodItem: item})
+                  navigation.navigate('DetailFood', {
+                    foodItem: {...item, priceTotal: 0, quantity: 0},
+                  })
                 }
                 item={item}
                 containerStyle={styles.horizontalFoodCard}
@@ -334,7 +374,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  popularContainer: {padding: SIZES.radius, width: 210},
+  popularContainer: {width: SIZES.width * 0.4},
   deliveryAddress: {
     ...FONTS.title_medium,
     color: COLORS.blackText,
@@ -347,9 +387,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   popularImage: {
-    width: 150,
+    width: '100%',
     height: 150,
-    marginTop: SIZES.radius,
   },
   recommendImage: {
     marginTop: 35,
@@ -362,10 +401,14 @@ const styles = StyleSheet.create({
     paddingRight: SIZES.radius,
     alignItems: 'center',
   },
+  btnWatchAll: {
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    borderRadius: 100,
+  },
   headlineNearYou: {
-    marginTop: 30,
+    marginTop: 20,
     marginHorizontal: SIZES.padding,
-    marginBottom: 20,
     fontWeight: 'bold',
     ...FONTS.headline_small,
     color: COLORS.blackText,
@@ -373,6 +416,13 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingHorizontal: SIZES.padding,
     alignItems: 'center',
+  },
+  footerHorizontalListWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: SIZES.width * 0.4,
+    marginRight: SIZES.padding,
   },
   indicator: {
     alignSelf: 'flex-start',
@@ -397,7 +447,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingHorizontal: SIZES.padding,
     paddingVertical: SIZES.radius,
-    marginBottom: SIZES.padding,
+    marginTop: SIZES.padding,
     rowGap: 10,
     columnGap: 10,
   },
@@ -453,13 +503,10 @@ const styles = StyleSheet.create({
   imageCard: {
     width: 110,
     height: 110,
-    marginTop: 20,
   },
 
   horizontalFoodCard: {
     height: 150,
-    marginHorizontal: SIZES.padding,
-    marginBottom: SIZES.radius,
   },
 
   icon: {

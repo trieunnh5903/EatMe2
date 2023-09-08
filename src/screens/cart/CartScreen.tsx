@@ -19,6 +19,7 @@ import {
   removeItem,
   updateItemQuantity,
 } from '../../redux/slice/cart.slice';
+import convertToVND from '../../utils/convertToVND';
 
 const FoodItem = ({data, index}: {data: FoodObject; index: number}) => {
   const dispatch = useAppDispatch();
@@ -55,38 +56,23 @@ const FoodItem = ({data, index}: {data: FoodObject; index: number}) => {
       />
       {/* content */}
       <View style={{flex: 1}}>
-        <Text style={styles.itemName}>{data.name}</Text>
-        <TouchableOpacity style={styles.itemBtnDetail}>
-          <Text
-            style={{
-              color: COLORS.darkGray,
-              ...FONTS.title_small,
-            }}>
-            Xem chi tiết
-          </Text>
-          <Image source={icons.down_arrow} style={styles.down_arrow} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.paymentWrapper}>
-        {/* total price */}
-        <Text style={styles.totalPrice}>${data.priceTotal}</Text>
-        {/* quantity input */}
-        <QuantityInput
-          onAddPress={() => onIncreasePress(data, data.quantity)}
-          onRemovePress={() => onDecreasePress(data)}
-          labelStyle={styles.labelQuantityInput}
-          iconContainerStyle={styles.iconQuantityInputContainer}
-          quantity={data.quantity}
-          iconStyle={styles.iconQuantityInput}
-          containerStyle={styles.quantityInputContainer}
-        />
-        <Text
-          style={{
-            color: COLORS.black,
-            ...FONTS.label_medium,
-          }}>
-          ${data.price}/sản phẩm
-        </Text>
+        <View style={{flex: 1}}>
+          <Text style={styles.itemName}>{data.name}</Text>
+        </View>
+        <View style={styles.quantityWrapper}>
+          <Text style={styles.totalPrice}>{convertToVND(data.priceTotal)}</Text>
+          <View style={styles.paymentWrapper}>
+            {/* quantity input */}
+            <QuantityInput
+              onAddPress={() => onIncreasePress(data, data.quantity)}
+              onRemovePress={() => onDecreasePress(data)}
+              labelStyle={styles.labelQuantityInput}
+              iconContainerStyle={styles.iconQuantityInputContainer}
+              quantity={data.quantity}
+              iconStyle={styles.iconQuantityInput}
+            />
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -169,17 +155,15 @@ const CartScreen = ({navigation}: CartScreenProp) => {
             )}
           />
           {/* nút thanh toán */}
-          <View
-            style={{
-              backgroundColor: COLORS.white,
-              width: SIZES.width,
-            }}>
+          <View>
             <TouchableOpacity style={styles.checkoutButton}>
               <Text style={styles.textTitle}>
                 {sumQuantityProduct() || 0} sản phẩm
               </Text>
               <Text style={styles.textTitle}>Thanh toán</Text>
-              <Text style={styles.textTitle}>${totalCartPrice}</Text>
+              <Text style={styles.textTitle}>
+                {convertToVND(totalCartPrice)}
+              </Text>
             </TouchableOpacity>
           </View>
         </>
@@ -218,7 +202,6 @@ export default CartScreen;
 const styles = StyleSheet.create({
   quantityInputContainer: {
     justifyContent: 'space-between',
-    height: 40,
     marginVertical: 6,
   },
 
@@ -226,6 +209,12 @@ const styles = StyleSheet.create({
     tintColor: COLORS.primary,
     width: 70,
     height: 70,
+  },
+
+  quantityWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 
   emptyWrapper: {
@@ -244,7 +233,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
 
-  paymentWrapper: {alignItems: 'flex-end', marginHorizontal: SIZES.radius},
+  paymentWrapper: {
+    alignItems: 'flex-end',
+    margin: SIZES.radius,
+  },
   btnBack: {
     paddingHorizontal: SIZES.radius,
     backgroundColor: COLORS.lightGray2,
@@ -262,9 +254,9 @@ const styles = StyleSheet.create({
   },
 
   iconQuantityInputContainer: {
-    borderColor: COLORS.primary,
-    borderWidth: 1,
-    height: 40,
+    height: 32,
+    width: 32,
+    backgroundColor: COLORS.lightGray2,
     borderRadius: SIZES.base,
     paddingHorizontal: SIZES.base,
   },
@@ -279,22 +271,21 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   iconQuantityInput: {
-    width: 24,
-    height: 24,
-    tintColor: COLORS.black,
+    width: 16,
+    height: 16,
+    tintColor: COLORS.primary,
   },
 
   down_arrow: {width: 18, height: 18, tintColor: COLORS.black},
 
   labelQuantityInput: {
     color: COLORS.blackText,
-    ...FONTS.title_medium,
-    fontWeight: 'bold',
-    marginHorizontal: SIZES.radius,
+    ...FONTS.label_large,
+    marginHorizontal: 15,
   },
 
   totalPrice: {
-    color: COLORS.black,
+    color: COLORS.primary,
     ...FONTS.title_medium,
     fontWeight: 'bold',
   },
@@ -321,25 +312,25 @@ const styles = StyleSheet.create({
 
   itemName: {
     color: COLORS.blackText,
-    ...FONTS.title_medium,
+    ...FONTS.label_large,
   },
 
   itemImage: {
-    margin: SIZES.base,
-    width: 70,
-    height: 80,
-    resizeMode: 'contain',
+    borderRadius: SIZES.radius,
+    marginRight: SIZES.spacing,
+    width: SIZES.width * 0.2,
+    height: '100%',
+    resizeMode: 'cover',
   },
 
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: SIZES.radius,
-    backgroundColor: COLORS.white,
+    padding: SIZES.spacing,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: COLORS.lightGray2,
+    height: 110,
   },
 
   textTitle: {

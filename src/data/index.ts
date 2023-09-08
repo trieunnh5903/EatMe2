@@ -339,46 +339,66 @@ const allCards = [
 const carousel = [
   {
     id: 1,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-59e924ad-230215000717.png',
   },
   {
     id: 2,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-e3f6df2a-230104161348.png',
   },
   {
     id: 3,
-    image: images.carousel_1,
+    image: 'https://mms.img.susercontent.com/vn-11134512-7r98o-ll33mqgl4tl761',
   },
   {
     id: 4,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-f22ccbfc-230104161912.png',
   },
   {
     id: 5,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-44986962-230630135943.png',
   },
   {
     id: 6,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-e12ce9e6-220406074410.png',
   },
   {
     id: 7,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-67058639-230704180939.png',
   },
   {
     id: 8,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-59e924ad-230215000717.png',
   },
   {
     id: 9,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-0f612348-230215104336.png',
   },
   {
     id: 10,
-    image: images.carousel_1,
+    image:
+      'https://images.foody.vn/delivery/collection/image-3b71bd4c-221230173415.png',
   },
 ];
+
+const mostSrearched = [
+  {id: 1, label: 'Cơm'},
+  {id: 2, label: 'Bún'},
+  {id: 3, label: 'Bánh mì'},
+  {id: 4, label: 'Pizza'},
+  {id: 5, label: 'Hamburger'},
+  {id: 6, label: 'Bánh ngọt'},
+  {id: 7, label: 'Coca'},
+];
 const data = {
+  mostSrearched,
   myProfile,
   menu,
   categories,

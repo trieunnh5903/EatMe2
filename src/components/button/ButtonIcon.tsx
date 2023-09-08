@@ -15,15 +15,18 @@ interface ButtonIconProps {
   icon: ImageSourcePropType;
   iconStyle?: StyleProp<ImageStyle>;
   containerStyle?: StyleProp<ViewStyle>;
+  disabled?: boolean;
 }
 const ButtonIcon: React.FC<ButtonIconProps> = ({
   containerStyle,
   icon,
   iconStyle,
   onPress,
+  disabled = false,
 }) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={[containerStyle, {justifyContent: 'center', alignItems: 'center'}]}
       onPress={onPress}>
       <Image source={icon} style={iconStyle} />

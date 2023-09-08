@@ -16,7 +16,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const MainNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="OnBoarding"
+      initialRouteName="Main"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="OnBoarding" component={OnBoardingScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />

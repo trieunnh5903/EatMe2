@@ -21,14 +21,10 @@ interface InformationFoodProps {
   quantity: number;
   item: FoodObject;
 }
+
 const TextMore = () => {
   const descText =
     "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).";
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleExpansion = () => {
-    setExpanded(!expanded);
-  };
   return (
     <>
       <Text
@@ -36,17 +32,8 @@ const TextMore = () => {
           color: COLORS.blackText,
           ...FONTS.body_large,
         }}>
-        {expanded ? descText : descText.substring(0, 150) + '...'}
+        {descText.substring(0, 150) + '...'}
       </Text>
-      {!expanded ? (
-        <TouchableOpacity onPress={toggleExpansion}>
-          <Text style={styles.readMore}>Xem thêm</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity onPress={toggleExpansion}>
-          <Text style={styles.readLess}>Thu gọn</Text>
-        </TouchableOpacity>
-      )}
     </>
   );
 };
@@ -74,21 +61,16 @@ const InformationFood: React.FC<InformationFoodProps> = ({
     {/* title */}
     <View style={styles.foodTitle}>
       <View style={{flex: 1}}>
-        <View>
-          <Text style={styles.textBody}>Mcdonalds</Text>
-        </View>
         <Text style={styles.textTitle}>{item.name}</Text>
       </View>
-      <Text
-        style={[
-          styles.textTitle,
-          {
-            paddingHorizontal: SIZES.padding,
-          },
-        ]}>
-        ${item.price}
+    </View>
+    {/* địa chỉ */}
+    <View>
+      <Text style={styles.textAddress}>
+        142 Ba Đình, P. 10, Quận 8, TP. HCM
       </Text>
     </View>
+    <Text style={styles.textPrice}>Giá: {item.price}đ</Text>
     {/* desc */}
     <TextMore />
     {/* delivery */}
@@ -121,7 +103,6 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   const dispatch = useAppDispatch();
   const isFavorite = favorite.some(product => product.id === foodItem.id);
   const [quantity, setQuantity] = useState<number>(1);
-
   const handleToggleFavorite = () => {
     if (isFavorite) {
       dispatch(removeFromFavorite(foodItem));
@@ -131,7 +112,9 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   };
 
   const onAddToCartPress = (item: FoodObject) => {
-    const existingItem = cartList.find(itemCart => itemCart.id === item.id);
+    const existingItem = cartList.find(
+      (itemCart: FoodObject) => itemCart.id === item.id,
+    );
     if (existingItem) {
       if (quantity === 1) {
         dispatch(
@@ -155,31 +138,24 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         {/* header */}
-        <HeaderCustom
-          containerStyle={{
-            paddingHorizontal: SIZES.padding,
-          }}
-          leftComponent={
-            <TouchableOpacity
-              style={styles.buttonNavWrapper}
-              onPress={() => navigation.goBack()}>
-              <Image source={icons.arrow_back} style={styles.icon} />
-            </TouchableOpacity>
-          }
-          rightComponent={
-            <TouchableOpacity
-              onPress={() => handleToggleFavorite()}
-              style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-              <Image
-                source={isFavorite ? icons.favourite_fill : icons.favourite}
-                style={[
-                  styles.icon,
-                  {tintColor: isFavorite ? COLORS.primary : COLORS.black},
-                ]}
-              />
-            </TouchableOpacity>
-          }
-        />
+        {/* btn back */}
+        <TouchableOpacity
+          style={styles.buttonBackWrapper}
+          onPress={() => navigation.goBack()}>
+          <Image source={icons.arrow_back} style={styles.icon} />
+        </TouchableOpacity>
+        {/* btn favorite */}
+        <TouchableOpacity
+          onPress={() => handleToggleFavorite()}
+          style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
+          <Image
+            source={isFavorite ? icons.favourite_fill : icons.favourite}
+            style={[
+              styles.icon,
+              {tintColor: isFavorite ? COLORS.primary : COLORS.black},
+            ]}
+          />
+        </TouchableOpacity>
         {/* image */}
         <View style={styles.imageFoodWrapper}>
           <Image style={styles.imageFood} source={{uri: foodItem.image}} />
@@ -190,14 +166,14 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
           quantity={quantity}
           setQuantity={setQuantity}
         />
-        {/* footer */}
-        <ButtonText
-          onPress={() => onAddToCartPress(foodItem)}
-          label={'Thêm vào giỏ hàng'}
-          containerStyle={styles.buttonFooter}
-          labelStyle={styles.labelFooter}
-        />
       </ScrollView>
+      {/* footer */}
+      <ButtonText
+        onPress={() => onAddToCartPress(foodItem)}
+        label={'Thêm vào giỏ hàng'}
+        containerStyle={styles.buttonFooter}
+        labelStyle={styles.labelFooter}
+      />
     </SafeAreaView>
   );
 };
@@ -205,16 +181,36 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
 export default DetailFoodScreen;
 
 const styles = StyleSheet.create({
-  buttonNavWrapper: {
+  buttonBackWrapper: {
     borderRadius: 100,
     width: 40,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: SIZES.radius,
+    position: 'absolute',
+    zIndex: 1,
+    top: SIZES.padding,
+    left: SIZES.padding,
     backgroundColor: COLORS.lightGray2,
   },
 
+  textPrice: {
+    color: COLORS.primary,
+    ...FONTS.title_medium,
+  },
+
+  buttonFavoriteWrapper: {
+    borderRadius: 100,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    zIndex: 1,
+    top: SIZES.padding,
+    right: SIZES.padding,
+    backgroundColor: COLORS.lightGray2,
+  },
   deliveryWrapper: {
     flexDirection: 'row',
     marginTop: SIZES.base,
@@ -227,8 +223,8 @@ const styles = StyleSheet.create({
   },
 
   imageFoodWrapper: {
-    paddingHorizontal: SIZES.padding,
-    alignItems: 'center',
+    height: SIZES.height * 0.4,
+    width: SIZES.width,
   },
 
   labelFooter: {
@@ -238,9 +234,7 @@ const styles = StyleSheet.create({
   },
 
   foodTitle: {
-    marginTop: SIZES.padding + SIZES.padding / 2,
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: 4 * SIZES.spacing,
   },
 
   quantityIcon: {
@@ -251,7 +245,7 @@ const styles = StyleSheet.create({
 
   quantityContainer: {
     backgroundColor: COLORS.primary,
-    borderRadius: 3 * SIZES.radius,
+    borderRadius: 2 * SIZES.radius,
     height: 50,
     alignSelf: 'center',
     position: 'absolute',
@@ -283,11 +277,15 @@ const styles = StyleSheet.create({
   },
 
   buttonFooter: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     marginTop: SIZES.radius,
     marginBottom: SIZES.radius,
     marginHorizontal: SIZES.padding,
     height: 50,
-    borderRadius: SIZES.padding,
+    borderRadius: SIZES.radius,
     backgroundColor: COLORS.primary,
   },
 
@@ -296,15 +294,17 @@ const styles = StyleSheet.create({
     ...FONTS.headline_medium,
     fontWeight: 'bold',
   },
-  textBody: {
+  textAddress: {
     color: COLORS.blackText,
-    ...FONTS.body_large,
+    ...FONTS.body_medium,
+    marginBottom: SIZES.spacing,
   },
 
   imageFood: {
-    height: SIZES.height * 0.4,
-    width: SIZES.width - 2 * SIZES.padding,
-    resizeMode: 'contain',
+    height: undefined,
+    width: undefined,
+    flex: 1,
+    resizeMode: 'cover',
   },
 
   icon: {

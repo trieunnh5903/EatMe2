@@ -9,7 +9,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import React, {memo} from 'react';
-import {COLORS, FONTS, SIZES} from '../config';
+import {COLORS, FONTS, SIZES, icons} from '../config';
 import FastImage, {ImageStyle} from 'react-native-fast-image';
 
 interface VerticalFoodCardProps {
@@ -19,7 +19,7 @@ interface VerticalFoodCardProps {
     name: string;
     description: string;
     categories: number[];
-    price: number;
+    price: string;
     calories: number;
     image: string;
   };
@@ -33,11 +33,13 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
   onPress,
 }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[styles.container, containerStyle]}>
+    <TouchableOpacity onPress={onPress} style={[containerStyle]}>
       {/* image */}
-      <FastImage style={imageStyle} source={{uri: item.image}} />
+
+      <FastImage
+        style={[imageStyle, {borderRadius: SIZES.radius}]}
+        source={{uri: item.image}}
+      />
       {/* info */}
       <View style={styles.info}>
         <Text style={styles.name}>{item.name}</Text>
@@ -48,7 +50,17 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
           }}>
           {item.description}
         </Text>
-        <Text style={[styles.price, FONTS.label_large]}>${item.price}</Text>
+        <View style={styles.rowWrapper}>
+          <Text style={[styles.price]}>{item.price}đ</Text>
+          <View style={styles.starWrapper}>
+            <Image
+              source={icons.star}
+              resizeMode="contain"
+              style={styles.iconStar}
+            />
+            <Text style={[styles.price]}>4.5</Text>
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -57,16 +69,17 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
 export default memo(VerticalFoodCard);
 
 const styles = StyleSheet.create({
+  rowWrapper: {flexDirection: 'row', alignItems: 'center', columnGap: 10},
+  starWrapper: {flexDirection: 'row', alignItems: 'center', columnGap: 2},
+  iconStar: {width: 18, height: 18, marginBottom: -5},
   price: {
     color: COLORS.blackText,
     marginTop: SIZES.base,
-    ...FONTS.title_large,
-    fontWeight: 'bold',
+    ...FONTS.title_small,
   },
   name: {
     color: COLORS.blackText,
-    ...FONTS.title_large,
-    fontWeight: 'bold',
+    ...FONTS.title_medium,
   },
   textCalories: {
     flex: 1,
@@ -74,14 +87,9 @@ const styles = StyleSheet.create({
     color: COLORS.darkGray2,
   },
   iconCalories: {width: 24, height: 24},
-  container: {
-    borderRadius: SIZES.radius,
-    backgroundColor: COLORS.lightGray2,
-    alignItems: 'center',
-  },
 
   info: {
-    alignItems: 'center',
+    marginVertical: SIZES.radius,
   },
   calories: {
     flexDirection: 'row',

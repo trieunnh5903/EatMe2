@@ -6,6 +6,11 @@ import MainNavigator from './src/navigation/MainNavigator';
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import setUpMirage from './miragejs/mirage.server';
+
+if (__DEV__) {
+  setUpMirage('development');
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {queries: {staleTime: 60 * 1000}},
