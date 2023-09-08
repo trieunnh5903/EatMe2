@@ -11,18 +11,12 @@ import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import FastImage, {ImageStyle} from 'react-native-fast-image';
 import {Image} from 'react-native';
+import {FoodObject} from '../screens/types';
+import convertToVND from '../utils/convertToVND';
 
 interface HorizontalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;
-  item: {
-    id: string;
-    name: string;
-    description: string;
-    categories: number[];
-    price: number;
-    calories: number;
-    image: string;
-  };
+  item: FoodObject;
   imageStyle?: StyleProp<ImageStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 }
@@ -60,7 +54,7 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
         {/* giá */}
         <View style={styles.rowWrapper}>
           <Text style={[styles.price, {color: COLORS.blackText}]}>
-            {item.price}đ
+            {convertToVND(item.price)}
           </Text>
           <VericalLine />
           {/* sao */}

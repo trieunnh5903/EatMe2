@@ -11,18 +11,12 @@ import {
 import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import FastImage, {ImageStyle} from 'react-native-fast-image';
+import {FoodObject} from '../screens/types';
+import convertToVND from '../utils/convertToVND';
 
 interface VerticalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;
-  item: {
-    id: string;
-    name: string;
-    description: string;
-    categories: number[];
-    price: string;
-    calories: number;
-    image: string;
-  };
+  item: FoodObject;
   imageStyle?: StyleProp<ImageStyle>;
   onPress?: (event: GestureResponderEvent) => any;
 }
@@ -51,7 +45,7 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
           {item.description}
         </Text>
         <View style={styles.rowWrapper}>
-          <Text style={[styles.price]}>{item.price}đ</Text>
+          <Text style={[styles.price]}>{convertToVND(item.price)}</Text>
           <View style={styles.starWrapper}>
             <Image
               source={icons.star}

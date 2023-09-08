@@ -7,6 +7,8 @@ import {
   TextStyle,
   ImageStyle,
   GestureResponderEvent,
+  ImageProps,
+  ImageSourcePropType,
 } from 'react-native';
 import React from 'react';
 import ButtonIcon from './button/ButtonIcon';
@@ -20,6 +22,8 @@ interface QuantityInputProps {
   quantity: number;
   iconStyle?: ImageStyle;
   labelStyle?: TextStyle;
+  iconLeft: ImageSourcePropType;
+  iconRight: ImageSourcePropType;
 }
 const QuantityInput: React.FC<QuantityInputProps> = ({
   containerStyle,
@@ -29,18 +33,20 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
   quantity = 1,
   iconStyle,
   labelStyle,
+  iconLeft,
+  iconRight,
 }) => {
   return (
     <View style={[styles.container, containerStyle]}>
       <ButtonIcon
-        icon={icons.remove}
+        icon={iconLeft}
         iconStyle={iconStyle}
         containerStyle={iconContainerStyle}
         onPress={onRemovePress}
       />
       <Text style={labelStyle}>{`${quantity}`}</Text>
       <ButtonIcon
-        icon={icons.add}
+        icon={iconRight}
         iconStyle={iconStyle}
         containerStyle={iconContainerStyle}
         onPress={onAddPress}

@@ -15,6 +15,7 @@ import {FoodObject} from '../types';
 import {useAppDispatch, useAppSelector} from '../../utils/hooks';
 import {addItem, updateItemQuantity} from '../../redux/slice/cart.slice';
 import {addToFavorite, removeFromFavorite} from '../../redux/slice/user.slice';
+import convertToVND from '../../utils/convertToVND';
 
 interface InformationFoodProps {
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
@@ -46,6 +47,8 @@ const InformationFood: React.FC<InformationFoodProps> = ({
   <View style={styles.infoFoodWrapper}>
     {/* input quantity */}
     <QuantityInput
+      iconLeft={icons.remove_wght500}
+      iconRight={icons.add_wght500}
       onAddPress={() => setQuantity(value => value + 1)}
       onRemovePress={() => {
         if (quantity > 0) {
@@ -70,7 +73,7 @@ const InformationFood: React.FC<InformationFoodProps> = ({
         142 Ba Đình, P. 10, Quận 8, TP. HCM
       </Text>
     </View>
-    <Text style={styles.textPrice}>Giá: {item.price}đ</Text>
+    <Text style={styles.textPrice}>Giá: {convertToVND(item.price)}</Text>
     {/* desc */}
     <TextMore />
     {/* delivery */}

@@ -347,7 +347,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
           scrollEnabled={false}
           keyExtractor={(item, index) => item.id}
           showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => {
+          renderItem={({item}) => {
             return (
               <HorizontalFoodCard
                 imageStyle={styles.imageCard}

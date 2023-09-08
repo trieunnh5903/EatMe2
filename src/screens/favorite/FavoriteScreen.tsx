@@ -13,8 +13,9 @@ import {ButtonIcon, HeaderCustom} from '../../components';
 import {FoodObject} from '../types';
 import {useAppDispatch, useAppSelector} from '../../utils/hooks';
 import {removeFromFavorite} from '../../redux/slice/user.slice';
+import {FavoriteScreenProp} from '../../navigation/types';
 
-const Favourite = () => {
+const Favourite = ({navigation}: FavoriteScreenProp) => {
   const dispatch = useAppDispatch();
   const favoriteList = useAppSelector(state => state.user.favorite);
   // const dispatch = useDispatch();
@@ -41,7 +42,16 @@ const Favourite = () => {
           }}>
           {item.name}
         </Text>
-        <TouchableOpacity style={styles.btnDetail}>
+        <Text
+          style={{
+            color: COLORS.darkGray,
+            ...FONTS.label_medium,
+          }}>
+          {item.description}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('DetailFood', {foodItem: item})}
+          style={styles.btnDetail}>
           <Text
             style={{
               color: COLORS.darkGray,
@@ -95,9 +105,10 @@ export default Favourite;
 
 const styles = StyleSheet.create({
   itemImage: {
-    marginHorizontal: SIZES.radius,
     width: 70,
     height: 70,
+    borderRadius: SIZES.radius,
+    marginRight: SIZES.spacing,
   },
 
   emptyText: {
@@ -113,8 +124,8 @@ const styles = StyleSheet.create({
   btnFavorite: {
     padding: SIZES.base,
     backgroundColor: COLORS.lightGray2,
-    marginRight: SIZES.radius,
     borderRadius: 100,
+    marginLeft: SIZES.base,
   },
   btnFavoriteRemove: {
     width: 24,
@@ -125,7 +136,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: SIZES.radius,
+    padding: SIZES.padding,
     borderBottomWidth: 1,
     borderColor: COLORS.lightGray2,
     backgroundColor: COLORS.white,

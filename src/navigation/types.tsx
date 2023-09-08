@@ -53,6 +53,11 @@ export type SreachScreenProp = CompositeScreenProps<
   NativeStackScreenProps<RootStackParamList>
 >;
 
+export type FavoriteScreenProp = CompositeScreenProps<
+  BottomTabScreenProps<BottomTabNavigatorParamList, 'Favorite'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
+
 export type OnBoardingNavigationProps = NativeStackScreenProps<
   RootStackParamList,
   'OnBoarding'

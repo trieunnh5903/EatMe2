@@ -64,6 +64,8 @@ const FoodItem = ({data, index}: {data: FoodObject; index: number}) => {
           <View style={styles.paymentWrapper}>
             {/* quantity input */}
             <QuantityInput
+              iconLeft={icons.remove_wght700}
+              iconRight={icons.add_wght700}
               onAddPress={() => onIncreasePress(data, data.quantity)}
               onRemovePress={() => onDecreasePress(data)}
               labelStyle={styles.labelQuantityInput}

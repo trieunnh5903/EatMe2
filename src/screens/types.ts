@@ -3,7 +3,7 @@ export type FoodObject = {
   name: string;
   description: string;
   categories: number[];
-  price: string;
+  price: number;
   calories: number;
   image: string;
   priceTotal: number;
