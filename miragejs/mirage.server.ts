@@ -256,6 +256,7 @@ const productsData = [
     supplierID: 'YMBA',
   },
   {
+    id: nanoid(),
     name: 'Cơm Gà Xối Mỡ 142 - Ba Đình',
     price: 20.0,
     description: '142 Ba Đình, P. 10, Quận 8, TP. HCM',
