@@ -4,9 +4,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import MainNavigator from './src/navigation/MainNavigator';
 import {Provider} from 'react-redux';
-import {store} from './src/redux/store';
+import {persistor, store} from './src/redux/store';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import setUpMirage from './miragejs/mirage.server';
+import {PersistGate} from 'redux-persist/integration/react';
 
 if (__DEV__) {
   setUpMirage('development');
@@ -19,11 +20,13 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <GestureHandlerRootView style={{flex: 1}}>
-          <NavigationContainer>
-            <MainNavigator />
-          </NavigationContainer>
-        </GestureHandlerRootView>
+        <PersistGate loading={null} persistor={persistor}>
+          <GestureHandlerRootView style={{flex: 1}}>
+            <NavigationContainer>
+              <MainNavigator />
+            </NavigationContainer>
+          </GestureHandlerRootView>
+        </PersistGate>
       </Provider>
     </QueryClientProvider>
   );

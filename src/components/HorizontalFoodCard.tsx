@@ -38,9 +38,7 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
       />
       {/* tên */}
       <View style={{flex: 1, marginLeft: SIZES.spacing}}>
-        <Text
-          numberOfLines={1}
-          style={[FONTS.title_medium, {color: COLORS.blackText}]}>
+        <Text style={[FONTS.title_medium, {color: COLORS.blackText}]}>
           {item.name}
         </Text>
         {/* mô tả */}

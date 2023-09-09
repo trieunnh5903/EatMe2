@@ -29,7 +29,6 @@ import {useNavigation} from '@react-navigation/native';
 import {FoodArray, FoodObject} from '../types';
 import {HomeScreenNavigationProp, HomeScreenProp} from '../../navigation/types';
 import FastImage from 'react-native-fast-image';
-import axios from 'axios';
 import {fetchAllFoods} from '../../services/food.service';
 
 interface SectionProps {

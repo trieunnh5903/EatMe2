@@ -18,9 +18,6 @@ import {FavoriteScreenProp} from '../../navigation/types';
 const Favourite = ({navigation}: FavoriteScreenProp) => {
   const dispatch = useAppDispatch();
   const favoriteList = useAppSelector(state => state.user.favorite);
-  // const dispatch = useDispatch();
-  // const favoriteList = useSelector(state => state.user.favorite);
-  // const [menuList, setMenuList] = useState(_enerateArray(3));
   const onRemovePress = (itemToRemove: FoodObject) => {
     dispatch(removeFromFavorite(itemToRemove));
   };
@@ -35,18 +32,12 @@ const Favourite = ({navigation}: FavoriteScreenProp) => {
       />
       {/* content */}
       <View style={{flex: 1}}>
-        <Text
-          style={{
-            color: COLORS.blackText,
-            ...FONTS.label_large,
-          }}>
+        <Text style={[FONTS.title_medium, {color: COLORS.blackText}]}>
           {item.name}
         </Text>
         <Text
-          style={{
-            color: COLORS.darkGray,
-            ...FONTS.label_medium,
-          }}>
+          numberOfLines={1}
+          style={[FONTS.body_medium, {color: COLORS.darkGray2}]}>
           {item.description}
         </Text>
         <TouchableOpacity
@@ -105,8 +96,8 @@ export default Favourite;
 
 const styles = StyleSheet.create({
   itemImage: {
-    width: 70,
-    height: 70,
+    width: SIZES.width * 0.25,
+    height: SIZES.width * 0.25,
     borderRadius: SIZES.radius,
     marginRight: SIZES.spacing,
   },
@@ -140,6 +131,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: COLORS.lightGray2,
     backgroundColor: COLORS.white,
+    height: 150,
   },
 
   container: {

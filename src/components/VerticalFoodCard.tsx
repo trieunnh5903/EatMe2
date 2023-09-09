@@ -45,7 +45,9 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
           {item.description}
         </Text>
         <View style={styles.rowWrapper}>
-          <Text style={[styles.price]}>{convertToVND(item.price)}</Text>
+          <Text style={[styles.price, {color: COLORS.blackText}]}>
+            {convertToVND(item.price)}
+          </Text>
           <View style={styles.starWrapper}>
             <Image
               source={icons.star}
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
   starWrapper: {flexDirection: 'row', alignItems: 'center', columnGap: 2},
   iconStar: {width: 18, height: 18, marginBottom: -5},
   price: {
-    color: COLORS.blackText,
+    color: COLORS.gray,
     marginTop: SIZES.base,
     ...FONTS.title_small,
   },

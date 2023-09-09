@@ -177,22 +177,16 @@ const CartScreen = ({navigation}: CartScreenProp) => {
             <Text
               style={{
                 color: COLORS.black,
-                ...FONTS.headline_small,
+                ...FONTS.title_large,
               }}>
               Giỏ hàng của bạn trống!
             </Text>
           </View>
-          <View
-            style={{
-              backgroundColor: COLORS.white,
-              width: SIZES.width,
-            }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Home')}
-              style={styles.buttonStartShopping}>
-              <Text style={styles.textTitle}>Mua sắm ngay</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Home')}
+            style={styles.buttonStartShopping}>
+            <Text style={styles.textTitle}>Mua sắm ngay</Text>
+          </TouchableOpacity>
         </>
       )}
     </SafeAreaView>
@@ -362,5 +356,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
+    paddingHorizontal: SIZES.radius,
   },
 });
