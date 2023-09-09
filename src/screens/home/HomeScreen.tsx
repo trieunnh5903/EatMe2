@@ -288,84 +288,83 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
     );
   };
 
+  console.log(isFetching);
   return (
     <SafeAreaView style={[styles.container]}>
-      <ScrollView nestedScrollEnabled showsVerticalScrollIndicator={false}>
-        {/* header */}
-        <View style={styles.headerWrapper}>
-          <HeaderCustom
-            containerStyle={styles.headerContainer}
-            rightComponent={
-              <BadgeButton
-                // onPress={() => navigation.navigate('Notification')}
-                icon={icons.notification}
-                iconStyle={styles.icon}
-                badgeStyle={styles.badgeNotification}
-              />
-            }
-            leftComponent={
-              <View>
-                <Image source={images.logo_02} style={styles.logo} />
-              </View>
-            }
-          />
-        </View>
-        {/* delivery to */}
-        <DeliveryTo />
-        {/* carousel */}
-        <FlatList
-          data={data.carousel}
-          style={{marginTop: SIZES.padding}}
-          keyExtractor={item => `${item.id}`}
-          horizontal
-          decelerationRate="fast"
-          snapToInterval={SIZES.width - 2 * SIZES.padding + 10}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return <CarouselItem item={item} index={index} />;
-          }}
-        />
-        {/* category */}
-        <Categories />
-        <Break marginVertical={30} />
-        {/* list popular */}
-        <PopularSection data={popular} />
-        <Break marginTop={30} />
-        {/* list recommended */}
-        <RecommendedSection data={popular} />
-        <Break marginTop={20} />
-        {/* list nearby you*/}
-        <FlatList
-          ListHeaderComponent={
-            <Text style={styles.headlineNearYou}>Gần bạn</Text>
-          }
-          ItemSeparatorComponent={() => <Break height={3} />}
-          data={foodNearYou?.pages.flat()}
-          style={{flex: 1}}
-          contentContainerStyle={{flex: 1}}
-          scrollEnabled={false}
-          keyExtractor={(item, index) => item.id}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item}) => {
-            return (
-              <HorizontalFoodCard
-                imageStyle={styles.imageCard}
-                onPress={() =>
-                  navigation.navigate('DetailFood', {
-                    foodItem: {...item, priceTotal: 0, quantity: 0},
-                  })
+      <FlatList
+        ListHeaderComponent={
+          <View>
+            {/* header */}
+            <View style={styles.headerWrapper}>
+              <HeaderCustom
+                containerStyle={styles.headerContainer}
+                rightComponent={
+                  <BadgeButton
+                    // onPress={() => navigation.navigate('Notification')}
+                    icon={icons.notification}
+                    iconStyle={styles.icon}
+                    badgeStyle={styles.badgeNotification}
+                  />
                 }
-                item={item}
-                containerStyle={styles.horizontalFoodCard}
+                leftComponent={
+                  <View>
+                    <Image source={images.logo_02} style={styles.logo} />
+                  </View>
+                }
               />
-            );
-          }}
-          // onEndReached tự động chạy
-          // onEndReached={() => fetchNextPage()}
-          // onEndReachedThreshold={0.1}
-          ListFooterComponent={renderFooter}
-        />
-      </ScrollView>
+            </View>
+            {/* delivery to */}
+            <DeliveryTo />
+            {/* carousel */}
+            <FlatList
+              data={data.carousel}
+              style={{marginTop: SIZES.padding}}
+              keyExtractor={item => `${item.id}`}
+              horizontal
+              decelerationRate="fast"
+              snapToInterval={SIZES.width - 2 * SIZES.padding + 10}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return <CarouselItem item={item} index={index} />;
+              }}
+            />
+            {/* category */}
+            <Categories />
+            <Break marginVertical={30} />
+            {/* list popular */}
+            <PopularSection data={popular} />
+            <Break marginTop={30} />
+            {/* list recommended */}
+            <RecommendedSection data={popular} />
+            <Break marginTop={30} />
+            <Text style={styles.headlineNearYou}>Gần bạn</Text>
+          </View>
+        }
+        ItemSeparatorComponent={() => <Break height={3} />}
+        data={foodNearYou?.pages.flat()}
+        // contentContainerStyle={{flex: 1}}
+        keyExtractor={(item, index) => item.id}
+        scrollEnabled
+        showsVerticalScrollIndicator={false}
+        renderItem={({item}) => {
+          return (
+            <HorizontalFoodCard
+              imageStyle={styles.imageCard}
+              onPress={() =>
+                navigation.navigate('DetailFood', {
+                  foodItem: {...item, priceTotal: 0, quantity: 0},
+                })
+              }
+              item={item}
+              containerStyle={styles.horizontalFoodCard}
+            />
+          );
+        }}
+        // onEndReached tự động chạy
+        onEndReached={() => fetchNextPage()}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={renderFooter}
+      />
     </SafeAreaView>
   );
 };
