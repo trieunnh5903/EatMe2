@@ -244,7 +244,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         categories: [1, 2],
         priceTotal: 0,
         quantity: 0,
-        price: '15.99',
+        price: 15.99,
         calories: 78,
         image:
           'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
