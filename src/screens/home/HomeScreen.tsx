@@ -30,6 +30,7 @@ import {FoodArray, FoodObject} from '../types';
 import {HomeScreenNavigationProp, HomeScreenProp} from '../../navigation/types';
 import FastImage from 'react-native-fast-image';
 import {fetchAllFoods} from '../../services/food.service';
+import {FlashList} from '@shopify/flash-list';
 
 interface SectionProps {
   title: string;
@@ -289,9 +290,10 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
   };
 
   console.log(isFetching);
+
   return (
     <SafeAreaView style={[styles.container]}>
-      <FlatList
+      <FlashList
         ListHeaderComponent={
           <View>
             {/* header */}
@@ -340,12 +342,10 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
             <Text style={styles.headlineNearYou}>Gần bạn</Text>
           </View>
         }
-        ItemSeparatorComponent={() => <Break height={3} />}
+        estimatedItemSize={150}
         data={foodNearYou?.pages.flat()}
-        // contentContainerStyle={{flex: 1}}
-        keyExtractor={(item, index) => item.id}
-        scrollEnabled
         showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={() => <Break height={2} />}
         renderItem={({item}) => {
           return (
             <HorizontalFoodCard
@@ -360,7 +360,6 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
             />
           );
         }}
-        // onEndReached tự động chạy
         onEndReached={() => fetchNextPage()}
         onEndReachedThreshold={0.3}
         ListFooterComponent={renderFooter}
