@@ -361,7 +361,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
           );
         }}
         onEndReached={() => fetchNextPage()}
-        onEndReachedThreshold={0.3}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
     </SafeAreaView>
