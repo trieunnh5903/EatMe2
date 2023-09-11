@@ -6,12 +6,18 @@ import {
   FlatList,
   View,
   SafeAreaView,
-  ScrollView,
   ActivityIndicator,
   GestureResponderEvent,
   ViewStyle,
 } from 'react-native';
-import React, {ReactNode, useCallback, useEffect, useState, memo} from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  memo,
+} from 'react';
 import {icons, COLORS, SIZES, FONTS, images} from '../../config';
 import data from '../../data';
 import {useInfiniteQuery} from '@tanstack/react-query';
@@ -38,6 +44,168 @@ interface SectionProps {
   children: ReactNode;
   style?: ViewStyle;
 }
+
+const HomeScreen = ({navigation}: HomeScreenProp) => {
+  const _enerateArray = useCallback((n: number) => {
+    let data = new Array<FoodObject>(n);
+    for (let i = 0; i < n; i++) {
+      data[i] = {
+        id: nanoid(),
+        name: `Hamburger ${i}`,
+        description: 'Hamburger thịt gà',
+        categories: [1, 2],
+        priceTotal: 0,
+        quantity: 0,
+        price: 15.99,
+        calories: 78,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      };
+    }
+    return data;
+  }, []);
+  const [popular, setPopular] = useState<FoodObject[]>(_enerateArray(10));
+
+  const fetchFoodNearYou = async ({pageParam = 1}) => {
+    return await fetchAllFoods(pageParam);
+  };
+
+  const {
+    data: foodNearYou,
+    error,
+    fetchStatus,
+    fetchNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ['food'],
+    queryFn: fetchFoodNearYou,
+    getNextPageParam: (_lastPage, allPage) => {
+      return allPage.length + 1;
+    },
+  });
+
+  if (status === 'error') {
+    console.log(error);
+  }
+
+  const renderFooter = () => {
+    return (
+      isFetching &&
+      isFetchingNextPage && (
+        <ActivityIndicator
+          style={styles.indicator}
+          size="small"
+          color={COLORS.primary}
+        />
+      )
+    );
+  };
+
+  console.log('isFetching', isFetching);
+
+  //auto scrolling carousel
+  const carouselRef = useRef<FlatList>(null);
+
+  let carouselIndex = 0;
+  const totalIndex = data.carousel.length - 1;
+  let timer: NodeJS.Timeout | undefined = undefined;
+  useEffect(() => {
+    timer = setInterval(() => {
+      carouselIndex++;
+      if (carouselIndex > totalIndex) {
+        carouselIndex = 0;
+      }
+
+      carouselRef.current?.scrollToIndex({
+        index: carouselIndex,
+        animated: true,
+      });
+      console.log(carouselIndex);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <SafeAreaView style={[styles.container]}>
+      <FlashList
+        ListHeaderComponent={
+          <View>
+            {/* header */}
+            <View style={styles.headerWrapper}>
+              <HeaderCustom
+                containerStyle={styles.headerContainer}
+                rightComponent={
+                  <BadgeButton
+                    // onPress={() => navigation.navigate('Notification')}
+                    icon={icons.notification}
+                    iconStyle={styles.icon}
+                    badgeStyle={styles.badgeNotification}
+                  />
+                }
+                leftComponent={
+                  <View>
+                    <Image source={images.logo_02} style={styles.logo} />
+                  </View>
+                }
+              />
+            </View>
+            {/* delivery to */}
+            <DeliveryTo />
+            {/* carousel */}
+            <FlatList
+              ref={carouselRef}
+              data={data.carousel}
+              style={{marginTop: SIZES.padding}}
+              keyExtractor={item => `${item.id}`}
+              horizontal
+              decelerationRate="fast"
+              snapToInterval={SIZES.width - 2 * SIZES.padding + 10}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return <CarouselItem item={item} index={index} />;
+              }}
+            />
+            {/* category */}
+            <Categories />
+            <Break marginVertical={30} />
+            {/* list popular */}
+            <PopularSection data={popular} />
+            <Break marginTop={30} />
+            {/* list recommended */}
+            <RecommendedSection data={popular} />
+            <Break marginTop={30} />
+            <Text style={styles.headlineNearYou}>Gần bạn</Text>
+          </View>
+        }
+        // ListEmptyComponent={<List />}
+        estimatedItemSize={150}
+        data={foodNearYou?.pages.flat()}
+        showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={() => <Break height={2} />}
+        renderItem={({item}) => {
+          return (
+            <HorizontalFoodCard
+              imageStyle={styles.imageCard}
+              onPress={() =>
+                navigation.navigate('DetailFood', {
+                  foodItem: {...item, priceTotal: 0, quantity: 0},
+                })
+              }
+              item={item}
+              containerStyle={styles.horizontalFoodCard}
+            />
+          );
+        }}
+        onEndReached={() => fetchNextPage()}
+        // onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+      />
+    </SafeAreaView>
+  );
+};
 
 const Section: React.FC<SectionProps> = ({title, onPress, children, style}) => {
   return (
@@ -224,149 +392,21 @@ const CarouselItem = memo(
           marginRight: marginRight,
           marginLeft: marginLeft,
         }}>
-        <FastImage
-          source={{uri: item.image}}
-          resizeMode={FastImage.resizeMode.cover}
-          style={styles.carouselImage}
-        />
+        {item.image ? (
+          <FastImage
+            source={{uri: item.image}}
+            resizeMode={FastImage.resizeMode.cover}
+            style={styles.carouselImage}
+          />
+        ) : (
+          <Image
+            source={require('../../assets/images/on_boarding/logo_3.png')}
+          />
+        )}
       </TouchableOpacity>
     );
   },
 );
-
-const HomeScreen = ({navigation}: HomeScreenProp) => {
-  const _enerateArray = useCallback((n: number) => {
-    let data = new Array<FoodObject>(n);
-    for (let i = 0; i < n; i++) {
-      data[i] = {
-        id: nanoid(),
-        name: `Hamburger ${i}`,
-        description: 'Hamburger thịt gà',
-        categories: [1, 2],
-        priceTotal: 0,
-        quantity: 0,
-        price: 15.99,
-        calories: 78,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
-      };
-    }
-    return data;
-  }, []);
-  const [popular, setPopular] = useState<FoodObject[]>(_enerateArray(10));
-
-  const fetchFoodNearYou = async ({pageParam = 1}) => {
-    return await fetchAllFoods(pageParam);
-  };
-
-  const {
-    data: foodNearYou,
-    error,
-    fetchStatus,
-    fetchNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ['food'],
-    queryFn: fetchFoodNearYou,
-    getNextPageParam: (_lastPage, allPage) => {
-      return allPage.length + 1;
-    },
-  });
-
-  if (status === 'error') {
-    console.log(error);
-  }
-
-  const renderFooter = () => {
-    return (
-      <ActivityIndicator
-        style={styles.indicator}
-        size="small"
-        color={COLORS.primary}
-      />
-    );
-  };
-
-  console.log(isFetching);
-
-  return (
-    <SafeAreaView style={[styles.container]}>
-      <FlashList
-        ListHeaderComponent={
-          <View>
-            {/* header */}
-            <View style={styles.headerWrapper}>
-              <HeaderCustom
-                containerStyle={styles.headerContainer}
-                rightComponent={
-                  <BadgeButton
-                    // onPress={() => navigation.navigate('Notification')}
-                    icon={icons.notification}
-                    iconStyle={styles.icon}
-                    badgeStyle={styles.badgeNotification}
-                  />
-                }
-                leftComponent={
-                  <View>
-                    <Image source={images.logo_02} style={styles.logo} />
-                  </View>
-                }
-              />
-            </View>
-            {/* delivery to */}
-            <DeliveryTo />
-            {/* carousel */}
-            <FlatList
-              data={data.carousel}
-              style={{marginTop: SIZES.padding}}
-              keyExtractor={item => `${item.id}`}
-              horizontal
-              decelerationRate="fast"
-              snapToInterval={SIZES.width - 2 * SIZES.padding + 10}
-              showsHorizontalScrollIndicator={false}
-              renderItem={({item, index}) => {
-                return <CarouselItem item={item} index={index} />;
-              }}
-            />
-            {/* category */}
-            <Categories />
-            <Break marginVertical={30} />
-            {/* list popular */}
-            <PopularSection data={popular} />
-            <Break marginTop={30} />
-            {/* list recommended */}
-            <RecommendedSection data={popular} />
-            <Break marginTop={30} />
-            <Text style={styles.headlineNearYou}>Gần bạn</Text>
-          </View>
-        }
-        estimatedItemSize={150}
-        data={foodNearYou?.pages.flat()}
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <Break height={2} />}
-        renderItem={({item}) => {
-          return (
-            <HorizontalFoodCard
-              imageStyle={styles.imageCard}
-              onPress={() =>
-                navigation.navigate('DetailFood', {
-                  foodItem: {...item, priceTotal: 0, quantity: 0},
-                })
-              }
-              item={item}
-              containerStyle={styles.horizontalFoodCard}
-            />
-          );
-        }}
-        onEndReached={() => fetchNextPage()}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-      />
-    </SafeAreaView>
-  );
-};
 
 export default HomeScreen;
 
