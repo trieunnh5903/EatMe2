@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ImageBackground,
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../../config';
@@ -25,12 +26,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Shadow} from 'react-native-shadow-2';
 
-interface InformationFoodProps {
-  setQuantity: React.Dispatch<React.SetStateAction<number>>;
-  quantity: number;
-  item: FoodObject;
-}
-
+const HEADER_MAX_HEIGHT = SIZES.height * 0.3;
+const HEADER_MIN_HEIGHT = 60;
+const AnimatedImageBackGround =
+  Animated.createAnimatedComponent(ImageBackground);
 const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   const {foodItem} = route.params;
   const {cartList} = useAppSelector(state => state.cart);
@@ -74,21 +73,23 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   const animtedStyles = useAnimatedStyle(() => {
     const translateY = interpolate(
       scrollY.value,
-      [-SIZES.height * 0.3, 0, SIZES.height * 0.3],
-      [(-SIZES.height * 0.3) / 2, 0, SIZES.height * 0.3 * 0.75],
+      [0, HEADER_MAX_HEIGHT],
+      [0, HEADER_MAX_HEIGHT * 0.75],
     );
 
-    const scale = interpolate(
-      scrollY.value,
-      [-SIZES.height * 0.3, 0, SIZES.height * 0.3],
-      [2, 1, 0.75],
-    );
+    const scale = interpolate(scrollY.value, [0, HEADER_MAX_HEIGHT], [1, 0.75]);
+
     return {
       transform: [{translateY}, {scale}],
     };
   });
-
   const headerStyle = useAnimatedStyle(() => {
+    const zIndex = interpolate(
+      scrollY.value,
+      [SIZES.height * 0.2, SIZES.height * 0.3],
+      [0, 2],
+      Extrapolate.CLAMP,
+    );
     const opacity = interpolate(
       scrollY.value,
       [SIZES.height * 0.2, SIZES.height * 0.3],
@@ -97,6 +98,7 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
     );
 
     return {
+      zIndex,
       opacity,
     };
   });
@@ -148,12 +150,33 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
         onScroll={onListViewScroll}
         showsVerticalScrollIndicator={false}>
         {/* image */}
-        <View style={{alignItems: 'center'}}>
-          <Animated.Image
+        <View style={styles.imageFoodWrapper}>
+          <AnimatedImageBackGround
+            resizeMode={'cover'}
             style={[styles.imageFood, animtedStyles]}
-            source={{uri: foodItem.image}}
-          />
+            source={{uri: foodItem.image}}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.iconHeaderWrapper}>
+              <Image
+                style={[styles.icon, {tintColor: COLORS.white}]}
+                source={icons.arrow_back}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleToggleFavorite()}
+              style={styles.iconHeaderWrapper}>
+              <Image
+                style={[
+                  styles.icon,
+                  {tintColor: isFavorite ? COLORS.primary : COLORS.white},
+                ]}
+                source={isFavorite ? icons.favourite_fill : icons.favourite}
+              />
+            </TouchableOpacity>
+          </AnimatedImageBackGround>
         </View>
+
         {/* content */}
         <View style={styles.infoFoodWrapper}>
           {/* input quantity */}
@@ -247,9 +270,17 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 2,
-    height: 60,
+    height: HEADER_MIN_HEIGHT,
     backgroundColor: COLORS.white,
+  },
+
+  iconHeaderWrapper: {
+    backgroundColor: COLORS.transparentBlack7,
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   headerContainer: {
@@ -291,7 +322,7 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.radius,
   },
 
-  imageFoodWrapper: {},
+  imageFoodWrapper: {justifyContent: 'center', alignItems: 'center'},
 
   labelFooter: {
     color: COLORS.white,
@@ -378,9 +409,12 @@ const styles = StyleSheet.create({
   },
 
   imageFood: {
-    height: SIZES.height * 0.3,
-    width: '150%',
-    resizeMode: 'cover',
+    height: HEADER_MAX_HEIGHT,
+    width: SIZES.width * 1.3,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingHorizontal: SIZES.width * 0.17,
+    paddingTop: SIZES.spacing,
   },
 
   icon: {
