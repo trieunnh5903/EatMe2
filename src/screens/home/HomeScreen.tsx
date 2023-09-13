@@ -122,7 +122,6 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         index: carouselIndex,
         animated: true,
       });
-      console.log(carouselIndex);
     }, 4000);
 
     return () => clearInterval(timer);

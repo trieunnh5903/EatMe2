@@ -13,7 +13,7 @@ const icons = {
   add: require('../assets/icons/add_FILL0_wght400_GRAD0_opsz48.png'),
   add_wght500: require('../assets/icons/add_FILL0_wght500_GRAD0_opsz48.png'),
   add_wght700: require('../assets/icons/add_FILL0_wght700_GRAD0_opsz48.png'),
-  arrow_back: require('../assets/icons/arrow_back_ios_new_FILL0_wght400_GRAD0_opsz48.png'),
+  arrow_back: require('../assets/icons/arrow_back_FILL0_wght400_GRAD0_opsz40.png'),
   clock: require('../assets/icons/schedule_FILL0_wght600_GRAD0_opsz48.png'),
   dolar: require('../assets/icons/money.png'),
   remove: require('../assets/icons/remove_FILL0_wght400_GRAD0_opsz48.png'),
