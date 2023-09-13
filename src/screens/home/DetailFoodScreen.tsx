@@ -155,11 +155,61 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
           />
         </View>
         {/* content */}
-        <InformationFood
-          item={foodItem}
-          quantity={quantity}
-          setQuantity={setQuantity}
-        />
+        <View style={styles.infoFoodWrapper}>
+          {/* input quantity */}
+          <QuantityInput
+            iconLeft={icons.remove_wght500}
+            iconRight={icons.add_wght500}
+            onAddPress={() => setQuantity(value => value + 1)}
+            onRemovePress={() => {
+              if (quantity > 0) {
+                setQuantity(quantity - 1);
+              }
+            }}
+            labelStyle={styles.quantityLabel}
+            iconContainerStyle={styles.quantityIconContainer}
+            quantity={quantity}
+            iconStyle={styles.quantityIcon}
+            containerStyle={styles.quantityContainer}
+          />
+          {/* title */}
+          <View style={styles.foodTitle}>
+            <View style={{flex: 1}}>
+              <Text style={styles.textTitle}>{foodItem.name}</Text>
+            </View>
+          </View>
+          {/* địa chỉ */}
+          <View>
+            <Text style={styles.textAddress}>
+              142 Ba Đình, P. 10, Quận 8, TP. HCM
+            </Text>
+          </View>
+          <Text style={styles.textPrice}>
+            Giá: {convertToVND(foodItem.price)}
+          </Text>
+          {/* desc */}
+          <TextMore />
+          {/* delivery */}
+          <View style={styles.deliveryWrapper}>
+            <Image source={icons.clock} style={styles.icon} />
+            <Text
+              style={{
+                marginHorizontal: SIZES.radius,
+                color: COLORS.black,
+                ...FONTS.title_medium,
+              }}>
+              Thời gian giao hàng dự kiến:
+              <Text
+                style={{
+                  color: COLORS.gray,
+                  ...FONTS.title_medium,
+                }}>
+                {' '}
+                30 Phút
+              </Text>
+            </Text>
+          </View>
+        </View>
       </Animated.ScrollView>
       {/* footer */}
       <ButtonText
@@ -188,66 +238,6 @@ const TextMore = () => {
     </>
   );
 };
-
-const InformationFood: React.FC<InformationFoodProps> = ({
-  setQuantity,
-  quantity,
-  item,
-}) => (
-  <View style={styles.infoFoodWrapper}>
-    {/* input quantity */}
-    <QuantityInput
-      iconLeft={icons.remove_wght500}
-      iconRight={icons.add_wght500}
-      onAddPress={() => setQuantity(value => value + 1)}
-      onRemovePress={() => {
-        if (quantity > 0) {
-          setQuantity(quantity - 1);
-        }
-      }}
-      labelStyle={styles.quantityLabel}
-      iconContainerStyle={styles.quantityIconContainer}
-      quantity={quantity}
-      iconStyle={styles.quantityIcon}
-      containerStyle={styles.quantityContainer}
-    />
-    {/* title */}
-    <View style={styles.foodTitle}>
-      <View style={{flex: 1}}>
-        <Text style={styles.textTitle}>{item.name}</Text>
-      </View>
-    </View>
-    {/* địa chỉ */}
-    <View>
-      <Text style={styles.textAddress}>
-        142 Ba Đình, P. 10, Quận 8, TP. HCM
-      </Text>
-    </View>
-    <Text style={styles.textPrice}>Giá: {convertToVND(item.price)}</Text>
-    {/* desc */}
-    <TextMore />
-    {/* delivery */}
-    <View style={styles.deliveryWrapper}>
-      <Image source={icons.clock} style={styles.icon} />
-      <Text
-        style={{
-          marginHorizontal: SIZES.radius,
-          color: COLORS.black,
-          ...FONTS.title_medium,
-        }}>
-        Thời gian giao hàng dự kiến:
-        <Text
-          style={{
-            color: COLORS.gray,
-            ...FONTS.title_medium,
-          }}>
-          {' '}
-          30 Phút
-        </Text>
-      </Text>
-    </View>
-  </View>
-);
 
 export default DetailFoodScreen;
 
