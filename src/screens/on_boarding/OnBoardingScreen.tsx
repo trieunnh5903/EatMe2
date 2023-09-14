@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   StyleSheet,
   FlatList,
-  ImageBackground,
   Text,
   View,
 } from 'react-native';
@@ -30,7 +29,6 @@ interface ItemFlatlist {
 }
 
 const OnBoardingScreen = ({navigation}: OnBoardingNavigationProps) => {
-  // const navigation = useNavigation<OnBoardingNavigationProps>();
   const flastListRef = useRef<Animated.FlatList<any> & FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const scrollX = useRef(useSharedValue<number>(0)).current;

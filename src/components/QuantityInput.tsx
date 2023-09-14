@@ -7,12 +7,10 @@ import {
   TextStyle,
   ImageStyle,
   GestureResponderEvent,
-  ImageProps,
   ImageSourcePropType,
 } from 'react-native';
 import React from 'react';
 import ButtonIcon from './button/ButtonIcon';
-import {icons} from '../config';
 
 interface QuantityInputProps {
   containerStyle?: StyleProp<ViewStyle>;

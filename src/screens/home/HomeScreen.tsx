@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   GestureResponderEvent,
   ViewStyle,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import React, {
   ReactNode,
@@ -20,7 +22,6 @@ import React, {
 } from 'react';
 import {icons, COLORS, SIZES, FONTS, images} from '../../config';
 import data from '../../data';
-import {useInfiniteQuery} from '@tanstack/react-query';
 
 import {
   BadgeButton,
@@ -35,7 +36,7 @@ import {useNavigation} from '@react-navigation/native';
 import {FoodArray, FoodObject} from '../types';
 import {HomeScreenNavigationProp, HomeScreenProp} from '../../navigation/types';
 import FastImage from 'react-native-fast-image';
-import {fetchAllFoods} from '../../services/food.service';
+import {useGetAllFood} from '../../services/food.service';
 import {FlashList} from '@shopify/flash-list';
 
 interface SectionProps {
@@ -46,6 +47,7 @@ interface SectionProps {
 }
 
 const HomeScreen = ({navigation}: HomeScreenProp) => {
+  //generate fake data
   const _enerateArray = useCallback((n: number) => {
     let data = new Array<FoodObject>(n);
     for (let i = 0; i < n; i++) {
@@ -64,32 +66,23 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
     }
     return data;
   }, []);
-  const [popular, setPopular] = useState<FoodObject[]>(_enerateArray(10));
+  const [popular, _setPopular] = useState<FoodObject[]>(_enerateArray(10));
 
-  const fetchFoodNearYou = async ({pageParam = 1}) => {
-    return await fetchAllFoods(pageParam);
-  };
-
+  // react query fetch api
   const {
     data: foodNearYou,
     error,
-    fetchStatus,
     fetchNextPage,
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery({
-    queryKey: ['food'],
-    queryFn: fetchFoodNearYou,
-    getNextPageParam: (_lastPage, allPage) => {
-      return allPage.length + 1;
-    },
-  });
+  } = useGetAllFood();
 
   if (status === 'error') {
     console.log(error);
   }
 
+  // footer flashlist
   const renderFooter = () => {
     return (
       isFetching &&
@@ -103,29 +96,38 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
     );
   };
 
-  console.log('isFetching', isFetching);
-
-  //auto scrolling carousel
+  //handle auto scrolling carousel
   const carouselRef = useRef<FlatList>(null);
 
-  let carouselIndex = 0;
+  let carouselIndex = useRef(0);
   const totalIndex = data.carousel.length - 1;
-  let timer: NodeJS.Timeout | undefined = undefined;
-  useEffect(() => {
-    timer = setInterval(() => {
-      carouselIndex++;
-      if (carouselIndex > totalIndex) {
-        carouselIndex = 0;
-      }
 
-      carouselRef.current?.scrollToIndex({
-        index: carouselIndex,
-        animated: true,
-      });
+  useEffect(() => {
+    let timer = setInterval(() => {
+      if (carouselIndex.current < totalIndex) {
+        carouselRef?.current?.scrollToIndex({
+          index: carouselIndex.current + 1,
+          animated: true,
+        });
+      } else {
+        carouselRef?.current?.scrollToIndex({
+          index: 0,
+          animated: true,
+        });
+      }
     }, 4000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [totalIndex]);
+
+  const onCarouselScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollOffset = event.nativeEvent.contentOffset.x;
+    const index = parseInt(
+      (scrollOffset / (SIZES.width - 2 * SIZES.padding)).toString(),
+      10,
+    );
+    carouselIndex.current = index;
+  };
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -155,6 +157,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
             <DeliveryTo />
             {/* carousel */}
             <FlatList
+              onScroll={onCarouselScroll}
               ref={carouselRef}
               data={data.carousel}
               style={{marginTop: SIZES.padding}}
@@ -162,6 +165,21 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
               horizontal
               decelerationRate="fast"
               snapToInterval={SIZES.width - 2 * SIZES.padding + 10}
+              getItemLayout={(_, index) => {
+                let itemWidth;
+                if (index === 0) {
+                  itemWidth = SIZES.width - 2 * SIZES.padding + SIZES.padding;
+                } else if (index === data.carousel.length - 1) {
+                  itemWidth = SIZES.width - 2 * SIZES.padding + 20;
+                } else {
+                  itemWidth = SIZES.width - 2 * SIZES.padding + 10;
+                }
+                return {
+                  length: itemWidth,
+                  offset: itemWidth * index,
+                  index,
+                };
+              }}
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return <CarouselItem item={item} index={index} />;
@@ -199,7 +217,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
           );
         }}
         onEndReached={() => fetchNextPage()}
-        // onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
     </SafeAreaView>
@@ -264,9 +282,8 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends}) => {
               containerStyle={[
                 styles.popularContainer,
                 {
-                  marginLeft: SIZES.padding,
                   marginRight:
-                    index == recommends.length - 1 ? SIZES.padding : 0,
+                    index === recommends.length - 1 ? SIZES.padding : 0,
                 },
               ]}
               imageStyle={styles.popularImage}
@@ -317,7 +334,6 @@ const PopularSection: React.FC<FoodArray> = ({data}) => {
               containerStyle={[
                 styles.popularContainer,
                 {
-                  marginLeft: SIZES.padding,
                   marginRight: index == data.length - 1 ? SIZES.padding : 0,
                 },
               ]}
@@ -363,7 +379,7 @@ const DeliveryTo = () => {
         // onPress={() => navigation.navigate('EnterAddress')}
         style={styles.deliveryTo}>
         <Text style={styles.deliveryAddress}>{data?.myProfile?.address}</Text>
-        <Image source={icons.down_arrow} style={{width: 24, height: 24}} />
+        <Image source={icons.down_arrow} style={styles.icon} />
       </TouchableOpacity>
     </View>
   );
@@ -410,7 +426,7 @@ const CarouselItem = memo(
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  popularContainer: {width: SIZES.width * 0.4},
+  popularContainer: {width: SIZES.width * 0.4, marginLeft: SIZES.padding},
   deliveryAddress: {
     ...FONTS.title_medium,
     color: COLORS.blackText,

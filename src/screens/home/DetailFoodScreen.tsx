@@ -35,7 +35,9 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   const {cartList} = useAppSelector(state => state.cart);
   const favorite = useAppSelector(state => state.user.favorite);
   const dispatch = useAppDispatch();
-  const isFavorite = favorite.some(product => product.id === foodItem.id);
+  const isFavorite = favorite.some(
+    (product: FoodObject) => product.id === foodItem.id,
+  );
   const [quantity, setQuantity] = useState<number>(1);
   const scrollY = useSharedValue(0);
 

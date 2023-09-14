@@ -1,4 +1,3 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomTabNavigatorParamList} from './types';
@@ -13,8 +12,39 @@ import {
 } from '../screens';
 import {FONTS} from '../config';
 import {useAppSelector} from '../utils/hooks';
+import {RouteProp} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator<BottomTabNavigatorParamList>();
+
+const tabBarIcon = ({
+  focused,
+  color,
+  size,
+  route,
+}: {
+  focused: boolean;
+  color: string;
+  size: number;
+  route: RouteProp<
+    BottomTabNavigatorParamList,
+    keyof BottomTabNavigatorParamList
+  >;
+}) => {
+  let iconName: string = 'question';
+
+  if (route.name === 'Home') {
+    iconName = focused ? 'home' : 'home-outline';
+  } else if (route.name === 'Search') {
+    iconName = focused ? 'search' : 'search-outline';
+  } else if (route.name === 'Cart') {
+    iconName = focused ? 'cart' : 'cart-outline';
+  } else if (route.name === 'Favorite') {
+    iconName = focused ? 'heart' : 'heart-outline';
+  } else if (route.name === 'Profile') {
+    iconName = focused ? 'person' : 'person';
+  }
+  return <Ionicons name={iconName} size={size} color={color} />;
+};
 
 const TabNavigator = () => {
   let badge = useAppSelector(state => state.cart.totalProductQuantity);
@@ -24,22 +54,25 @@ const TabNavigator = () => {
         tabBarStyle: {height: 56},
         tabBarIconStyle: {marginTop: 4},
         tabBarLabelStyle: {marginBottom: 4, ...FONTS.label_small},
-        tabBarIcon: ({focused, color, size}) => {
-          let iconName: string = 'question';
+        // tabBarIcon: ({focused, color, size}) => {
+        //   let iconName: string = 'question';
 
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Search') {
-            iconName = focused ? 'search' : 'search-outline';
-          } else if (route.name === 'Cart') {
-            iconName = focused ? 'cart' : 'cart-outline';
-          } else if (route.name === 'Favorite') {
-            iconName = focused ? 'heart' : 'heart-outline';
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person';
-          }
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
+        //   if (route.name === 'Home') {
+        //     iconName = focused ? 'home' : 'home-outline';
+        //   } else if (route.name === 'Search') {
+        //     iconName = focused ? 'search' : 'search-outline';
+        //   } else if (route.name === 'Cart') {
+        //     iconName = focused ? 'cart' : 'cart-outline';
+        //   } else if (route.name === 'Favorite') {
+        //     iconName = focused ? 'heart' : 'heart-outline';
+        //   } else if (route.name === 'Profile') {
+        //     iconName = focused ? 'person' : 'person';
+        //   }
+        //   return <Ionicons name={iconName} size={size} color={color} />;
+        // },
+        // tabBarIcon(focused, color, size)
+        tabBarIcon: ({focused, color, size}) =>
+          tabBarIcon({focused, color, size, route}),
         headerShown: false,
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
@@ -78,5 +111,3 @@ const TabNavigator = () => {
 };
 
 export default TabNavigator;
-
-const styles = StyleSheet.create({});

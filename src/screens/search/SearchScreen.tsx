@@ -11,9 +11,8 @@ import {
   FlatList,
   GestureResponderEvent,
 } from 'react-native';
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../../config';
-import {useNavigation} from '@react-navigation/native';
 import {ButtonText, HorizontalFoodCard, Break} from '../../components';
 import {useQuery} from '@tanstack/react-query';
 import {fetchSearchResults} from '../../services/food.service';
@@ -145,9 +144,9 @@ const SearchScreen = ({navigation}: SreachScreenProp) => {
             ItemSeparatorComponent={() => (
               <Break height={1} marginTop={2 * SIZES.spacing} />
             )}
-            keyExtractor={(item, index) => `${index}`}
+            keyExtractor={(_item, index) => `${index}`}
             showsVerticalScrollIndicator={false}
-            renderItem={({item, index}) => {
+            renderItem={({item}) => {
               return (
                 <HorizontalFoodCard
                   imageStyle={styles.imageCard}

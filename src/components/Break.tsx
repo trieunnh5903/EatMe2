@@ -1,9 +1,9 @@
-import {StyleSheet, Text, View, ViewProps, ViewStyle} from 'react-native';
+import {StyleSheet, View, ViewStyle} from 'react-native';
 import React from 'react';
-import {COLORS, SIZES} from '../config';
+import {SIZES} from '../config';
 
 const Break = (style: ViewStyle) => {
-  return <View style={[styles.line, style]}></View>;
+  return <View style={[styles.line, style]} />;
 };
 
 export default Break;

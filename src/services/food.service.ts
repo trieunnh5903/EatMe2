@@ -1,6 +1,7 @@
+import {useInfiniteQuery} from '@tanstack/react-query';
 import axios from 'axios';
 
-export const fetchAllFoods = async (pageParam: number) => {
+const fetchAllFoods = async ({pageParam = 1}) => {
   try {
     const response = await axios.get(`/products/${pageParam}`);
     return response.data;
@@ -13,6 +14,17 @@ export const fetchAllFoods = async (pageParam: number) => {
       return Promise.reject(new Error('unexpected error'));
     }
   }
+};
+
+export const useGetAllFood = () => {
+  const result = useInfiniteQuery({
+    queryKey: ['food'],
+    queryFn: fetchAllFoods,
+    getNextPageParam: (_lastPage, allPage) => {
+      return allPage.length + 1;
+    },
+  });
+  return result;
 };
 
 export const fetchSearchResults = async (keyword: string) => {

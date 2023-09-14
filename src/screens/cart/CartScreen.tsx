@@ -21,7 +21,7 @@ import {
 } from '../../redux/slice/cart.slice';
 import convertToVND from '../../utils/convertToVND';
 
-const FoodItem = ({data, index}: {data: FoodObject; index: number}) => {
+const FoodItem = ({data}: {data: FoodObject}) => {
   const dispatch = useAppDispatch();
   // xử lí tăng sản phẩm
   const onIncreasePress = useCallback(
@@ -152,9 +152,7 @@ const CartScreen = ({navigation}: CartScreenProp) => {
             keyExtractor={item => {
               return item.id;
             }}
-            renderItem={({item, index}) => (
-              <FoodItem data={item} index={index} />
-            )}
+            renderItem={({item}) => <FoodItem data={item} />}
           />
           {/* nút thanh toán */}
           <View>
