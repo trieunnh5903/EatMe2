@@ -126,6 +126,7 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
               {/* icon */}
               <Image source={icons.search} style={styles.iconSearch} />
               <TextInput
+                style={{width: '85%'}}
                 placeholderTextColor={COLORS.gray}
                 cursorColor={COLORS.gray}
                 placeholder={`Tìm món tại ${foodItem.name}`}
