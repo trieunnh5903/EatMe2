@@ -43,7 +43,7 @@ const FONTS = {
 
   title_large: {
     lineHeight: 28,
-    fontSize: 22,
+    fontSize: 20,
     letterSpacing: 0,
     fontFamily: 'Roboto-Regular',
   },

@@ -3,10 +3,12 @@ import {FoodObject} from '../../screens/types';
 
 interface UserState {
   favorite: FoodObject[];
+  address: {name: string; location: string}[];
 }
 
 const initialState: UserState = {
   favorite: [],
+  address: [],
 };
 const userSlice = createSlice({
   name: 'user',
@@ -23,9 +25,32 @@ const userSlice = createSlice({
         state.favorite.splice(index, 1);
       }
     },
+    addAddress: (
+      state,
+      action: PayloadAction<{name: string; location: string}>,
+    ) => {
+      const index = state.address.findIndex(
+        item => item.name === action.payload.name,
+      );
+      if (index !== -1) {
+        state.address.splice(index, 1, action.payload);
+      }
+    },
+    removeAddress: (
+      state,
+      action: PayloadAction<{name: string; location: string}>,
+    ) => {
+      const index = state.address.findIndex(
+        item => item.name === action.payload.name,
+      );
+      if (index !== -1) {
+        state.address.splice(index, 1);
+      }
+    },
   },
 });
 
-export const {addToFavorite, removeFromFavorite} = userSlice.actions;
+export const {addToFavorite, removeFromFavorite, addAddress, removeAddress} =
+  userSlice.actions;
 
 export default userSlice.reducer;

@@ -12,12 +12,12 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import React, {useState} from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../../config';
-import {ButtonText, HorizontalFoodCard, Break} from '../../components';
+import {COLORS, FONTS, SIZES, icons} from '../config';
+import {ButtonText, HorizontalFoodCard, Break} from '../components';
 import {useQuery} from '@tanstack/react-query';
-import {fetchSearchResults} from '../../services/food.service';
-import data from '../../data';
-import {SreachScreenProp} from '../../navigation/types';
+import {fetchSearchResults} from '../services/food.service';
+import data from '../data';
+import {SreachScreenProp} from '../navigation/types';
 
 interface SearchInputProps {
   keyword?: string;
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 24,
     height: 24,
-    tintColor: COLORS.black,
+    tintColor: COLORS.gray,
   },
   searchInput: {
     ...FONTS.body_medium,

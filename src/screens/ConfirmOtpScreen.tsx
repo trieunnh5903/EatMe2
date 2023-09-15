@@ -6,9 +6,9 @@ import {
   useClearByFocusCell,
   Cursor,
 } from 'react-native-confirmation-code-field';
-import {COLORS, SIZES, FONTS, images} from '../../config';
-import {AuthLayout, ButtonText} from '../../components';
-import {ConfirmOtpNavigationProps} from '../../navigation/types';
+import {COLORS, SIZES, FONTS, images} from '../config';
+import {AuthLayout, ButtonText} from '../components';
+import {ConfirmOtpNavigationProps} from '../navigation/types';
 const CELL_COUNT = 4;
 
 const ConfirmOtpScreen = ({navigation}: ConfirmOtpNavigationProps) => {

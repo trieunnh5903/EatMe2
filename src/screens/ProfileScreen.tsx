@@ -9,8 +9,8 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 import React, {useState} from 'react';
-import data from '../../data';
-import {COLORS, FONTS, SIZES, icons} from '../../config';
+import data from '../data';
+import {COLORS, FONTS, SIZES, icons} from '../config';
 
 interface OptionItemProps {
   icon: ImageSourcePropType;

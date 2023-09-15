@@ -9,14 +9,14 @@ import {
   ImageBackground,
 } from 'react-native';
 import React, {useState} from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../../config';
-import {ButtonText, QuantityInput} from '../../components';
-import {DetailFoodNavigationProps} from '../../navigation/types';
-import {FoodObject} from '../types';
-import {useAppDispatch, useAppSelector} from '../../utils/hooks';
-import {addItem, updateItemQuantity} from '../../redux/slice/cart.slice';
-import {addToFavorite, removeFromFavorite} from '../../redux/slice/user.slice';
-import convertToVND from '../../utils/convertToVND';
+import {COLORS, FONTS, SIZES, icons} from '../config';
+import {ButtonText, QuantityInput} from '../components';
+import {DetailFoodNavigationProps} from '../navigation/types';
+import {FoodObject} from './types';
+import {useAppDispatch, useAppSelector} from '../utils/hooks';
+import {addItem, updateItemQuantity} from '../redux/slice/cart.slice';
+import {addToFavorite, removeFromFavorite} from '../redux/slice/user.slice';
+import convertToVND from '../utils/convertToVND';
 import Animated, {
   Extrapolate,
   interpolate,

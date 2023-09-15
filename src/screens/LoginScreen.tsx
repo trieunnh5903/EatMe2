@@ -7,15 +7,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
-import {SIZES, FONTS, COLORS, icons, images} from '../../config';
-import validate from '../../utils/validate';
+import {SIZES, FONTS, COLORS, icons, images} from '../config';
+import validate from '../utils/validate';
 import {
   AuthLayout,
   ButtonIcon,
   ButtonText,
   TextInputCustom,
-} from '../../components';
-import {LoginNavigationProps} from '../../navigation/types';
+} from '../components';
+import {LoginNavigationProps} from '../navigation/types';
 
 const LoginScreen = ({navigation}: LoginNavigationProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');

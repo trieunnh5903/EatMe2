@@ -1,15 +1,17 @@
-import LoginScreen from './authentication/LoginScreen';
-import OnBoardingScreen from './on_boarding/OnBoardingScreen';
-import RegisterScreen from './authentication/RegisterScreen';
-import ForgotPasswordScreen from './authentication/ForgotPasswordScreen';
-import ConfirmOtpScreen from './authentication/ConfirmOtpScreen';
-import HomeScreen from './home/HomeScreen';
-import DetailFoodScreen from './home/DetailFoodScreen';
-import CartScreen from './cart/CartScreen';
-import ProfileScreen from './profile/ProfileScreen';
-import SearchScreen from './search/SearchScreen';
-import FavoriteScreen from './favorite/FavoriteScreen';
+import LoginScreen from './LoginScreen';
+import OnBoardingScreen from './OnBoardingScreen';
+import RegisterScreen from './RegisterScreen';
+import ForgotPasswordScreen from './ForgotPasswordScreen';
+import ConfirmOtpScreen from './ConfirmOtpScreen';
+import HomeScreen from './HomeScreen';
+import DetailFoodScreen from './DetailFoodScreen';
+import CartScreen from './CartScreen';
+import ProfileScreen from './ProfileScreen';
+import SearchScreen from './SearchScreen';
+import FavoriteScreen from './FavoriteScreen';
+import EnterAddressScreen from './EnterAddressScreen';
 export {
+  EnterAddressScreen,
   SearchScreen,
   FavoriteScreen,
   CartScreen,

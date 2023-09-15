@@ -7,8 +7,8 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
-import {COLORS, FONTS, SIZES, images} from '../../config';
-import data from '../../data';
+import {COLORS, FONTS, SIZES, images} from '../config';
+import data from '../data';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -17,8 +17,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import ButtonText from '../../components/button/ButtonText';
-import {OnBoardingNavigationProps} from '../../navigation/types';
+import ButtonText from '../components/button/ButtonText';
+import {OnBoardingNavigationProps} from '../navigation/types';
 
 interface ItemFlatlist {
   id: number;

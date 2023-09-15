@@ -9,17 +9,17 @@ import {
 } from 'react-native';
 import React, {useCallback} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS, FONTS, SIZES, icons} from '../../config';
-import {HeaderCustom, QuantityInput} from '../../components';
-import {useAppDispatch, useAppSelector} from '../../utils/hooks';
-import {FoodObject} from '../types';
-import {CartScreenProp} from '../../navigation/types';
+import {COLORS, FONTS, SIZES, icons} from '../config';
+import {HeaderCustom, QuantityInput} from '../components';
+import {useAppDispatch, useAppSelector} from '../utils/hooks';
+import {FoodObject} from './types';
+import {CartScreenProp} from '../navigation/types';
 import {
   clearCart,
   removeItem,
   updateItemQuantity,
-} from '../../redux/slice/cart.slice';
-import convertToVND from '../../utils/convertToVND';
+} from '../redux/slice/cart.slice';
+import convertToVND from '../utils/convertToVND';
 
 const FoodItem = ({data}: {data: FoodObject}) => {
   const dispatch = useAppDispatch();
@@ -114,9 +114,7 @@ const CartScreen = ({navigation}: CartScreenProp) => {
       {/* header navigation */}
       <HeaderCustom
         leftComponent={
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.btnBack}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={icons.arrow_back} style={styles.icon} />
           </TouchableOpacity>
         }
@@ -334,8 +332,8 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
     tintColor: COLORS.black,
   },
 
@@ -354,6 +352,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
-    paddingHorizontal: SIZES.radius,
   },
 });

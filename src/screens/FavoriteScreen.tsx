@@ -8,12 +8,12 @@ import {
   SafeAreaView,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../../config';
-import {ButtonIcon, HeaderCustom} from '../../components';
-import {FoodObject} from '../types';
-import {useAppDispatch, useAppSelector} from '../../utils/hooks';
-import {removeFromFavorite} from '../../redux/slice/user.slice';
-import {FavoriteScreenProp} from '../../navigation/types';
+import {COLORS, FONTS, SIZES, icons} from '../config';
+import {ButtonIcon, HeaderCustom} from '../components';
+import {FoodObject} from './types';
+import {useAppDispatch, useAppSelector} from '../utils/hooks';
+import {removeFromFavorite} from '../redux/slice/user.slice';
+import {FavoriteScreenProp} from '../navigation/types';
 
 const Favourite = ({navigation}: FavoriteScreenProp) => {
   const dispatch = useAppDispatch();

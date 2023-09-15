@@ -12,10 +12,10 @@ import {
   ButtonIcon,
   ButtonText,
   TextInputCustom,
-} from '../../components';
-import {COLORS, FONTS, SIZES, icons, images} from '../../config';
-import validate from '../../utils/validate';
-import {RegisterNavigationProps} from '../../navigation/types';
+} from '../components';
+import {COLORS, FONTS, SIZES, icons, images} from '../config';
+import validate from '../utils/validate';
+import {RegisterNavigationProps} from '../navigation/types';
 
 const RegisterScreen = ({navigation}: RegisterNavigationProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');

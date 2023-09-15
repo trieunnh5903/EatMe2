@@ -3,8 +3,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   ConfirmOtpScreen,
   DetailFoodScreen,
+  EnterAddressScreen,
   ForgotPasswordScreen,
-  HomeScreen,
   LoginScreen,
   OnBoardingScreen,
   RegisterScreen,
@@ -16,7 +16,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const MainNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="OnBoarding"
+      initialRouteName="Main"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="OnBoarding" component={OnBoardingScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
@@ -25,6 +25,7 @@ const MainNavigator = () => {
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="Main" component={TabNavigator} />
       <Stack.Screen name="DetailFood" component={DetailFoodScreen} />
+      <Stack.Screen name="EnterAddressScreen" component={EnterAddressScreen} />
     </Stack.Navigator>
   );
 };

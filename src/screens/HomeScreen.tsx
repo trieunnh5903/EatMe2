@@ -20,8 +20,8 @@ import React, {
   useRef,
   memo,
 } from 'react';
-import {icons, COLORS, SIZES, FONTS, images} from '../../config';
-import data from '../../data';
+import {icons, COLORS, SIZES, FONTS, images} from '../config';
+import data from '../data';
 
 import {
   BadgeButton,
@@ -30,13 +30,13 @@ import {
   HeaderCustom,
   HorizontalFoodCard,
   VerticalFoodCard,
-} from '../../components';
+} from '../components';
 import {nanoid} from '@reduxjs/toolkit';
 import {useNavigation} from '@react-navigation/native';
-import {FoodArray, FoodObject} from '../types';
-import {HomeScreenNavigationProp, HomeScreenProp} from '../../navigation/types';
+import {FoodArray, FoodObject} from './types';
+import {HomeScreenNavigationProp, HomeScreenProp} from '../navigation/types';
 import FastImage from 'react-native-fast-image';
-import {useGetAllFood} from '../../services/food.service';
+import {useGetAllFood} from '../services/food.service';
 import {FlashList} from '@shopify/flash-list';
 
 interface SectionProps {
@@ -362,6 +362,7 @@ const PopularSection: React.FC<FoodArray> = ({data}) => {
 };
 
 const DeliveryTo = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   return (
     <View
       style={{
@@ -376,7 +377,7 @@ const DeliveryTo = () => {
       </Text>
 
       <TouchableOpacity
-        // onPress={() => navigation.navigate('EnterAddress')}
+        onPress={() => navigation.navigate('EnterAddressScreen')}
         style={styles.deliveryTo}>
         <Text style={styles.deliveryAddress}>{data?.myProfile?.address}</Text>
         <Image source={icons.down_arrow} style={styles.icon} />
@@ -414,9 +415,7 @@ const CarouselItem = memo(
             style={styles.carouselImage}
           />
         ) : (
-          <Image
-            source={require('../../assets/images/on_boarding/logo_3.png')}
-          />
+          <Image source={images.logo_03} />
         )}
       </TouchableOpacity>
     );

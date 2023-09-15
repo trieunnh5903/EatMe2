@@ -7,15 +7,15 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../../config';
+import {COLORS, FONTS, SIZES, icons} from '../config';
 import {
   AuthLayout,
   ButtonText,
   HeaderCustom,
   TextInputCustom,
-} from '../../components';
-import validate from '../../utils/validate';
-import {ForgotPasswordNavigationProps} from '../../navigation/types';
+} from '../components';
+import validate from '../utils/validate';
+import {ForgotPasswordNavigationProps} from '../navigation/types';
 
 const ForgotPasswordScreen = ({navigation}: ForgotPasswordNavigationProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');
