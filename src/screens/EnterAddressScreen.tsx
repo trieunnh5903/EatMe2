@@ -1,12 +1,14 @@
 import {Image, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
-import React, {useState} from 'react';
-import {COLORS, SIZES, FONTS, icons, images} from '../config';
+import React, {useRef, useState} from 'react';
+import {COLORS, SIZES, FONTS, icons} from '../config';
 import {ButtonText, HeaderCustom} from '../components';
 import {EnterAddressScreenProps} from '../navigation/types';
 import SearchInput from '../components/SearchInput';
 import {FlashList} from '@shopify/flash-list';
 import {useAppSelector} from '../utils/hooks';
-import MapView, {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps';
+import LottieView from 'lottie-react-native';
+import lottie from '../config/lottie';
 
 // interface AddressProps {
 //   name: string;
@@ -17,6 +19,7 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
   const [showGoogleMap, setShowGoogleMap] = useState(false);
   const [keyAddress, setKeyAddress] = useState('');
   const {address} = useAppSelector(state => state.user);
+  const animationRef = useRef<LottieView>(null);
   const [region, setRegion] = useState({
     latitude: 10.8356522,
     longitude: 106.6769978,
@@ -90,17 +93,23 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
           <View style={{flex: 1}}>
             <MapView
               style={{flex: 1}}
-              onRegionChangeComplete={newRegion => setRegion(newRegion)}
+              onRegionChangeComplete={newRegion => {
+                setRegion(newRegion);
+                animationRef.current?.play();
+                console.log(region);
+              }}
               initialRegion={region}
             />
             <View pointerEvents="none" style={styles.iconMarkerWrapper}>
-              <Image
-                source={images.location_pin}
+              <LottieView
+                ref={animationRef}
                 style={{width: 48, height: 48}}
+                source={lottie.location_pin}
+                autoPlay={true}
+                loop={false}
               />
             </View>
           </View>
-
           <View style={{padding: SIZES.padding}}>
             <Text
               style={{
