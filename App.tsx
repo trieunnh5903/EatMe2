@@ -1,4 +1,3 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -8,6 +7,7 @@ import {persistor, store} from './src/redux/store';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import setUpMirage from './miragejs/mirage.server';
 import {PersistGate} from 'redux-persist/integration/react';
+import {enableLatestRenderer} from 'react-native-maps';
 
 if (__DEV__) {
   setUpMirage('development');
@@ -16,6 +16,8 @@ if (__DEV__) {
 const queryClient = new QueryClient({
   defaultOptions: {queries: {staleTime: 60 * 1000}},
 });
+
+enableLatestRenderer();
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -33,5 +35,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-const styles = StyleSheet.create({});
