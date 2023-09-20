@@ -6,11 +6,12 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  FlatList,
   ImageBackground,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
-import {ButtonText, QuantityInput} from '../components';
+import {Break, ButtonText, QuantityInput} from '../components';
 import {DetailFoodNavigationProps} from '../navigation/types';
 import {FoodObject} from './types';
 import {useAppDispatch, useAppSelector} from '../utils/hooks';
@@ -25,21 +26,24 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {Shadow} from 'react-native-shadow-2';
+import {FlashList, ViewToken} from '@shopify/flash-list';
+import {nanoid} from '@reduxjs/toolkit';
+import {Line} from 'react-native-svg';
 
 const HEADER_MAX_HEIGHT = SIZES.height * 0.3;
 const HEADER_MIN_HEIGHT = 60;
-const AnimatedImageBackGround =
-  Animated.createAnimatedComponent(ImageBackground);
 const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
   const {foodItem} = route.params;
   const {cartList} = useAppSelector(state => state.cart);
   const favorite = useAppSelector(state => state.user.favorite);
   const dispatch = useAppDispatch();
+  const [currentFlashListIndex, setCurrentFlashListIndex] = useState(0);
+  const flashListRef = useRef<FlashList<FlastListItemProps>>(null);
+  const menuListRef = useRef<FlatList>(null);
+
   const isFavorite = favorite.some(
     (product: FoodObject) => product.id === foodItem.id,
   );
-  const [quantity, setQuantity] = useState<number>(1);
-  const scrollY = useSharedValue(0);
 
   const handleToggleFavorite = () => {
     if (isFavorite) {
@@ -49,225 +53,437 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
     }
   };
 
-  const onAddToCartPress = (item: FoodObject) => {
-    const existingItem = cartList.find(
-      (itemCart: FoodObject) => itemCart.id === item.id,
-    );
-    if (existingItem) {
-      if (quantity === 1) {
-        dispatch(
-          updateItemQuantity({...item, quantity: existingItem.quantity + 1}),
-        );
-      } else {
-        dispatch(
-          updateItemQuantity({
-            ...item,
-            quantity: existingItem.quantity + quantity,
-          }),
-        );
-      }
-    } else {
-      dispatch(addItem({...item, quantity}));
-    }
-    navigation.goBack();
+  const onMenuListPress = (index: number) => {
+    flashListRef.current?.scrollToIndex({
+      index: index,
+      animated: true,
+    });
+    menuListRef.current?.scrollToIndex({
+      index: index,
+      animated: true,
+    });
   };
 
-  const animtedStyles = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, HEADER_MAX_HEIGHT],
-      [0, HEADER_MAX_HEIGHT * 0.75],
-    );
-
-    const scale = interpolate(scrollY.value, [0, HEADER_MAX_HEIGHT], [1, 0.75]);
-
-    return {
-      transform: [{translateY}, {scale}],
-    };
-  });
-  const headerStyle = useAnimatedStyle(() => {
-    const zIndex = interpolate(
-      scrollY.value,
-      [SIZES.height * 0.2, SIZES.height * 0.3],
-      [0, 2],
-      Extrapolate.CLAMP,
-    );
-    const opacity = interpolate(
-      scrollY.value,
-      [SIZES.height * 0.2, SIZES.height * 0.3],
-      [0, 1],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      zIndex,
-      opacity,
-    };
-  });
-
-  const onListViewScroll = useAnimatedScrollHandler({
-    onScroll: event => {
-      scrollY.value = event.contentOffset.y;
-    },
-  });
-
+  const onViewableItemsChanged = (info: {
+    viewableItems: ViewToken[];
+    changed: ViewToken[];
+  }) => {
+    if (info.viewableItems.length > 1) {
+      // Lấy index của phần tử đầu tiên trong danh sách viewableItems
+      const currentIndex = info.viewableItems[0].index;
+      if (currentIndex !== null) {
+        setCurrentFlashListIndex(currentIndex);
+        menuListRef.current?.scrollToIndex({
+          index: currentIndex,
+          animated: true,
+        });
+      }
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
-      {/* header */}
-      <Animated.View style={[styles.header, headerStyle]}>
-        <Shadow>
-          <View style={styles.headerContainer}>
-            {/* btn back */}
-            <TouchableOpacity
-              style={styles.buttonBackWrapper}
-              onPress={() => navigation.goBack()}>
-              <Image source={icons.arrow_back} style={styles.icon} />
-            </TouchableOpacity>
+      <Shadow style={styles.menuList}>
+        <View style={styles.headerContainer}>
+          {/* btn back */}
+          <TouchableOpacity
+            style={styles.buttonBackWrapper}
+            onPress={() => navigation.goBack()}>
+            <Image source={icons.arrow_back} style={styles.icon} />
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.searchContainer}>
-              {/* icon */}
-              <Image source={icons.search} style={styles.iconSearch} />
-              <TextInput
-                style={{width: '85%'}}
-                placeholderTextColor={COLORS.gray}
-                cursorColor={COLORS.gray}
-                placeholder={`Tìm món tại ${foodItem.name}`}
-              />
-              {/* text input */}
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.searchContainer}>
+            {/* icon */}
+            <Image source={icons.search} style={styles.iconSearch} />
+            <TextInput
+              style={{width: '85%'}}
+              placeholderTextColor={COLORS.gray}
+              cursorColor={COLORS.gray}
+              placeholder={`Tìm món tại ${foodItem.name}`}
+            />
+            {/* text input */}
+          </TouchableOpacity>
 
-            {/* btn favorite */}
-            <TouchableOpacity
-              onPress={() => handleToggleFavorite()}
-              style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
-              <Image
-                source={isFavorite ? icons.favourite_fill : icons.favourite}
-                style={[styles.icon]}
-              />
-            </TouchableOpacity>
-          </View>
-        </Shadow>
-      </Animated.View>
-
-      <Animated.ScrollView
-        onScroll={onListViewScroll}
-        showsVerticalScrollIndicator={false}>
-        {/* image */}
-        <View style={styles.imageFoodWrapper}>
-          <AnimatedImageBackGround
-            resizeMode={'cover'}
-            style={[styles.imageFood, animtedStyles]}
-            source={{uri: foodItem.image}}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.iconHeaderWrapper}>
-              <Image
-                style={[styles.icon, {tintColor: COLORS.white}]}
-                source={icons.arrow_back}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleToggleFavorite()}
-              style={styles.iconHeaderWrapper}>
-              <Image
-                style={[
-                  styles.icon,
-                  {tintColor: isFavorite ? COLORS.primary : COLORS.white},
-                ]}
-                source={isFavorite ? icons.favourite_fill : icons.favourite}
-              />
-            </TouchableOpacity>
-          </AnimatedImageBackGround>
+          {/* btn favorite */}
+          <TouchableOpacity
+            onPress={() => handleToggleFavorite()}
+            style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
+            <Image
+              source={isFavorite ? icons.favourite_fill : icons.favourite}
+              style={[styles.icon]}
+            />
+          </TouchableOpacity>
         </View>
-
-        {/* content */}
-        <View style={styles.infoFoodWrapper}>
-          {/* input quantity */}
-          <QuantityInput
-            iconLeft={icons.remove_wght500}
-            iconRight={icons.add_wght500}
-            onAddPress={() => setQuantity(value => value + 1)}
-            onRemovePress={() => {
-              if (quantity > 0) {
-                setQuantity(quantity - 1);
-              }
-            }}
-            labelStyle={styles.quantityLabel}
-            iconContainerStyle={styles.quantityIconContainer}
-            quantity={quantity}
-            iconStyle={styles.quantityIcon}
-            containerStyle={styles.quantityContainer}
-          />
-          {/* title */}
-          <View style={styles.foodTitle}>
-            <View style={{flex: 1}}>
-              <Text style={styles.textTitle}>{foodItem.name}</Text>
-            </View>
-          </View>
-          {/* địa chỉ */}
-          <View>
-            <Text style={styles.textAddress}>
-              142 Ba Đình, P. 10, Quận 8, TP. HCM
-            </Text>
-          </View>
-          <Text style={styles.textPrice}>
-            Giá: {convertToVND(foodItem.price)}
-          </Text>
-          {/* desc */}
-          <TextMore />
-          {/* delivery */}
-          <View style={styles.deliveryWrapper}>
-            <Image source={icons.clock} style={styles.icon} />
-            <Text
-              style={{
-                marginHorizontal: SIZES.radius,
-                color: COLORS.black,
-                ...FONTS.title_medium,
-              }}>
-              Thời gian giao hàng dự kiến:
-              <Text
-                style={{
-                  color: COLORS.gray,
-                  ...FONTS.title_medium,
-                }}>
-                {' '}
-                30 Phút
-              </Text>
-            </Text>
-          </View>
-        </View>
-      </Animated.ScrollView>
-      {/* footer */}
-      <ButtonText
-        onPress={() => onAddToCartPress(foodItem)}
-        label={'Thêm vào giỏ hàng'}
-        containerStyle={styles.buttonFooter}
-        labelStyle={styles.labelFooter}
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          ref={menuListRef}
+          contentContainerStyle={styles.menuListContentContainer}
+          data={DATA}
+          horizontal
+          renderItem={({item, index}) => {
+            const textColor =
+              currentFlashListIndex === index ? COLORS.white : COLORS.blackText;
+            const backgroundColor =
+              currentFlashListIndex === index ? COLORS.primary : COLORS.white;
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  onMenuListPress(index);
+                }}
+                style={[styles.menuItem, {backgroundColor: backgroundColor}]}
+                key={item.label}>
+                <Text style={[{color: textColor}, FONTS.label_large]}>
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </Shadow>
+      <FlashList
+        onViewableItemsChanged={onViewableItemsChanged}
+        ref={flashListRef}
+        onEndReachedThreshold={0.1}
+        data={DATA}
+        estimatedItemSize={SIZES.width}
+        renderItem={({item}) => <FlastListItem item={item} />}
       />
     </SafeAreaView>
   );
 };
 
-const TextMore = () => {
-  const descText =
-    "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)" +
-    "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).";
+interface FlastListItemProps {
+  label: string;
+  data: {
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+    id: string;
+  }[];
+}
+
+const FlastListItem = ({item: categoryItem}: {item: FlastListItemProps}) => {
+  const lastIndex = categoryItem.data.length - 1;
   return (
-    <>
-      <Text
-        style={{
-          color: COLORS.blackText,
-          ...FONTS.body_large,
-        }}>
-        {descText}
-      </Text>
-    </>
+    <View style={{width: SIZES.width}}>
+      <Text style={styles.categoryWrapper}>{categoryItem.label}</Text>
+      <View>
+        {categoryItem.data.map((item, index) => (
+          <View key={item.id} style={{width: '100%'}}>
+            <View style={styles.foodItemWrapper}>
+              <View style={{flex: 1, justifyContent: 'space-between'}}>
+                <Text style={[{color: COLORS.blackText}, FONTS.title_medium]}>
+                  {item.name}
+                </Text>
+                <Text style={[{color: COLORS.gray}]}>{item.description}</Text>
+                <Text>{convertToVND(item.price)}</Text>
+              </View>
+              <Image
+                source={{uri: item.image}}
+                style={{width: SIZES.width * 0.2, height: SIZES.width * 0.2}}
+              />
+            </View>
+            {index !== lastIndex && <Break height={1} />}
+          </View>
+        ))}
+      </View>
+    </View>
   );
 };
+
+const DATA = [
+  {
+    label: 'Khuyến mãi',
+    data: [
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+    ],
+  },
+  {
+    label: 'Thực đơn',
+    data: [
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+    ],
+  },
+  {
+    label: 'Chọn thêm',
+    data: [
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+    ],
+  },
+  {
+    label: 'Không thể bỏ lở',
+    data: [
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+      {
+        name: 'Bún bò - chả',
+        id: nanoid(),
+        description: 'Bao gồm: hộp, muỗng, đũa mang về',
+        price: 31000,
+        image:
+          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+      },
+    ],
+  },
+];
+
+{
+  /* header */
+}
+//   <Animated.View style={[styles.header, headerStyle]}>
+//   <Shadow>
+//     <View style={styles.headerContainer}>
+//       {/* btn back */}
+//       <TouchableOpacity
+//         style={styles.buttonBackWrapper}
+//         onPress={() => navigation.goBack()}>
+//         <Image source={icons.arrow_back} style={styles.icon} />
+//       </TouchableOpacity>
+
+//       <TouchableOpacity style={styles.searchContainer}>
+//         {/* icon */}
+//         <Image source={icons.search} style={styles.iconSearch} />
+//         <TextInput
+//           style={{width: '85%'}}
+//           placeholderTextColor={COLORS.gray}
+//           cursorColor={COLORS.gray}
+//           placeholder={`Tìm món tại ${foodItem.name}`}
+//         />
+//         {/* text input */}
+//       </TouchableOpacity>
+
+//       {/* btn favorite */}
+//       <TouchableOpacity
+//         onPress={() => handleToggleFavorite()}
+//         style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
+//         <Image
+//           source={isFavorite ? icons.favourite_fill : icons.favourite}
+//           style={[styles.icon]}
+//         />
+//       </TouchableOpacity>
+//     </View>
+//   </Shadow>
+// </Animated.View>
+
+// <Animated.ScrollView
+//   onScroll={onListViewScroll}
+//   showsVerticalScrollIndicator={false}>
+//   {/* image */}
+//   <View style={styles.imageFoodWrapper}>
+//     <AnimatedImageBackGround
+//       resizeMode={'cover'}
+//       style={[styles.imageFood, animtedStyles]}
+//       source={{uri: foodItem.image}}>
+//       <TouchableOpacity
+//         onPress={() => navigation.goBack()}
+//         style={styles.iconHeaderWrapper}>
+//         <Image
+//           style={[styles.icon, {tintColor: COLORS.white}]}
+//           source={icons.arrow_back}
+//         />
+//       </TouchableOpacity>
+//       <TouchableOpacity
+//         onPress={() => handleToggleFavorite()}
+//         style={styles.iconHeaderWrapper}>
+//         <Image
+//           style={[
+//             styles.icon,
+//             {tintColor: isFavorite ? COLORS.primary : COLORS.white},
+//           ]}
+//           source={isFavorite ? icons.favourite_fill : icons.favourite}
+//         />
+//       </TouchableOpacity>
+//     </AnimatedImageBackGround>
+//   </View>
+
+//   {/* content */}
+//   <View style={styles.infoFoodWrapper}>
+//     {/* input quantity */}
+//     <QuantityInput
+//       iconLeft={icons.remove_wght500}
+//       iconRight={icons.add_wght500}
+//       onAddPress={() => setQuantity(value => value + 1)}
+//       onRemovePress={() => {
+//         if (quantity > 0) {
+//           setQuantity(quantity - 1);
+//         }
+//       }}
+//       labelStyle={styles.quantityLabel}
+//       iconContainerStyle={styles.quantityIconContainer}
+//       quantity={quantity}
+//       iconStyle={styles.quantityIcon}
+//       containerStyle={styles.quantityContainer}
+//     />
+//     {/* title */}
+//     <View style={styles.foodTitle}>
+//       <View style={{flex: 1}}>
+//         <Text style={styles.textTitle}>{foodItem.name}</Text>
+//       </View>
+//     </View>
+//     {/* địa chỉ */}
+//     <View>
+//       <Text style={styles.textAddress}>
+//         142 Ba Đình, P. 10, Quận 8, TP. HCM
+//       </Text>
+//     </View>
+//     <Text style={styles.textPrice}>
+//       Giá: {convertToVND(foodItem.price)}
+//     </Text>
+//     {/* desc */}
+//     <TextMore />
+//     {/* delivery */}
+//     <View style={styles.deliveryWrapper}>
+//       <Image source={icons.clock} style={styles.icon} />
+//       <Text
+//         style={{
+//           marginHorizontal: SIZES.radius,
+//           color: COLORS.black,
+//           ...FONTS.title_medium,
+//         }}>
+//         Thời gian giao hàng dự kiến:
+//         <Text
+//           style={{
+//             color: COLORS.gray,
+//             ...FONTS.title_medium,
+//           }}>
+//           {' '}
+//           30 Phút
+//         </Text>
+//       </Text>
+//     </View>
+//   </View>
+// </Animated.ScrollView>
+// {/* footer */}
+// <ButtonText
+//   onPress={() => onAddToCartPress(foodItem)}
+//   label={'Thêm vào giỏ hàng'}
+//   containerStyle={styles.buttonFooter}
+//   labelStyle={styles.labelFooter}
+// />
+
+// const TextMore = () => {
+//   const descText =
+//     "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)" +
+//     "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).";
+//   return (
+//     <>
+//       <Text
+//         style={{
+//           color: COLORS.blackText,
+//           ...FONTS.body_large,
+//         }}>
+//         {descText}
+//       </Text>
+//     </>
+//   );
+// };
 
 export default DetailFoodScreen;
 
 const styles = StyleSheet.create({
+  menuListContentContainer: {
+    paddingLeft: SIZES.spacing,
+    alignItems: 'center',
+    gap: 10,
+    marginVertical: SIZES.radius,
+  },
+  menuItem: {
+    borderRadius: 20,
+    padding: 8,
+  },
+  menuList: {
+    width: SIZES.width,
+  },
+  foodItemWrapper: {flexDirection: 'row', padding: SIZES.padding},
+  categoryWrapper: {
+    color: COLORS.blackText,
+    padding: SIZES.padding,
+    ...FONTS.title_large,
+    fontWeight: 'bold',
+  },
   header: {
     position: 'absolute',
     top: 0,
@@ -287,11 +503,11 @@ const styles = StyleSheet.create({
   },
 
   headerContainer: {
-    height: '100%',
     width: SIZES.width,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginVertical: SIZES.radius,
   },
 
   buttonBackWrapper: {
