@@ -1,5 +1,6 @@
 const icons = {
   close: require('../assets/icons/close.png'),
+  verified: require('../assets/icons/icons8-verified-64.png'),
   card: require('../assets/icons/card.png'),
   zalo_pay: require('../assets/icons/zalo.png'),
   apple_pay: require('../assets/icons/icons8-apple-pay-50.png'),

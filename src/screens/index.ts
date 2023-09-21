@@ -4,15 +4,16 @@ import RegisterScreen from './RegisterScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
 import ConfirmOtpScreen from './ConfirmOtpScreen';
 import HomeScreen from './HomeScreen';
-import DetailFoodScreen from './DetailFoodScreen';
 import CartScreen from './CartScreen';
 import ProfileScreen from './ProfileScreen';
 import SearchScreen from './SearchScreen';
+import DetailShopScreen from './DetailShopScreen';
 import FavoriteScreen from './FavoriteScreen';
 import EnterAddressScreen from './EnterAddressScreen';
 export {
   EnterAddressScreen,
   SearchScreen,
+  DetailShopScreen,
   FavoriteScreen,
   CartScreen,
   ProfileScreen,
@@ -22,5 +23,4 @@ export {
   OnBoardingScreen,
   ForgotPasswordScreen,
   ConfirmOtpScreen,
-  DetailFoodScreen,
 };

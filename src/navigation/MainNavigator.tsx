@@ -2,7 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   ConfirmOtpScreen,
-  DetailFoodScreen,
+  DetailShopScreen,
   EnterAddressScreen,
   ForgotPasswordScreen,
   LoginScreen,
@@ -24,7 +24,7 @@ const MainNavigator = () => {
       <Stack.Screen name="ConfirmOtp" component={ConfirmOtpScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="Main" component={TabNavigator} />
-      <Stack.Screen name="DetailFood" component={DetailFoodScreen} />
+      <Stack.Screen name="DetailShop" component={DetailShopScreen} />
       <Stack.Screen name="EnterAddressScreen" component={EnterAddressScreen} />
     </Stack.Navigator>
   );

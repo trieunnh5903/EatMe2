@@ -151,8 +151,8 @@ const SearchScreen = ({navigation}: SreachScreenProp) => {
                 <HorizontalFoodCard
                   imageStyle={styles.imageCard}
                   onPress={() =>
-                    navigation.navigate('DetailFood', {
-                      foodItem: {...item, priceTotal: 0, quantity: 0},
+                    navigation.navigate('DetailShop', {
+                      foodItem: item,
                     })
                   }
                   item={item}

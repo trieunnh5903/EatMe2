@@ -23,7 +23,10 @@ export type RootStackParamList = {
   DetailFood: {
     foodItem: FoodObject;
   };
-  EnterAddressScreen: undef;
+  DetailShop: {
+    foodItem: FoodObject;
+  };
+  EnterAddressScreen: undefined;
 };
 
 export type BottomTabNavigatorParamList = {
@@ -72,6 +75,11 @@ export type EnterAddressScreenProps = NativeStackScreenProps<
 export type DetailFoodNavigationProps = NativeStackScreenProps<
   RootStackParamList,
   'DetailFood'
+>;
+
+export type DetailShopNavigationProps = NativeStackScreenProps<
+  RootStackParamList,
+  'DetailShop'
 >;
 
 export type LoginNavigationProps = NativeStackScreenProps<

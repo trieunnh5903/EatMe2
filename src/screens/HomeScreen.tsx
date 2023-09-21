@@ -208,8 +208,8 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
             <HorizontalFoodCard
               imageStyle={styles.imageCard}
               onPress={() =>
-                navigation.navigate('DetailFood', {
-                  foodItem: {...item, priceTotal: 0, quantity: 0},
+                navigation.navigate('DetailShop', {
+                  foodItem: item,
                 })
               }
               item={item}
@@ -275,8 +275,8 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends}) => {
           return (
             <VerticalFoodCard
               onPress={() =>
-                navigation.navigate('DetailFood', {
-                  foodItem: {...item, priceTotal: 0, quantity: 0},
+                navigation.navigate('DetailShop', {
+                  foodItem: item,
                 })
               }
               item={item}
@@ -327,8 +327,8 @@ const PopularSection: React.FC<FoodArray> = ({data}) => {
           return (
             <VerticalFoodCard
               onPress={() =>
-                navigation.navigate('DetailFood', {
-                  foodItem: {...item, priceTotal: 0, quantity: 0},
+                navigation.navigate('DetailShop', {
+                  foodItem: item,
                 })
               }
               item={item}

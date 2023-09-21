@@ -31,13 +31,17 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
       {/* image */}
 
       <FastImage
+        resizeMode={FastImage.resizeMode.cover}
         style={[imageStyle, {borderRadius: SIZES.radius}]}
         source={{uri: item.image}}
       />
       {/* info */}
       <View style={styles.info}>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text numberOfLines={2} style={styles.name}>
+          {item.name}
+        </Text>
         <Text
+          numberOfLines={1}
           style={{
             color: COLORS.darkGray2,
             ...FONTS.body_medium,

@@ -7,9 +7,9 @@ import {
   FlatList,
   SafeAreaView,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
-import {ButtonIcon, HeaderCustom} from '../components';
+import {HeaderCustom} from '../components';
 import {FoodObject} from './types';
 import {useAppDispatch, useAppSelector} from '../utils/hooks';
 import {removeFromFavorite} from '../redux/slice/user.slice';
@@ -41,7 +41,7 @@ const Favourite = ({navigation}: FavoriteScreenProp) => {
           {item.description}
         </Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('DetailFood', {foodItem: item})}
+          onPress={() => navigation.navigate('DetailShop', {foodItem: item})}
           style={styles.btnDetail}>
           <Text
             style={{
