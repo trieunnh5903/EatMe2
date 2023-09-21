@@ -61,7 +61,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         price: 20000,
         calories: 78,
         image:
-          'https://images.foody.vn/res/g2/11349/prof/image-3111762a-200910114155.jpeg',
+          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
       };
     }
     return data;
@@ -82,6 +82,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
     console.log(error);
   }
 
+  console.log('isFetching', isFetching);
   // footer flashlist
   const renderFooter = () => {
     return (
@@ -218,8 +219,8 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         }}
         onEndReached={() => fetchNextPage()}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
       />
+      {renderFooter()}
     </SafeAreaView>
   );
 };
@@ -333,9 +334,7 @@ const PopularSection: React.FC<FoodArray> = ({data}) => {
               item={item}
               containerStyle={[
                 styles.popularContainer,
-                {
-                  marginRight: index == data.length - 1 ? SIZES.padding : 0,
-                },
+                {marginRight: index == data.length - 1 ? SIZES.padding : 0},
               ]}
               imageStyle={styles.popularImage}
             />
