@@ -173,6 +173,10 @@ const DetailShopScreen = ({navigation, route}) => {
         onScroll={onListScroll}
         ref={detailMenuRef}
         data={data}
+        viewabilityConfig={{
+          minimumViewTime: 300,
+          itemVisiblePercentThreshold: 50,
+        }}
         onViewableItemsChanged={onViewableItemsChanged.current}
         onEndReachedThreshold={0.2}
         renderItem={({item}) => (
