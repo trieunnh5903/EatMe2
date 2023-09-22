@@ -23,6 +23,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import {addToFavorite, removeFromFavorite} from '../redux/slice/user.slice';
+import {useAppDispatch, useAppSelector} from '../utils/hooks';
 const HEADERHEIGHT = 106;
 const DetailShopScreen = ({navigation, route}) => {
   const {foodItem} = route.params;
@@ -64,7 +66,6 @@ const DetailShopScreen = ({navigation, route}) => {
     );
   };
 
-  console.log('onViewableItemsChanged');
   const onViewableItemsChanged = useRef(({viewableItems, changed}) => {
     const firstItem = viewableItems[0];
     if (firstItem) {
@@ -102,6 +103,17 @@ const DetailShopScreen = ({navigation, route}) => {
     };
   });
 
+  const dispatch = useAppDispatch();
+  const favorite = useAppSelector(state => state.user.favorite);
+  const isFavorite = favorite.some(product => product.id === foodItem.id);
+  const handleToggleFavorite = () => {
+    if (isFavorite) {
+      dispatch(removeFromFavorite(foodItem));
+    } else {
+      dispatch(addToFavorite(foodItem));
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.headerWrapper, headerStyle]}>
@@ -124,9 +136,15 @@ const DetailShopScreen = ({navigation, route}) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              // onPress={() => handleToggleFavorite()}
+              onPress={() => handleToggleFavorite()}
               style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
-              <Image source={icons.favourite} style={[styles.icon]} />
+              <Image
+                source={isFavorite ? icons.favourite_fill : icons.favourite}
+                style={[
+                  styles.icon,
+                  {tintColor: isFavorite ? COLORS.primary : COLORS.black},
+                ]}
+              />
             </TouchableOpacity>
           </View>
           <FlatList
@@ -157,13 +175,25 @@ const DetailShopScreen = ({navigation, route}) => {
         data={data}
         onViewableItemsChanged={onViewableItemsChanged.current}
         onEndReachedThreshold={0.2}
-        renderItem={({item}) => <FlastListItem item={item} />}
+        renderItem={({item}) => (
+          <FlastListItem navigation={navigation} item={item} />
+        )}
       />
     </SafeAreaView>
   );
 };
 
 const RenderHeader = ({foodItem, navigation}) => {
+  const dispatch = useAppDispatch();
+  const favorite = useAppSelector(state => state.user.favorite);
+  const isFavorite = favorite.some(product => product.id === foodItem.id);
+  const handleToggleFavorite = () => {
+    if (isFavorite) {
+      dispatch(removeFromFavorite(foodItem));
+    } else {
+      dispatch(addToFavorite(foodItem));
+    }
+  };
   return (
     <ImageBackground
       style={{height: SIZES.height * 0.3}}
@@ -185,11 +215,14 @@ const RenderHeader = ({foodItem, navigation}) => {
         }
         rightComponent={
           <TouchableOpacity
-            // onPress={() => handleToggleFavorite()}
+            onPress={() => handleToggleFavorite()}
             style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
             <Image
-              source={icons.favourite}
-              style={[styles.icon, {tintColor: COLORS.black}]}
+              source={isFavorite ? icons.favourite_fill : icons.favourite}
+              style={[
+                styles.icon,
+                {tintColor: isFavorite ? COLORS.primary : COLORS.black},
+              ]}
             />
           </TouchableOpacity>
         }
@@ -293,7 +326,7 @@ const ButtonMenu = ({onPress, backgroundColor, textColor, label}) => (
   </TouchableOpacity>
 );
 
-const FlastListItem = ({item: categoryItem}) => {
+const FlastListItem = ({item: categoryItem, navigation}) => {
   const lastIndex = categoryItem.data.length - 1;
   return (
     <View
@@ -304,7 +337,14 @@ const FlastListItem = ({item: categoryItem}) => {
       <Text style={styles.categoryWrapper}>{categoryItem.label}</Text>
       <View>
         {categoryItem.data.map((item, index) => (
-          <View key={item.id} style={{width: '100%'}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('DetailFood', {
+                foodItem: {...item, priceTotal: 0, quantity: 0},
+              });
+            }}
+            key={item.id}
+            style={{width: '100%'}}>
             <View style={styles.foodItemWrapper}>
               <View style={{flex: 1, justifyContent: 'space-between'}}>
                 <Text style={[{color: COLORS.blackText}, FONTS.title_medium]}>
@@ -323,7 +363,7 @@ const FlastListItem = ({item: categoryItem}) => {
               />
             </View>
             {index !== lastIndex && <Break height={1} />}
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </View>

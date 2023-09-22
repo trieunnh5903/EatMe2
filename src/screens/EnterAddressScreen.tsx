@@ -1,7 +1,14 @@
-import {Image, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import React, {useRef, useState} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
-import {ButtonText, HeaderCustom} from '../components';
+import {Break, ButtonText, HeaderCustom} from '../components';
 import {EnterAddressScreenProps} from '../navigation/types';
 import SearchInput from '../components/SearchInput';
 import {FlashList} from '@shopify/flash-list';
@@ -73,6 +80,7 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
             keyExtractor={item => item.name}
             estimatedItemSize={70}
             ListEmptyComponent={<View />}
+            ItemSeparatorComponent={() => <Break height={2} />}
             ListFooterComponent={
               <TouchableOpacity style={styles.listFooter}>
                 <Image source={icons.add_wght700} style={styles.icon} />
@@ -81,8 +89,27 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
             }
             renderItem={({item}) => {
               return (
-                <View>
-                  <Text>{item.name}</Text>
+                <View style={styles.addressItem}>
+                  <Image
+                    style={{width: 30, height: 30}}
+                    source={icons.location}
+                  />
+                  <View style={{marginLeft: SIZES.spacing}}>
+                    <Text
+                      style={{color: COLORS.blackText, ...FONTS.label_large}}
+                      numberOfLines={1}>
+                      {item.name}
+                    </Text>
+                    <Text
+                      style={{
+                        color: COLORS.blackText,
+                        marginTop: SIZES.base,
+                        ...FONTS.body_medium,
+                      }}
+                      numberOfLines={1}>
+                      {item.location}
+                    </Text>
+                  </View>
                 </View>
               );
             }}
@@ -96,7 +123,7 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
               onRegionChangeComplete={newRegion => {
                 setRegion(newRegion);
                 animationRef.current?.play();
-                console.log(region);
+                ToastAndroid.show(region.latitude + '', 5000);
               }}
               initialRegion={region}
             />
@@ -140,6 +167,11 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
 export default EnterAddressScreen;
 
 const styles = StyleSheet.create({
+  addressItem: {
+    paddingVertical: SIZES.spacing,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   iconMarkerWrapper: {
     position: 'absolute',
     top: 0,
@@ -169,7 +201,7 @@ const styles = StyleSheet.create({
   listFooter: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 70,
+    height: 50,
   },
 
   textAdd: {

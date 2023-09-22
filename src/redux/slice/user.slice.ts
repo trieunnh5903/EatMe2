@@ -8,7 +8,12 @@ interface UserState {
 
 const initialState: UserState = {
   favorite: [],
-  address: [],
+  address: [
+    {
+      name: 'Nhà',
+      location: '214/66 Nguyễn Oanh, phường 17, Gò Vấp, Thành phố Hồ Chí Minh',
+    },
+  ],
 };
 const userSlice = createSlice({
   name: 'user',

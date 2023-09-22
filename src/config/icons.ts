@@ -26,7 +26,7 @@ const icons = {
   favourite: require('../assets/icons/favorite_FILL0_wght600_GRAD0_opsz48.png'),
   favourite_fill: require('../assets/icons/favorite_FILL1_wght600_GRAD0_opsz48.png'),
   help_center: require('../assets/icons/help_center.png'),
-  location: require('../assets/icons/location.png'),
+  location: require('../assets/icons/location_on_FILL0_wght400_GRAD0_opsz48.png'),
   logout: require('../assets/icons/logout_FILL0_wght400_GRAD0_opsz48.png'),
   wallet: require('../assets/icons/wallet_FILL0_wght400_GRAD0_opsz48.png'),
   home: require('../assets/icons/home_FILL0_wght600_GRAD0_opsz48.png'),
