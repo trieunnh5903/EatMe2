@@ -9,5 +9,5 @@ export type FoodObject = {
 };
 
 export interface FoodArray {
-  data: FoodObject[];
+  data?: FoodObject[];
 }

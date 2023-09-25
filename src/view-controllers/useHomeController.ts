@@ -15,8 +15,7 @@ const useHomeController = () => {
   const carouselRef = useRef<FlatList>(null);
   let carouselIndex = useRef(0);
   const totalIndex = data.carousel.length - 1;
-  const popularFood = usePopularFoodViewModel();
-
+  const {data: popularFood} = usePopularFoodViewModel();
   const {
     errorFoodNearYou,
     fetchNextPageFoodNearYou,

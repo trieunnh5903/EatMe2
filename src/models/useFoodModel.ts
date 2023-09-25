@@ -1,7 +1,11 @@
 import {nanoid} from '@reduxjs/toolkit';
 import {FoodObject} from '../types/types';
-import {fetchSearchResults, useGetAllFood} from '../services/food.service';
-import {useQuery} from '@tanstack/react-query';
+import {
+  fetchPolpularFood,
+  fetchSearchResults,
+  useGetAllFood,
+} from '../services/food.service';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 
 export const useFoodNearByModel = () => {
   const {
@@ -39,7 +43,14 @@ const _enerateArray = (n: number) => {
 };
 
 export const usePopularFoodModel = () => {
-  return _enerateArray(10);
+  const result = useInfiniteQuery({
+    queryKey: ['food'],
+    queryFn: fetchPolpularFood,
+    getNextPageParam: (_lastPage, allPage) => {
+      return allPage.length + 1;
+    },
+  });
+  return result;
 };
 
 export const useSeachFoodByNameModel = (keyword: string) => {

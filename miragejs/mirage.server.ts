@@ -11,6 +11,12 @@ export default function setUpMirage(environment: string | undefined) {
         return productsData.slice(offset, offset + 20);
       });
 
+      this.get('/products/popular/:page', (_schema, request) => {
+        let page = request.params.page;
+        let offset: number = (Number(page) - 1) * 10;
+        return productsData.slice(offset, offset + 10);
+      });
+
       this.get('/products/search', (_schema, request) => {
         let keywords = request.queryParams.q;
         if (!keywords) {

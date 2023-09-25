@@ -105,10 +105,10 @@ const HomeScreen = () => {
             <Categories />
             <Break marginVertical={30} />
             {/* list popular */}
-            <PopularSection data={popularFood} />
+            <PopularSection data={popularFood?.pages.flat()} />
             <Break marginTop={30} />
             {/* list recommended */}
-            <RecommendedSection data={popularFood} />
+            <RecommendedSection data={popularFood?.pages.flat()} />
             <Break marginTop={30} />
             <Text style={styles.headlineNearYou}>Gần bạn</Text>
           </View>
