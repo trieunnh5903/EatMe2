@@ -5,150 +5,35 @@ import {
   View,
   Image,
   TouchableOpacity,
-  TextInput,
   ImageBackground,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {ButtonText, QuantityInput} from '../components';
 import {DetailFoodNavigationProps} from '../navigation/types';
-import {FoodObject} from './types';
-import {useAppDispatch, useAppSelector} from '../utils/hooks';
-import {addItem, updateItemQuantity} from '../redux/slice/cart.slice';
-import {addToFavorite, removeFromFavorite} from '../redux/slice/user.slice';
 import convertToVND from '../utils/convertToVND';
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
-import {Shadow} from 'react-native-shadow-2';
+import Animated from 'react-native-reanimated';
+import useDetailFoodController from '../view-controllers/useDetailFoodController';
 
 const HEADER_MAX_HEIGHT = SIZES.height * 0.3;
 const HEADER_MIN_HEIGHT = 60;
 const AnimatedImageBackGround =
   Animated.createAnimatedComponent(ImageBackground);
-const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
+const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
   const {foodItem} = route.params;
-  const {cartList} = useAppSelector(state => state.cart);
-  const favorite = useAppSelector(state => state.user.favorite);
-  const dispatch = useAppDispatch();
-  const isFavorite = favorite.some(
-    (product: FoodObject) => product.id === foodItem.id,
-  );
-  const [quantity, setQuantity] = useState<number>(1);
-  const scrollY = useSharedValue(0);
-
-  const handleToggleFavorite = () => {
-    if (isFavorite) {
-      dispatch(removeFromFavorite(foodItem));
-    } else {
-      dispatch(addToFavorite(foodItem));
-    }
-  };
-
-  const onAddToCartPress = (item: FoodObject) => {
-    const existingItem = cartList.find(
-      (itemCart: FoodObject) => itemCart.id === item.id,
-    );
-    if (existingItem) {
-      if (quantity === 1) {
-        dispatch(
-          updateItemQuantity({...item, quantity: existingItem.quantity + 1}),
-        );
-      } else {
-        dispatch(
-          updateItemQuantity({
-            ...item,
-            quantity: existingItem.quantity + quantity,
-          }),
-        );
-      }
-    } else {
-      dispatch(addItem({...item, quantity}));
-    }
-    navigation.goBack();
-  };
-
-  const animtedStyles = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, HEADER_MAX_HEIGHT],
-      [0, HEADER_MAX_HEIGHT * 0.75],
-    );
-
-    const scale = interpolate(scrollY.value, [0, HEADER_MAX_HEIGHT], [1, 0.75]);
-
-    return {
-      transform: [{translateY}, {scale}],
-    };
-  });
-  const headerStyle = useAnimatedStyle(() => {
-    const zIndex = interpolate(
-      scrollY.value,
-      [SIZES.height * 0.2, SIZES.height * 0.3],
-      [0, 2],
-      Extrapolate.CLAMP,
-    );
-    const opacity = interpolate(
-      scrollY.value,
-      [SIZES.height * 0.2, SIZES.height * 0.3],
-      [0, 1],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      zIndex,
-      opacity,
-    };
-  });
-
-  const onListViewScroll = useAnimatedScrollHandler({
-    onScroll: event => {
-      scrollY.value = event.contentOffset.y;
-    },
-  });
+  const {
+    quantity,
+    animtedStyles,
+    onAddPress,
+    onAddToCartPress,
+    onBackPress,
+    onListViewScroll,
+    onRemovePress,
+  } = useDetailFoodController();
 
   return (
     <SafeAreaView style={styles.container}>
       {/* header */}
-      <Animated.View style={[styles.header, headerStyle]}>
-        <Shadow>
-          <View style={styles.headerContainer}>
-            {/* btn back */}
-            <TouchableOpacity
-              style={styles.buttonBackWrapper}
-              onPress={() => navigation.goBack()}>
-              <Image source={icons.arrow_back} style={styles.icon} />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.searchContainer}>
-              {/* icon */}
-              <Image source={icons.search} style={styles.iconSearch} />
-              <TextInput
-                style={{width: '85%'}}
-                placeholderTextColor={COLORS.gray}
-                cursorColor={COLORS.gray}
-                placeholder={`Tìm món tại ${foodItem.name}`}
-              />
-              {/* text input */}
-            </TouchableOpacity>
-
-            {/* btn favorite */}
-            <TouchableOpacity
-              onPress={() => handleToggleFavorite()}
-              style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
-              <Image
-                source={isFavorite ? icons.favourite_fill : icons.favourite}
-                style={[styles.icon]}
-              />
-            </TouchableOpacity>
-          </View>
-        </Shadow>
-      </Animated.View>
-
       <Animated.ScrollView
         onScroll={onListViewScroll}
         showsVerticalScrollIndicator={false}>
@@ -159,22 +44,11 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
             style={[styles.imageFood, animtedStyles]}
             source={{uri: foodItem.image}}>
             <TouchableOpacity
-              onPress={() => navigation.goBack()}
+              onPress={onBackPress}
               style={styles.iconHeaderWrapper}>
               <Image
                 style={[styles.icon, {tintColor: COLORS.white}]}
                 source={icons.arrow_back}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleToggleFavorite()}
-              style={styles.iconHeaderWrapper}>
-              <Image
-                style={[
-                  styles.icon,
-                  {tintColor: isFavorite ? COLORS.primary : COLORS.white},
-                ]}
-                source={isFavorite ? icons.favourite_fill : icons.favourite}
               />
             </TouchableOpacity>
           </AnimatedImageBackGround>
@@ -186,12 +60,8 @@ const DetailFoodScreen = ({navigation, route}: DetailFoodNavigationProps) => {
           <QuantityInput
             iconLeft={icons.remove_wght500}
             iconRight={icons.add_wght500}
-            onAddPress={() => setQuantity(value => value + 1)}
-            onRemovePress={() => {
-              if (quantity > 0) {
-                setQuantity(quantity - 1);
-              }
-            }}
+            onAddPress={onAddPress}
+            onRemovePress={onRemovePress}
             labelStyle={styles.quantityLabel}
             iconContainerStyle={styles.quantityIconContainer}
             quantity={quantity}

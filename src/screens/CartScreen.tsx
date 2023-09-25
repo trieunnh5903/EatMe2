@@ -5,46 +5,17 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert,
 } from 'react-native';
-import React, {useCallback} from 'react';
+import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {HeaderCustom, QuantityInput} from '../components';
-import {useAppDispatch, useAppSelector} from '../utils/hooks';
-import {FoodObject} from './types';
-import {CartScreenProp} from '../navigation/types';
-import {
-  clearCart,
-  removeItem,
-  updateItemQuantity,
-} from '../redux/slice/cart.slice';
 import convertToVND from '../utils/convertToVND';
+import {FoodObject} from '../types/types';
+import useCartController from '../view-controllers/useCartController';
 
 const FoodItem = ({data}: {data: FoodObject}) => {
-  const dispatch = useAppDispatch();
-  // xử lí tăng sản phẩm
-  const onIncreasePress = useCallback(
-    (item: FoodObject, previousQuantity: number) => {
-      const quantity = previousQuantity + 1;
-      dispatch(updateItemQuantity({...item, quantity}));
-    },
-    [dispatch],
-  );
-
-  // xử lí giảm sản phẩm
-  const onDecreasePress = useCallback(
-    (item: FoodObject) => {
-      const {id, quantity} = item;
-      if (quantity > 1) {
-        const newQuantity = quantity - 1;
-        dispatch(updateItemQuantity({...item, quantity: newQuantity}));
-      } else {
-        dispatch(removeItem(id));
-      }
-    },
-    [dispatch],
-  );
+  const {onDecreasePress, onIncreasePress} = useCartController();
   return (
     <View style={styles.itemContainer}>
       {/* image */}
@@ -60,17 +31,19 @@ const FoodItem = ({data}: {data: FoodObject}) => {
           <Text style={styles.itemName}>{data.name}</Text>
         </View>
         <View style={styles.quantityWrapper}>
-          <Text style={styles.totalPrice}>{convertToVND(data.priceTotal)}</Text>
+          <Text style={styles.totalPrice}>
+            {convertToVND(data.priceTotal || 0)}
+          </Text>
           <View style={styles.paymentWrapper}>
             {/* quantity input */}
             <QuantityInput
               iconLeft={icons.remove_wght700}
               iconRight={icons.add_wght700}
-              onAddPress={() => onIncreasePress(data, data.quantity)}
+              onAddPress={() => onIncreasePress(data, data.quantity || 0)}
               onRemovePress={() => onDecreasePress(data)}
               labelStyle={styles.labelQuantityInput}
               iconContainerStyle={styles.iconQuantityInputContainer}
-              quantity={data.quantity}
+              quantity={data.quantity || 0}
               iconStyle={styles.iconQuantityInput}
             />
           </View>
@@ -80,48 +53,30 @@ const FoodItem = ({data}: {data: FoodObject}) => {
   );
 };
 
-const CartScreen = ({navigation}: CartScreenProp) => {
-  const {cartList, totalCartPrice} = useAppSelector(state => state.cart);
-  const dispatch = useAppDispatch();
-  // tổng số lượng sản phẩm
-  const sumQuantityProduct = () => {
-    return cartList.reduce((sum, item) => sum + item.quantity, 0);
-  };
+const CartScreen = () => {
+  const {
+    cartList,
+    onBackPress,
+    onDeleteAllPress,
+    onGoHomePress,
+    sumQuantityProduct,
+    totalCartPrice,
+    onCheckoutPress,
+  } = useCartController();
 
-  // xử lí nút xóa tất cả sản phẩm
-  const onDeleteAll = () => {
-    Alert.alert(
-      'Thông báo',
-      'Bạn muốn xóa tất cả sản phẩm không?',
-      [
-        {
-          text: 'Hủy',
-          style: 'default',
-        },
-        {
-          text: 'Đồng ý',
-          onPress: () => dispatch(clearCart()),
-          style: 'default',
-        },
-      ],
-      {
-        cancelable: false,
-      },
-    );
-  };
   return (
     <SafeAreaView style={styles.container}>
       {/* header navigation */}
       <HeaderCustom
         leftComponent={
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={onBackPress}>
             <Image source={icons.arrow_back} style={styles.icon} />
           </TouchableOpacity>
         }
         rightComponent={
           cartList.length > 0 ? (
             // có sản phẩm
-            <TouchableOpacity onPress={() => onDeleteAll()}>
+            <TouchableOpacity onPress={onDeleteAllPress}>
               <Text
                 style={{
                   color: COLORS.red,
@@ -154,7 +109,9 @@ const CartScreen = ({navigation}: CartScreenProp) => {
           />
           {/* nút thanh toán */}
           <View>
-            <TouchableOpacity style={styles.checkoutButton}>
+            <TouchableOpacity
+              onPress={onCheckoutPress}
+              style={styles.checkoutButton}>
               <Text style={styles.textTitle}>
                 {sumQuantityProduct() || 0} sản phẩm
               </Text>
@@ -179,7 +136,7 @@ const CartScreen = ({navigation}: CartScreenProp) => {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Home')}
+            onPress={onGoHomePress}
             style={styles.buttonStartShopping}>
             <Text style={styles.textTitle}>Mua sắm ngay</Text>
           </TouchableOpacity>

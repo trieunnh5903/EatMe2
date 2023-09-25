@@ -26,7 +26,9 @@ export type RootStackParamList = {
   DetailShop: {
     foodItem: FoodObject;
   };
-  EnterAddressScreen: undefined;
+  EnterAddressScreen: {
+    enableGoogleMap: boolean;
+  };
 };
 
 export type BottomTabNavigatorParamList = {
@@ -47,9 +49,9 @@ export type HomeScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<RootStackParamList>
 >;
 
-export type CartScreenProp = BottomTabScreenProps<
-  BottomTabNavigatorParamList,
-  'Cart'
+export type CartScreenProp = CompositeNavigationProp<
+  BottomTabNavigationProp<BottomTabNavigatorParamList, 'Cart'>,
+  NativeStackNavigationProp<RootStackParamList>
 >;
 
 export type SreachScreenProp = CompositeScreenProps<

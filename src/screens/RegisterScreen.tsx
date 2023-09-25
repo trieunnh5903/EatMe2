@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   AuthLayout,
   ButtonIcon,
@@ -14,33 +14,29 @@ import {
   TextInputCustom,
 } from '../components';
 import {COLORS, FONTS, SIZES, icons, images} from '../config';
-import validate from '../utils/validate';
-import {RegisterNavigationProps} from '../navigation/types';
+import useRegisterController from '../view-controllers/useRegisterController';
 
-const RegisterScreen = ({navigation}: RegisterNavigationProps) => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [phoneNumberError, setPhoneNumberError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [fullName, setFullName] = useState('');
-  const [fullNameError, setFullNameError] = useState('');
-  const isEnableSignIn = () => {
-    return (
-      phoneNumber !== '' &&
-      password !== '' &&
-      passwordError === '' &&
-      phoneNumberError === '' &&
-      fullName !== ''
-    );
-  };
-
-  const onClearPhoneNumberPress = () => {
-    setPhoneNumber('');
-    setPhoneNumberError('');
-  };
+const RegisterScreen = () => {
+  const {
+    fullName,
+    password,
+    onClearPasswordPress,
+    fullNameError,
+    isEnableSignIn,
+    onChangeTextFullName,
+    onChangeTextPassword,
+    onChangeTextPhoneNumber,
+    onClearPhoneNumberPress,
+    onLoginPress,
+    onRegisterPress,
+    onShowPasswordPress,
+    showPassword,
+    passwordError,
+    phoneNumber,
+    phoneNumberError,
+  } = useRegisterController();
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
       <AuthLayout>
         {/* logo */}
         <View style={styles.logoWrapper}>
@@ -65,23 +61,22 @@ const RegisterScreen = ({navigation}: RegisterNavigationProps) => {
                         styles.iconCheck,
                         {
                           tintColor:
-                            phoneNumberError === '' ? COLORS.green : COLORS.red,
+                            phoneNumberError === ''
+                              ? COLORS.green
+                              : COLORS.black,
                         },
                       ]}
                       source={
                         phoneNumberError === ''
                           ? icons.check_circle
-                          : icons.cancel_circle
+                          : icons.close
                       }
                     />
                   </TouchableOpacity>
                 )}
               </View>
             }
-            onChangeText={value => {
-              validate.validatePhoneNumber(value, setPhoneNumberError);
-              setPhoneNumber(value);
-            }}
+            onChangeText={value => onChangeTextPhoneNumber(value)}
             errorMsg={phoneNumberError}
           />
           {/* password */}
@@ -90,17 +85,21 @@ const RegisterScreen = ({navigation}: RegisterNavigationProps) => {
             placeholder={'Mật khẩu'}
             secureTextEntry={!showPassword}
             rightComponent={
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Image
-                  style={[styles.iconCheck, {tintColor: COLORS.gray}]}
-                  source={showPassword ? icons.eye : icons.eye_off}
-                />
-              </TouchableOpacity>
+              <View style={styles.rightTxtPassword}>
+                {password !== '' && passwordError !== '' && (
+                  <TouchableOpacity onPress={onClearPasswordPress}>
+                    <Image style={[styles.iconCheck]} source={icons.close} />
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity onPress={onShowPasswordPress}>
+                  <Image
+                    style={[styles.iconCheck]}
+                    source={showPassword ? icons.eye : icons.eye_off}
+                  />
+                </TouchableOpacity>
+              </View>
             }
-            onChangeText={value => {
-              validate.validatePassword(value, setPasswordError);
-              setPassword(value);
-            }}
+            onChangeText={value => onChangeTextPassword(value)}
             errorMsg={passwordError}
           />
           <TextInputCustom
@@ -114,28 +113,23 @@ const RegisterScreen = ({navigation}: RegisterNavigationProps) => {
                       styles.iconCheck,
                       {
                         tintColor:
-                          fullNameError === '' ? COLORS.green : COLORS.red,
+                          fullNameError === '' ? COLORS.green : COLORS.black,
                       },
                     ]}
                     source={
-                      fullNameError === ''
-                        ? icons.check_circle
-                        : icons.cancel_circle
+                      fullNameError === '' ? icons.check_circle : icons.close
                     }
                   />
                 )}
               </View>
             }
-            onChangeText={value => {
-              validate.validateFullName(value, setFullNameError);
-              setFullName(value);
-            }}
+            onChangeText={value => onChangeTextFullName(value)}
             errorMsg={fullNameError}
           />
 
           <ButtonText
             disabled={!isEnableSignIn()}
-            onPress={() => navigation.navigate('ConfirmOtp')}
+            onPress={onRegisterPress}
             label={'Đăng ký'}
             labelStyle={styles.btnRegisterLabel}
             containerStyle={[
@@ -167,7 +161,7 @@ const RegisterScreen = ({navigation}: RegisterNavigationProps) => {
             color: COLORS.primary,
             ...FONTS.title_medium,
           }}
-          onPress={() => navigation.goBack()}
+          onPress={onLoginPress}
         />
       </AuthLayout>
     </SafeAreaView>
@@ -177,6 +171,12 @@ const RegisterScreen = ({navigation}: RegisterNavigationProps) => {
 export default RegisterScreen;
 
 const styles = StyleSheet.create({
+  rightTxtPassword: {
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+  },
+
   btnGoogle: {
     padding: SIZES.base,
     backgroundColor: COLORS.lightGray2,
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
   iconCheck: {
     width: 20,
     height: 20,
+    tintColor: COLORS.black,
   },
   contentWrapper: {
     marginTop: SIZES.padding * 2,

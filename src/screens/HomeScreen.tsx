@@ -9,17 +9,8 @@ import {
   ActivityIndicator,
   GestureResponderEvent,
   ViewStyle,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from 'react-native';
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-  memo,
-} from 'react';
+import React, {ReactNode, memo} from 'react';
 import {icons, COLORS, SIZES, FONTS, images} from '../config';
 import data from '../data';
 
@@ -31,13 +22,9 @@ import {
   HorizontalFoodCard,
   VerticalFoodCard,
 } from '../components';
-import {nanoid} from '@reduxjs/toolkit';
-import {useNavigation} from '@react-navigation/native';
-import {FoodArray, FoodObject} from './types';
-import {HomeScreenNavigationProp, HomeScreenProp} from '../navigation/types';
-import FastImage from 'react-native-fast-image';
-import {useGetAllFood} from '../services/food.service';
 import {FlashList} from '@shopify/flash-list';
+import useHomeController from '../view-controllers/useHomeController';
+import {FoodArray} from '../types/types';
 
 interface SectionProps {
   title: string;
@@ -46,48 +33,23 @@ interface SectionProps {
   style?: ViewStyle;
 }
 
-const HomeScreen = ({navigation}: HomeScreenProp) => {
-  //generate fake data
-  const _enerateArray = useCallback((n: number) => {
-    let data = new Array<FoodObject>(n);
-    for (let i = 0; i < n; i++) {
-      data[i] = {
-        id: nanoid(),
-        name: `Hamburger ${i}`,
-        description: 'Hamburger thịt gà',
-        categories: [1, 2],
-        priceTotal: 0,
-        quantity: 0,
-        price: 20000,
-        calories: 78,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      };
-    }
-    return data;
-  }, []);
-  const [popular, _setPopular] = useState<FoodObject[]>(_enerateArray(10));
-
-  // react query fetch api
+const HomeScreen = () => {
   const {
-    data: foodNearYou,
-    error,
-    fetchNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-  } = useGetAllFood();
+    fetchNextPageFoodNearYou,
+    foodNearYou,
+    carouselRef,
+    isFetchingFoodNearYou,
+    getItemLayoutCarousel,
+    isFetchingNextPageFoodNearYou,
+    onCarouselScroll,
+    popularFood,
+    onFoodItemPress,
+  } = useHomeController();
 
-  if (status === 'error') {
-    console.log(error);
-  }
-
-  console.log('isFetching', isFetching);
   // footer flashlist
   const renderFooter = () => {
     return (
-      isFetching &&
-      isFetchingNextPage && (
+      (isFetchingFoodNearYou || isFetchingNextPageFoodNearYou) && (
         <ActivityIndicator
           style={styles.indicator}
           size="small"
@@ -95,39 +57,6 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
         />
       )
     );
-  };
-
-  //handle auto scrolling carousel
-  const carouselRef = useRef<FlatList>(null);
-
-  let carouselIndex = useRef(0);
-  const totalIndex = data.carousel.length - 1;
-
-  useEffect(() => {
-    let timer = setInterval(() => {
-      if (carouselIndex.current < totalIndex) {
-        carouselRef?.current?.scrollToIndex({
-          index: carouselIndex.current + 1,
-          animated: true,
-        });
-      } else {
-        carouselRef?.current?.scrollToIndex({
-          index: 0,
-          animated: true,
-        });
-      }
-    }, 4000);
-
-    return () => clearInterval(timer);
-  }, [totalIndex]);
-
-  const onCarouselScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const scrollOffset = event.nativeEvent.contentOffset.x;
-    const index = parseInt(
-      (scrollOffset / (SIZES.width - 2 * SIZES.padding)).toString(),
-      10,
-    );
-    carouselIndex.current = index;
   };
 
   return (
@@ -166,21 +95,7 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
               horizontal
               decelerationRate="fast"
               snapToInterval={SIZES.width - 2 * SIZES.padding + 10}
-              getItemLayout={(_, index) => {
-                let itemWidth;
-                if (index === 0) {
-                  itemWidth = SIZES.width - 2 * SIZES.padding + SIZES.padding;
-                } else if (index === data.carousel.length - 1) {
-                  itemWidth = SIZES.width - 2 * SIZES.padding + 20;
-                } else {
-                  itemWidth = SIZES.width - 2 * SIZES.padding + 10;
-                }
-                return {
-                  length: itemWidth,
-                  offset: itemWidth * index,
-                  index,
-                };
-              }}
+              getItemLayout={(_, index) => getItemLayoutCarousel(index)}
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return <CarouselItem item={item} index={index} />;
@@ -190,10 +105,10 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
             <Categories />
             <Break marginVertical={30} />
             {/* list popular */}
-            <PopularSection data={popular} />
+            <PopularSection data={popularFood} />
             <Break marginTop={30} />
             {/* list recommended */}
-            <RecommendedSection data={popular} />
+            <RecommendedSection data={popularFood} />
             <Break marginTop={30} />
             <Text style={styles.headlineNearYou}>Gần bạn</Text>
           </View>
@@ -207,17 +122,13 @@ const HomeScreen = ({navigation}: HomeScreenProp) => {
           return (
             <HorizontalFoodCard
               imageStyle={styles.imageCard}
-              onPress={() =>
-                navigation.navigate('DetailShop', {
-                  foodItem: item,
-                })
-              }
+              onPress={() => onFoodItemPress(item)}
               item={item}
               containerStyle={styles.horizontalFoodCard}
             />
           );
         }}
-        onEndReached={() => fetchNextPage()}
+        onEndReached={() => fetchNextPageFoodNearYou()}
         onEndReachedThreshold={0.5}
       />
       {renderFooter()}
@@ -246,7 +157,7 @@ const Categories = () => (
     {data.categories.map(item => {
       return (
         <TouchableOpacity key={item.id} style={styles.categoriesItem}>
-          <FastImage source={item.icon} style={styles.categoryImage} />
+          <Image source={item.icon} style={styles.categoryImage} />
           <Text
             style={{
               color: COLORS.blackText,
@@ -261,7 +172,7 @@ const Categories = () => (
 );
 
 const RecommendedSection: React.FC<FoodArray> = ({data: recommends}) => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const {onFoodItemPress} = useHomeController();
   return (
     <Section
       title={'Gợi ý'}
@@ -274,11 +185,7 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends}) => {
         renderItem={({item, index}) => {
           return (
             <VerticalFoodCard
-              onPress={() =>
-                navigation.navigate('DetailShop', {
-                  foodItem: item,
-                })
-              }
+              onPress={() => onFoodItemPress(item)}
               item={item}
               containerStyle={[
                 styles.popularContainer,
@@ -312,7 +219,7 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends}) => {
 };
 
 const PopularSection: React.FC<FoodArray> = ({data}) => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const {onFoodItemPress} = useHomeController();
   return (
     <Section
       style={{marginTop: 0}}
@@ -326,11 +233,7 @@ const PopularSection: React.FC<FoodArray> = ({data}) => {
         renderItem={({item, index}) => {
           return (
             <VerticalFoodCard
-              onPress={() =>
-                navigation.navigate('DetailShop', {
-                  foodItem: item,
-                })
-              }
+              onPress={() => onFoodItemPress(item)}
               item={item}
               containerStyle={[
                 styles.popularContainer,
@@ -361,7 +264,8 @@ const PopularSection: React.FC<FoodArray> = ({data}) => {
 };
 
 const DeliveryTo = () => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const {onEnterAddressPress} = useHomeController();
+
   return (
     <View
       style={{
@@ -376,7 +280,7 @@ const DeliveryTo = () => {
       </Text>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate('EnterAddressScreen')}
+        onPress={() => onEnterAddressPress()}
         style={styles.deliveryTo}>
         <Text style={styles.deliveryAddress}>{data?.myProfile?.address}</Text>
         <Image source={icons.down_arrow} style={styles.icon} />
@@ -408,9 +312,9 @@ const CarouselItem = memo(
           marginLeft: marginLeft,
         }}>
         {item.image ? (
-          <FastImage
+          <Image
             source={{uri: item.image}}
-            resizeMode={FastImage.resizeMode.cover}
+            resizeMode="cover"
             style={styles.carouselImage}
           />
         ) : (

@@ -1,45 +1,29 @@
-import {
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  ToastAndroid,
-  View,
-} from 'react-native';
-import React, {useRef, useState} from 'react';
+import {Image, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
+import React from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
 import {Break, ButtonText, HeaderCustom} from '../components';
 import {EnterAddressScreenProps} from '../navigation/types';
 import SearchInput from '../components/SearchInput';
 import {FlashList} from '@shopify/flash-list';
-import {useAppSelector} from '../utils/hooks';
 import MapView from 'react-native-maps';
 import LottieView from 'lottie-react-native';
 import lottie from '../config/lottie';
+import useEnterAddressController from '../view-controllers/useEnterAddressController';
 
-// interface AddressProps {
-//   name: string;
-//   location: string;
-// }
-
-const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
-  const [showGoogleMap, setShowGoogleMap] = useState(false);
-  const [keyAddress, setKeyAddress] = useState('');
-  const {address} = useAppSelector(state => state.user);
-  const animationRef = useRef<LottieView>(null);
-  const [region, setRegion] = useState({
-    latitude: 10.8356522,
-    longitude: 106.6769978,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
-  });
-  const onBackPress = () => {
-    if (showGoogleMap === false) {
-      return navigation.goBack();
-    } else {
-      setShowGoogleMap(false);
-    }
-  };
+const EnterAddressScreen = ({route}: EnterAddressScreenProps) => {
+  const {enableGoogleMap} = route.params;
+  const {
+    showGoogleMap,
+    onChangeTextKeyword,
+    onRegionChangeComplete,
+    onDeleteKeywordPress,
+    onToggleGoogleMapPress,
+    onBackPress,
+    animationRef,
+    region,
+    address,
+    keyAddress,
+  } = useEnterAddressController(enableGoogleMap);
 
   return (
     <View style={styles.container}>
@@ -51,7 +35,7 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
           </TouchableOpacity>
         }
         rightComponent={
-          <TouchableOpacity onPress={() => setShowGoogleMap(!showGoogleMap)}>
+          <TouchableOpacity onPress={onToggleGoogleMapPress}>
             <Image source={icons.map} style={styles.iconHeader} />
           </TouchableOpacity>
         }
@@ -63,8 +47,8 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
         <View style={{flex: 1, paddingHorizontal: SIZES.spacing}}>
           <SearchInput
             keyword={keyAddress}
-            onDeletePress={() => setKeyAddress('')}
-            onChangeText={value => setKeyAddress(value)}
+            onDeletePress={onDeleteKeywordPress}
+            onChangeText={text => onChangeTextKeyword(text)}
             placeholder="Địa điểm hiện tại của bạn ở đâu"
           />
 
@@ -120,11 +104,9 @@ const EnterAddressScreen = ({navigation}: EnterAddressScreenProps) => {
           <View style={{flex: 1}}>
             <MapView
               style={{flex: 1}}
-              onRegionChangeComplete={newRegion => {
-                setRegion(newRegion);
-                animationRef.current?.play();
-                ToastAndroid.show(region.latitude + '', 5000);
-              }}
+              onRegionChangeComplete={newRegion =>
+                onRegionChangeComplete(newRegion)
+              }
               initialRegion={region}
             />
             <View pointerEvents="none" style={styles.iconMarkerWrapper}>

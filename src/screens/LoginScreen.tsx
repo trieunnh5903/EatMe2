@@ -6,33 +6,35 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {SIZES, FONTS, COLORS, icons, images} from '../config';
-import validate from '../utils/validate';
 import {
   AuthLayout,
   ButtonIcon,
   ButtonText,
   TextInputCustom,
 } from '../components';
-import {LoginNavigationProps} from '../navigation/types';
+import useLoginController from '../view-controllers/useLoginController';
 
-const LoginScreen = ({navigation}: LoginNavigationProps) => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [phoneNumberError, setPhoneNumberError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const isEnableSignIn = () => {
-    return (
-      phoneNumber !== '' &&
-      password !== '' &&
-      passwordError === '' &&
-      phoneNumberError === ''
-    );
-  };
+const LoginScreen = () => {
+  const {
+    onChangeTextPassword,
+    onForgotPasswordPress,
+    onLoginPress,
+    onRegisterPress,
+    onShowPasswordPress,
+    password,
+    onChangeTextPhoneNumber,
+    isEnableSignIn,
+    onClearPasswordPress,
+    passwordError,
+    phoneNumber,
+    phoneNumberError,
+    showPassword,
+    onClearPhoneNumberPress,
+  } = useLoginController();
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
       <AuthLayout>
         {/* logo */}
         <View style={styles.logoWrapper}>
@@ -56,64 +58,43 @@ const LoginScreen = ({navigation}: LoginNavigationProps) => {
             placeholder={'Số điện thoại di động'}
             rightComponent={
               <View>
-                {phoneNumber !== '' &&
-                  (phoneNumberError === '' ? (
-                    <Image
-                      style={[
-                        styles.iconCheck,
-                        {
-                          tintColor: COLORS.green,
-                        },
-                      ]}
-                      source={icons.check_circle}
-                    />
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setPhoneNumber('');
-                        setPhoneNumberError('');
-                      }}>
-                      <Image
-                        style={[
-                          styles.iconCheck,
-                          {
-                            tintColor: COLORS.red,
-                          },
-                        ]}
-                        source={icons.cancel_circle}
-                      />
-                    </TouchableOpacity>
-                  ))}
+                {phoneNumber !== '' && phoneNumberError !== '' && (
+                  <TouchableOpacity onPress={onClearPhoneNumberPress}>
+                    <Image style={[styles.iconCheck]} source={icons.close} />
+                  </TouchableOpacity>
+                )}
               </View>
             }
-            onChangeText={value => {
-              validate.validatePhoneNumber(value, setPhoneNumberError);
-              setPhoneNumber(value);
-            }}
+            onChangeText={text => onChangeTextPhoneNumber(text)}
             errorMsg={phoneNumberError}
           />
           <TextInputCustom
+            value={password}
             containerStyle={{marginTop: phoneNumberError ? 0 : SIZES.radius}}
             placeholder={'Mật khẩu'}
             secureTextEntry={!showPassword}
             rightComponent={
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Image
-                  style={[styles.iconCheck, {tintColor: COLORS.gray}]}
-                  source={showPassword ? icons.eye : icons.eye_off}
-                />
-              </TouchableOpacity>
+              <View style={styles.rightTxtPassword}>
+                {password !== '' && passwordError !== '' && (
+                  <TouchableOpacity onPress={onClearPasswordPress}>
+                    <Image style={[styles.iconCheck]} source={icons.close} />
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity onPress={onShowPasswordPress}>
+                  <Image
+                    style={[styles.iconCheck]}
+                    source={showPassword ? icons.eye : icons.eye_off}
+                  />
+                </TouchableOpacity>
+              </View>
             }
-            onChangeText={value => {
-              validate.validatePassword(value, setPasswordError);
-              setPassword(value);
-            }}
+            onChangeText={value => onChangeTextPassword(value)}
             errorMsg={passwordError}
           />
 
           <TouchableOpacity
             style={{alignSelf: 'flex-start'}}
-            onPress={() => navigation.navigate('ForgotPassword')}>
+            onPress={onForgotPasswordPress}>
             <Text
               style={[
                 {
@@ -129,7 +110,7 @@ const LoginScreen = ({navigation}: LoginNavigationProps) => {
           {/* button group */}
           <ButtonText
             disabled={!isEnableSignIn()}
-            onPress={() => navigation.navigate('ConfirmOtp')}
+            onPress={onLoginPress}
             label={'Đăng nhập'}
             labelStyle={{
               color: COLORS.white,
@@ -175,7 +156,7 @@ const LoginScreen = ({navigation}: LoginNavigationProps) => {
             color: COLORS.primary,
             ...FONTS.title_medium,
           }}
-          onPress={() => navigation.navigate('Register')}
+          onPress={onRegisterPress}
         />
       </AuthLayout>
     </SafeAreaView>
@@ -185,6 +166,12 @@ const LoginScreen = ({navigation}: LoginNavigationProps) => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  rightTxtPassword: {
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+  },
+
   btnGoogle: {
     padding: SIZES.base,
     backgroundColor: COLORS.lightGray2,
@@ -218,6 +205,7 @@ const styles = StyleSheet.create({
   iconCheck: {
     width: 20,
     height: 20,
+    tintColor: COLORS.black,
   },
   contentWrapper: {
     marginTop: SIZES.padding * 2,

@@ -1,133 +1,121 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {
-  CodeField,
-  useBlurOnFulfill,
-  useClearByFocusCell,
-  Cursor,
-} from 'react-native-confirmation-code-field';
+import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {CodeField, Cursor} from 'react-native-confirmation-code-field';
 import {COLORS, SIZES, FONTS, images} from '../config';
 import {AuthLayout, ButtonText} from '../components';
-import {ConfirmOtpNavigationProps} from '../navigation/types';
-const CELL_COUNT = 4;
+import useConfirmOtpController from '../view-controllers/useConfirmOtpController';
 
-const ConfirmOtpScreen = ({navigation}: ConfirmOtpNavigationProps) => {
-  const [value, setValue] = useState('');
-  const [timer, setTimer] = useState(60);
-  useEffect(() => {
-    let interval = setInterval(() => {
-      setTimer(preValue => {
-        if (preValue > 0) {
-          return preValue - 1;
-        }
-        return preValue;
-      });
-      return () => clearInterval(interval);
-    }, 1000);
-  }, []);
-
-  const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
-  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+const ConfirmOtpScreen = () => {
+  const {
+    CELL_COUNT,
+    onChangeTextOtp,
     value,
-    setValue,
-  });
-  const isEnableButton = () => {
-    return value.length === CELL_COUNT;
-  };
-  return (
-    <AuthLayout>
-      {/* logo */}
-      <View style={styles.logoWrapper}>
-        <Image
-          source={images.logo_03}
-          resizeMode="contain"
-          style={styles.logo}
-        />
-      </View>
-      <Text style={styles.headline}>Xác thực OTP</Text>
-      <Text
-        style={{
-          color: COLORS.blackText,
-          ...FONTS.body_large,
-        }}>
-        Mã xác thực đã được gửi tới trieu@gmail.com
-      </Text>
-      {/* otp */}
-      <CodeField
-        ref={ref}
-        {...props}
-        caretHidden={false}
-        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
-        value={value}
-        onChangeText={setValue}
-        cellCount={CELL_COUNT}
-        rootStyle={styles.codeFieldRoot}
-        keyboardType="number-pad"
-        textContentType="oneTimeCode"
-        renderCell={({index, symbol, isFocused}) => (
-          <View
-            key={index}
-            style={[styles.cell, isFocused && styles.focusCell]}
-            onLayout={getCellOnLayoutHandler(index)}>
-            <Text style={styles.textCell}>
-              {symbol || (isFocused ? <Cursor /> : null)}
-            </Text>
-          </View>
-        )}
-      />
+    onResendPress,
+    interval,
+    isEnableButton,
+    onNextPress,
+    props,
+    getCellOnLayoutHandler,
+    ref,
+    timer,
+  } = useConfirmOtpController();
 
-      {/* resend otp */}
-      <View style={styles.text}>
-        <Text style={{color: COLORS.darkGray, ...FONTS.body_large}}>
-          Không nhận được mã?{' '}
-        </Text>
-        <ButtonText
-          label={`Gửi lại (${timer}s)`}
-          disabled={timer === 0 ? false : true}
-          labelStyle={{
-            color: COLORS.primary,
-            ...FONTS.label_large,
-          }}
-          onPress={() => setTimer(60)}
-        />
-      </View>
-      {/* Footer */}
-      <View>
-        <ButtonText
-          disabled={!isEnableButton()}
-          labelStyle={{
-            color: COLORS.white,
-          }}
-          label={'Continue'}
-          containerStyle={[
-            styles.btnContinue,
-            !isEnableButton() && {opacity: 0.5},
-          ]}
-          onPress={() =>
-            navigation.navigate('Main', {
-              screen: 'Home',
-            })
-          }
-        />
-        <View style={styles.policyWrapper}>
-          <Text
-            style={{
-              color: COLORS.darkGray,
-              ...FONTS.body_medium,
-            }}>
-            Bằng cách đăng ký, bạn đồng ý với chúng tôi
-          </Text>
-          <ButtonText
-            label={'Điều khoản và Điều kiện'}
-            labelStyle={{
-              color: COLORS.primary,
-              ...FONTS.title_small,
-            }}
-            onPress={() => console.log('Terms and Conditions')}
+  useEffect(() => {
+    let countDown = interval();
+    return () => clearInterval(countDown);
+  }, [interval]);
+  return (
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
+      <AuthLayout>
+        {/* logo */}
+        <View style={styles.logoWrapper}>
+          <Image
+            source={images.logo_03}
+            resizeMode="contain"
+            style={styles.logo}
           />
         </View>
-      </View>
-    </AuthLayout>
+        <Text style={styles.headline}>Xác thực OTP</Text>
+        <Text
+          style={{
+            color: COLORS.blackText,
+            ...FONTS.body_large,
+          }}>
+          Mã xác thực đã được gửi tới trieu@gmail.com
+        </Text>
+        {/* otp */}
+        <CodeField
+          ref={ref}
+          {...props}
+          caretHidden={false}
+          // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+          value={value}
+          onChangeText={text => onChangeTextOtp(text)}
+          cellCount={CELL_COUNT}
+          rootStyle={styles.codeFieldRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          renderCell={({index, symbol, isFocused}) => (
+            <View
+              key={index}
+              style={[styles.cell, isFocused && styles.focusCell]}
+              onLayout={getCellOnLayoutHandler(index)}>
+              <Text style={styles.textCell}>
+                {symbol || (isFocused ? <Cursor /> : null)}
+              </Text>
+            </View>
+          )}
+        />
+
+        {/* resend otp */}
+        <View style={styles.text}>
+          <Text style={{color: COLORS.darkGray, ...FONTS.body_large}}>
+            Không nhận được mã?{' '}
+          </Text>
+          <ButtonText
+            label={`Gửi lại (${timer}s)`}
+            disabled={timer === 0 ? false : true}
+            labelStyle={{
+              color: COLORS.primary,
+              ...FONTS.label_large,
+            }}
+            onPress={onResendPress}
+          />
+        </View>
+        {/* Footer */}
+        <View>
+          <ButtonText
+            disabled={!isEnableButton()}
+            labelStyle={{
+              color: COLORS.white,
+            }}
+            label={'Tiếp tục'}
+            containerStyle={[
+              styles.btnContinue,
+              !isEnableButton() && {opacity: 0.5},
+            ]}
+            onPress={onNextPress}
+          />
+          <View style={styles.policyWrapper}>
+            <Text
+              style={{
+                color: COLORS.darkGray,
+                ...FONTS.body_medium,
+              }}>
+              Bằng cách đăng ký, bạn đồng ý với chúng tôi
+            </Text>
+            <ButtonText
+              label={'Điều khoản và Điều kiện'}
+              labelStyle={{
+                color: COLORS.primary,
+                ...FONTS.title_small,
+              }}
+              onPress={() => console.log('Terms and Conditions')}
+            />
+          </View>
+        </View>
+      </AuthLayout>
+    </SafeAreaView>
   );
 };
 
@@ -148,8 +136,9 @@ const styles = StyleSheet.create({
   },
   btnContinue: {
     height: 50,
+    marginTop: SIZES.spacing,
     alignItems: 'center',
-    borderRadius: SIZES.radius,
+    borderRadius: SIZES.padding,
     backgroundColor: COLORS.primary,
   },
   policyWrapper: {

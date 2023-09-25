@@ -1,24 +1,15 @@
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  FlatList,
-  Text,
-  View,
-} from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
 import {COLORS, FONTS, SIZES, images} from '../config';
 import data from '../data';
 import Animated, {
   Extrapolate,
   interpolate,
   interpolateColor,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
-  useSharedValue,
 } from 'react-native-reanimated';
 import ButtonText from '../components/button/ButtonText';
-import {OnBoardingNavigationProps} from '../navigation/types';
+import useOnboardingController from '../view-controllers/useOnboardingController';
 
 interface ItemFlatlist {
   id: number;
@@ -28,30 +19,15 @@ interface ItemFlatlist {
   description: string;
 }
 
-const OnBoardingScreen = ({navigation}: OnBoardingNavigationProps) => {
-  const flastListRef = useRef<Animated.FlatList<any> & FlatList>(null);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const scrollX = useRef(useSharedValue<number>(0)).current;
-  const onNextPress = useCallback(() => {
-    let nextIndex = currentIndex + 1;
-    setCurrentIndex(nextIndex);
-    if (flastListRef?.current) {
-      flastListRef?.current.scrollToIndex({index: nextIndex, animated: true});
-    }
-  }, [currentIndex]);
-
-  const onScroll = useAnimatedScrollHandler(event => {
-    scrollX.value = event.contentOffset.x;
-  });
-
-  const handleViewableItemsChanged = useRef(
-    ({viewableItems}: {viewableItems: any}) => {
-      if (viewableItems.length > 0) {
-        const firstVisibleItem = viewableItems[0];
-        setCurrentIndex(firstVisibleItem.index);
-      }
-    },
-  );
+const OnBoardingScreen = () => {
+  const {
+    flastListRef,
+    handleViewableItemsChanged,
+    onNextPress,
+    onScroll,
+    scrollX,
+    onSkipPress,
+  } = useOnboardingController();
 
   // render item image flatlist
   const renderItem = ({item}: {item: ItemFlatlist}) => {
@@ -106,7 +82,7 @@ const OnBoardingScreen = ({navigation}: OnBoardingNavigationProps) => {
         }}>
         <View style={styles.dotContainer}>
           {data.onboarding_screens.map((item, index) => {
-            // <Dot index={index} item={item} />;
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             const reanimatedStyle = useAnimatedStyle(() => {
               const inputRange = [
                 (index - 1) * SIZES.width,
@@ -142,18 +118,12 @@ const OnBoardingScreen = ({navigation}: OnBoardingNavigationProps) => {
       {/* button */}
       <View style={styles.btnSkipContainer}>
         <ButtonText
-          onPress={() => navigation.navigate('Login')}
+          onPress={onSkipPress}
           label={'Bỏ qua'}
           labelStyle={[FONTS.title_medium, {color: COLORS.gray}]}
         />
         <ButtonText
-          onPress={() => {
-            if (currentIndex < 2) {
-              onNextPress();
-            } else {
-              navigation.navigate('Login');
-            }
-          }}
+          onPress={onNextPress}
           label={'Tiếp tục'}
           labelStyle={[FONTS.title_medium, {color: COLORS.white}]}
           containerStyle={styles.btnNextContainer}

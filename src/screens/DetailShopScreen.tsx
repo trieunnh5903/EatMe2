@@ -5,114 +5,62 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  ScrollView,
   TouchableOpacity,
   View,
   ImageBackground,
+  GestureResponderEvent,
+  ColorValue,
 } from 'react-native';
-import React, {useState, useRef, useCallback} from 'react';
+import React from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
-import {nanoid} from '@reduxjs/toolkit';
 import {Shadow} from 'react-native-shadow-2';
 import convertToVND from '../utils/convertToVND';
 import {Break, HeaderCustom, VerticalFoodCard} from '../components';
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
-import {addToFavorite, removeFromFavorite} from '../redux/slice/user.slice';
-import {useAppDispatch, useAppSelector} from '../utils/hooks';
+import Animated from 'react-native-reanimated';
+import {FoodObject} from '../types/types';
+import {DetailShopNavigationProps} from '../navigation/types';
+import useDetailShopController from '../view-controllers/useDetailShopController';
+
+interface HeaderProp {
+  foodItem: FoodObject;
+  handleToggleFavorite: () => void;
+  isFavorite: boolean;
+  onBackPress: (event: GestureResponderEvent) => void;
+}
+interface ButtonMenuProp {
+  onPress: (event: GestureResponderEvent) => void;
+  backgroundColor: ColorValue;
+  textColor: ColorValue;
+  label: string;
+}
+interface ShopItem {
+  label: string;
+  data: {
+    name: string;
+    id: string;
+    description: string;
+    price: number;
+    image: string;
+  }[];
+}
 const HEADERHEIGHT = 106;
-const DetailShopScreen = ({navigation, route}) => {
+const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
   const {foodItem} = route.params;
-  const [data, setData] = useState(DATA);
-  const [highLightList, setHighLightList] = useState(highLightData);
-  const [currentMenuItem, setCurrentMenuItem] = useState(data[0]?.label);
-  const menuListRef = useRef(null);
-  const detailMenuRef = useRef(null);
-  const scrollY = useSharedValue(0);
-  const viewabilityConfigCallbackPairs = useRef([{onViewableItemsChanged}]);
-
-  const onMenuListPress = useCallback((label, index) => {
-    detailMenuRef.current?.scrollToIndex({
-      index: index,
-      animated: true,
-    });
-
-    menuListRef.current?.scrollToIndex({
-      index: index,
-      animated: true,
-    });
-  }, []);
-
-  const renderMenuItem = ({item, index}) => {
-    const textColor =
-      currentMenuItem === item.label ? COLORS.white : COLORS.blackText;
-
-    const backgroundColor =
-      currentMenuItem === item.label ? COLORS.primary : COLORS.white;
-    return (
-      <ButtonMenu
-        backgroundColor={backgroundColor}
-        label={item.label}
-        onPress={() => {
-          onMenuListPress(item.label, index);
-        }}
-        textColor={textColor}
-      />
-    );
-  };
-
-  const onViewableItemsChanged = useRef(({viewableItems, changed}) => {
-    const firstItem = viewableItems[0];
-    if (firstItem) {
-      menuListRef.current?.scrollToIndex({
-        index: firstItem.index,
-        animated: true,
-      });
-      setCurrentMenuItem(firstItem.item.label);
-    }
-  });
-
-  const onListScroll = useAnimatedScrollHandler({
-    onScroll: event => {
-      scrollY.value = event.contentOffset.y;
-    },
-  });
-
-  const headerStyle = useAnimatedStyle(() => {
-    const height = interpolate(
-      scrollY.value,
-      [0, SIZES.height * 0.5],
-      [-HEADERHEIGHT, 0],
-      Extrapolate.CLAMP,
-    );
-    const opacity = interpolate(
-      scrollY.value,
-      [0, SIZES.height * 0.5],
-      [0, 1],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      opacity,
-      marginTop: height,
-    };
-  });
-
-  const dispatch = useAppDispatch();
-  const favorite = useAppSelector(state => state.user.favorite);
-  const isFavorite = favorite.some(product => product.id === foodItem.id);
-  const handleToggleFavorite = () => {
-    if (isFavorite) {
-      dispatch(removeFromFavorite(foodItem));
-    } else {
-      dispatch(addToFavorite(foodItem));
-    }
-  };
+  const {
+    onFoodItemPress,
+    headerStyle,
+    onBackPress,
+    menuListRef,
+    allFood,
+    detailMenuRef,
+    onListScroll,
+    onViewableItemsChanged,
+    onMenuListPress,
+    hightLightFood,
+    currentMenuItem,
+    isFavorite,
+    handleToggleFavorite,
+  } = useDetailShopController(foodItem);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -153,8 +101,26 @@ const DetailShopScreen = ({navigation, route}) => {
             contentContainerStyle={styles.menuListContentContainer}
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.label}
-            data={data}
-            renderItem={renderMenuItem}
+            data={allFood}
+            renderItem={({item, index}) => {
+              const textColor =
+                currentMenuItem === item.label
+                  ? COLORS.white
+                  : COLORS.blackText;
+
+              const backgroundColor =
+                currentMenuItem === item.label ? COLORS.primary : COLORS.white;
+              return (
+                <ButtonMenu
+                  backgroundColor={backgroundColor}
+                  label={item.label}
+                  onPress={() => {
+                    onMenuListPress(index);
+                  }}
+                  textColor={textColor}
+                />
+              );
+            }}
           />
         </Shadow>
       </Animated.View>
@@ -162,17 +128,22 @@ const DetailShopScreen = ({navigation, route}) => {
       <Animated.FlatList
         ListHeaderComponent={
           <View>
-            <RenderHeader navigation={navigation} foodItem={foodItem} />
+            <RenderHeader
+              foodItem={foodItem}
+              handleToggleFavorite={() => handleToggleFavorite()}
+              isFavorite={isFavorite}
+              onBackPress={onBackPress}
+            />
             <RenderInformationFood foodItem={foodItem} />
             <RenderListHighLight
-              highLightList={highLightList}
-              navigation={navigation}
+              highLightList={hightLightFood}
+              onFoodItemPress={onFoodItemPress}
             />
           </View>
         }
         onScroll={onListScroll}
         ref={detailMenuRef}
-        data={data}
+        data={allFood}
         viewabilityConfig={{
           minimumViewTime: 300,
           itemVisiblePercentThreshold: 50,
@@ -180,24 +151,19 @@ const DetailShopScreen = ({navigation, route}) => {
         onViewableItemsChanged={onViewableItemsChanged.current}
         onEndReachedThreshold={0.2}
         renderItem={({item}) => (
-          <FlastListItem navigation={navigation} item={item} />
+          <FlastListItem item={item} onFoodItemPress={onFoodItemPress} />
         )}
       />
     </SafeAreaView>
   );
 };
 
-const RenderHeader = ({foodItem, navigation}) => {
-  const dispatch = useAppDispatch();
-  const favorite = useAppSelector(state => state.user.favorite);
-  const isFavorite = favorite.some(product => product.id === foodItem.id);
-  const handleToggleFavorite = () => {
-    if (isFavorite) {
-      dispatch(removeFromFavorite(foodItem));
-    } else {
-      dispatch(addToFavorite(foodItem));
-    }
-  };
+const RenderHeader: React.FC<HeaderProp> = ({
+  foodItem,
+  handleToggleFavorite,
+  isFavorite,
+  onBackPress,
+}) => {
   return (
     <ImageBackground
       style={{height: SIZES.height * 0.3}}
@@ -210,7 +176,7 @@ const RenderHeader = ({foodItem, navigation}) => {
         leftComponent={
           <TouchableOpacity
             style={styles.buttonNavWrapper}
-            onPress={() => navigation.goBack()}>
+            onPress={onBackPress}>
             <Image
               source={icons.arrow_back}
               style={[styles.icon, {tintColor: COLORS.black}]}
@@ -235,7 +201,7 @@ const RenderHeader = ({foodItem, navigation}) => {
   );
 };
 
-const RenderInformationFood = ({foodItem}) => {
+const RenderInformationFood = ({foodItem}: {foodItem: FoodObject}) => {
   return (
     <View style={{margin: 2 * SIZES.spacing}}>
       {/* thông tin chính */}
@@ -287,7 +253,13 @@ const RenderInformationFood = ({foodItem}) => {
   );
 };
 
-const RenderListHighLight = ({highLightList, navigation}) => {
+const RenderListHighLight = ({
+  highLightList,
+  onFoodItemPress,
+}: {
+  highLightList: FoodObject[];
+  onFoodItemPress: (item: FoodObject) => void;
+}) => {
   return (
     <FlatList
       ListHeaderComponent={
@@ -298,17 +270,15 @@ const RenderListHighLight = ({highLightList, navigation}) => {
         marginHorizontal: 2 * SIZES.spacing,
         gap: 2 * SIZES.spacing,
       }}
-      ItemSeparatorComponent={<View style={{height: 2 * SIZES.spacing}} />}
+      ItemSeparatorComponent={() => (
+        <View style={{height: 2 * SIZES.spacing}} />
+      )}
       data={highLightList}
       keyExtractor={item => item.id}
       renderItem={({item}) => {
         return (
           <VerticalFoodCard
-            onPress={() => {
-              navigation.navigate('DetailFood', {
-                foodItem: {...item, priceTotal: 0, quantity: 0},
-              });
-            }}
+            onPress={() => onFoodItemPress(item)}
             imageStyle={{
               height: (SIZES.width - 6 * SIZES.spacing) / 2,
               width: (SIZES.width - 6 * SIZES.spacing) / 2,
@@ -322,7 +292,12 @@ const RenderListHighLight = ({highLightList, navigation}) => {
   );
 };
 
-const ButtonMenu = ({onPress, backgroundColor, textColor, label}) => (
+const ButtonMenu: React.FC<ButtonMenuProp> = ({
+  onPress,
+  backgroundColor,
+  textColor,
+  label,
+}) => (
   <TouchableOpacity
     onPress={onPress}
     style={[styles.menuItem, {backgroundColor: backgroundColor}]}>
@@ -330,7 +305,13 @@ const ButtonMenu = ({onPress, backgroundColor, textColor, label}) => (
   </TouchableOpacity>
 );
 
-const FlastListItem = ({item: categoryItem, navigation}) => {
+const FlastListItem = ({
+  item: categoryItem,
+  onFoodItemPress,
+}: {
+  item: ShopItem;
+  onFoodItemPress: (item: FoodObject) => void;
+}) => {
   const lastIndex = categoryItem.data.length - 1;
   return (
     <View
@@ -343,9 +324,7 @@ const FlastListItem = ({item: categoryItem, navigation}) => {
         {categoryItem.data.map((item, index) => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('DetailFood', {
-                foodItem: {...item, priceTotal: 0, quantity: 0},
-              });
+              onFoodItemPress(item);
             }}
             key={item.id}
             style={{width: '100%'}}>
@@ -600,228 +579,3 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
 });
-
-const highLightData = [
-  {
-    id: nanoid(),
-    name: 'Zangzang Food - Gà Tươi Ủ Muối Cầu Kỳ',
-    price: 20000,
-    description: '226 Lê Đức Thọ, P. 6, Gò Vấp, TP. HCM',
-    image:
-      'https://images.foody.vn/res/g117/1163373/prof/s460x300/foody-upload-api-foody-mobile-fi-365302c3-230320112903.jpeg',
-    categoryId: 'LEMG',
-    supplierID: 'SBPJ',
-  },
-  {
-    id: nanoid(),
-    name: 'Mì Trộn Park Kim Thang - Phạm Văn Đồng',
-    price: 20000,
-    description: '259 Phạm Văn Đồng, P.1, Gò Vấp, TP. HCM',
-    image:
-      'https://images.foody.vn/res/g108/1076096/prof/s460x300/foody-upload-api-foody-mobile-36-e6f8587b-230729083030.jpeg',
-    supplierID: 'ZYSQ',
-  },
-  {
-    id: nanoid(),
-    name: 'Bún Thịt Nướng Dì 7 & Cơm Tấm, Lẩu - Khu Phố 2A',
-    price: 20000,
-    description:
-      '1779/21/6 Khu Phố 2A, Quốc Lộ 1A, P. Tân Thới Hiệp, Quận 12, TP. HCM',
-    image:
-      'https://images.foody.vn/res/g105/1043305/prof/s480x300/foody-upload-api-foody-mobile-89039049_10754428753-200820145636.jpg',
-    categoryId: 'MGQZ',
-  },
-  {
-    id: nanoid(),
-    name: 'Thành Đạt - Hủ Tiếu Nam Vang - 22C Nguyễn Hữu Cầu',
-    price: 20000,
-    description: 'Thành Đạt - Hủ Tiếu Nam Vang - 22C Nguyễn Hữu Cầu',
-    image:
-      'https://images.foody.vn/res/g112/1114707/prof/s460x300/foody-upload-api-foody-mobile-un-de857048-211105141117.jpeg',
-    categoryId: 'AGGR',
-    supplierID: 'MMCP',
-  },
-];
-
-const DATA = [
-  {
-    label: 'Khuyến mãi',
-    data: [
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-    ],
-  },
-  {
-    label: 'Thực đơn',
-    data: [
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-    ],
-  },
-  {
-    label: 'Chọn thêm',
-    data: [
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-    ],
-  },
-  {
-    label: 'Đồ uống',
-    data: [
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-      {
-        name: 'Bún bò - chả',
-        id: nanoid(),
-        description: 'Bao gồm: hộp, muỗng, đũa mang về',
-        price: 31000,
-        image:
-          'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
-      },
-    ],
-  },
-];

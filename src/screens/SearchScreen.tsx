@@ -11,13 +11,11 @@ import {
   FlatList,
   GestureResponderEvent,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {ButtonText, HorizontalFoodCard, Break} from '../components';
-import {useQuery} from '@tanstack/react-query';
-import {fetchSearchResults} from '../services/food.service';
 import data from '../data';
-import {SreachScreenProp} from '../navigation/types';
+import useSearchController from '../view-controllers/useSearchController';
 
 interface SearchInputProps {
   keyword?: string;
@@ -25,71 +23,22 @@ interface SearchInputProps {
   onDeletePress?: (event: GestureResponderEvent) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({
-  keyword,
-  onChangeText,
-  onDeletePress,
-}) => {
-  return (
-    <View style={styles.searchContainer}>
-      {/* icon */}
-      <Image source={icons.search} style={styles.icon} />
-      {/* text input */}
-      <TextInput
-        value={keyword}
-        onChangeText={onChangeText}
-        cursorColor={COLORS.black}
-        placeholder="Tìm kiếm món ăn"
-        style={styles.searchInput}
-      />
-      {/* filter */}
-      {keyword && (
-        <TouchableOpacity onPress={onDeletePress}>
-          <Image source={icons.close} style={styles.icon} />
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-};
-
-const Chips = ({
-  label,
-  onPress,
-}: {
-  label: string;
-  onPress: (event: GestureResponderEvent) => void;
-}) => (
-  <ButtonText
-    onPress={onPress}
-    label={label}
-    labelStyle={{
-      color: COLORS.gray,
-      ...FONTS.label_large,
-    }}
-    containerStyle={styles.chipContainer}
-  />
-);
-
-const SearchScreen = ({navigation}: SreachScreenProp) => {
-  const [keyword, setKeyword] = useState('');
-
-  const {data: searchResult} = useQuery({
-    queryKey: ['search', keyword],
-    queryFn: async () => {
-      const data = await fetchSearchResults(keyword);
-      return data;
-    },
-    enabled: !!keyword,
-  });
-
+const SearchScreen = () => {
+  const {
+    data: searchResult,
+    keyword,
+    onChangeTextSeach,
+    onDeletePress,
+    onFoodItemPress,
+  } = useSearchController();
   return (
     <SafeAreaView style={styles.container}>
       {/* header */}
       <View style={styles.headerWrapper}>
         <SearchInput
           keyword={keyword}
-          onChangeText={value => setKeyword(value)}
-          onDeletePress={() => setKeyword('')}
+          onChangeText={value => onChangeTextSeach(value)}
+          onDeletePress={onDeletePress}
         />
       </View>
       {/* list */}
@@ -144,17 +93,13 @@ const SearchScreen = ({navigation}: SreachScreenProp) => {
             ItemSeparatorComponent={() => (
               <Break height={1} marginTop={2 * SIZES.spacing} />
             )}
-            keyExtractor={(_item, index) => `${index}`}
+            keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             renderItem={({item}) => {
               return (
                 <HorizontalFoodCard
                   imageStyle={styles.imageCard}
-                  onPress={() =>
-                    navigation.navigate('DetailShop', {
-                      foodItem: item,
-                    })
-                  }
+                  onPress={() => onFoodItemPress(item)}
                   item={item}
                 />
               );
@@ -165,6 +110,51 @@ const SearchScreen = ({navigation}: SreachScreenProp) => {
     </SafeAreaView>
   );
 };
+
+const SearchInput: React.FC<SearchInputProps> = ({
+  keyword,
+  onChangeText,
+  onDeletePress,
+}) => {
+  return (
+    <View style={styles.searchContainer}>
+      {/* icon */}
+      <Image source={icons.search} style={styles.icon} />
+      {/* text input */}
+      <TextInput
+        value={keyword}
+        onChangeText={onChangeText}
+        cursorColor={COLORS.black}
+        placeholder="Tìm kiếm món ăn"
+        style={styles.searchInput}
+      />
+      {/* filter */}
+      {keyword && (
+        <TouchableOpacity onPress={onDeletePress}>
+          <Image source={icons.close} style={styles.icon} />
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+};
+
+const Chips = ({
+  label,
+  onPress,
+}: {
+  label: string;
+  onPress: (event: GestureResponderEvent) => void;
+}) => (
+  <ButtonText
+    onPress={onPress}
+    label={label}
+    labelStyle={{
+      color: COLORS.gray,
+      ...FONTS.label_large,
+    }}
+    containerStyle={styles.chipContainer}
+  />
+);
 
 export default SearchScreen;
 

@@ -62,7 +62,7 @@ const ProfileScreen = () => {
           <View style={{height: SIZES.radius}} />
           <OptionItem icon={icons.wallet} label={'Phương thức thanh toán'} />
           <View style={{height: SIZES.radius}} />
-          <OptionItem icon={icons.address} label={'Địa chỉ'} />
+          <OptionItem icon={icons.location} label={'Địa chỉ'} />
         </View>
         <View style={styles.optionWrapper}>
           <OptionItem icon={icons.policy} label={'Điều khoản và Chính sách'} />

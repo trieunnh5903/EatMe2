@@ -11,8 +11,8 @@ import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import FastImage, {ImageStyle} from 'react-native-fast-image';
 import {Image} from 'react-native';
-import {FoodObject} from '../screens/types';
 import convertToVND from '../utils/convertToVND';
+import {FoodObject} from '../types/types';
 
 interface HorizontalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;

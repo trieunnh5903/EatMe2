@@ -10,60 +10,14 @@ import {
 import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {HeaderCustom} from '../components';
-import {FoodObject} from './types';
-import {useAppDispatch, useAppSelector} from '../utils/hooks';
-import {removeFromFavorite} from '../redux/slice/user.slice';
-import {FavoriteScreenProp} from '../navigation/types';
+import useFavoriteController from '../view-controllers/useFavoriteController';
 
-const Favourite = ({navigation}: FavoriteScreenProp) => {
-  const dispatch = useAppDispatch();
-  const favoriteList = useAppSelector(state => state.user.favorite);
-  const onRemovePress = (itemToRemove: FoodObject) => {
-    dispatch(removeFromFavorite(itemToRemove));
-  };
-  const FoodItem = ({item, index}: {item: FoodObject; index: number}) => (
-    <View style={styles.itemContainer}>
-      {/* image */}
-      <Image
-        style={styles.itemImage}
-        source={{
-          uri: item.image,
-        }}
-      />
-      {/* content */}
-      <View style={{flex: 1}}>
-        <Text style={[FONTS.title_medium, {color: COLORS.blackText}]}>
-          {item.name}
-        </Text>
-        <Text
-          numberOfLines={1}
-          style={[FONTS.body_medium, {color: COLORS.darkGray2}]}>
-          {item.description}
-        </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('DetailShop', {foodItem: item})}
-          style={styles.btnDetail}>
-          <Text
-            style={{
-              color: COLORS.darkGray,
-              ...FONTS.label_medium,
-            }}>
-            Xem chi tiết
-          </Text>
-          <Image
-            source={icons.down_arrow}
-            style={{width: 18, height: 18, tintColor: COLORS.black}}
-          />
-        </TouchableOpacity>
-      </View>
-      {/* btn favourite */}
-      <TouchableOpacity
-        onPress={() => onRemovePress(item)}
-        style={styles.btnFavorite}>
-        <Image source={icons.favourite_fill} style={styles.btnFavoriteRemove} />
-      </TouchableOpacity>
-    </View>
-  );
+const Favourite = () => {
+  const {
+    favoriteList,
+    onFoodItemPress,
+    removeFromFavoriteList: onRemovePress,
+  } = useFavoriteController();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,10 +25,55 @@ const Favourite = ({navigation}: FavoriteScreenProp) => {
       {favoriteList.length ? (
         <FlatList
           data={favoriteList}
-          keyExtractor={(item, index) => `${index}`}
+          keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return <FoodItem item={item} index={index} />;
+          renderItem={({item}) => {
+            return (
+              <View style={styles.itemContainer}>
+                {/* image */}
+                <Image
+                  style={styles.itemImage}
+                  source={{
+                    uri: item.image,
+                  }}
+                />
+                {/* content */}
+                <View style={{flex: 1}}>
+                  <Text style={[FONTS.title_medium, {color: COLORS.blackText}]}>
+                    {item.name}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={[FONTS.body_medium, {color: COLORS.darkGray2}]}>
+                    {item.description}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => onFoodItemPress(item)}
+                    style={styles.btnDetail}>
+                    <Text
+                      style={{
+                        color: COLORS.darkGray,
+                        ...FONTS.label_medium,
+                      }}>
+                      Xem chi tiết
+                    </Text>
+                    <Image
+                      source={icons.down_arrow}
+                      style={{width: 18, height: 18, tintColor: COLORS.black}}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {/* btn favourite */}
+                <TouchableOpacity
+                  onPress={() => onRemovePress(item)}
+                  style={styles.btnFavorite}>
+                  <Image
+                    source={icons.favourite_fill}
+                    style={styles.btnFavoriteRemove}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
           }}
         />
       ) : (
