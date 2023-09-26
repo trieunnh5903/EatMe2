@@ -88,7 +88,11 @@ const styles = StyleSheet.create({
     padding: SIZES.padding,
   },
 
-  image: {width: SIZES.width * 0.3, borderRadius: SIZES.radius},
+  image: {
+    width: SIZES.width * 0.3,
+    height: SIZES.width * 0.3,
+    borderRadius: SIZES.radius,
+  },
 
   line: {
     height: 20,

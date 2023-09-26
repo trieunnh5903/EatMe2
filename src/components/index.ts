@@ -8,7 +8,11 @@ import VerticalFoodCard from './VerticalFoodCard';
 import BadgeButton from './button/BadgeButton';
 import QuantityInput from './QuantityInput';
 import Break from './Break';
+import VerticalFoodCardSkeleton from './skeleton/VerticalFoodCardSkeleton';
+import HorizontalFoodCardSkeleton from './skeleton/HorizontalFoodCardSkeleton';
 export {
+  HorizontalFoodCardSkeleton,
+  VerticalFoodCardSkeleton,
   Break,
   BadgeButton,
   ButtonText,

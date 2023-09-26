@@ -20,7 +20,9 @@ import {
   ButtonIcon,
   HeaderCustom,
   HorizontalFoodCard,
+  HorizontalFoodCardSkeleton,
   VerticalFoodCard,
+  VerticalFoodCardSkeleton,
 } from '../components';
 import {FlashList} from '@shopify/flash-list';
 import useHomeController from '../view-controllers/useHomeController';
@@ -113,7 +115,6 @@ const HomeScreen = () => {
             <Text style={styles.headlineNearYou}>Gần bạn</Text>
           </View>
         }
-        // ListEmptyComponent={<List />}
         estimatedItemSize={150}
         data={foodNearYou?.pages.flat()}
         showsVerticalScrollIndicator={false}
@@ -121,13 +122,22 @@ const HomeScreen = () => {
         renderItem={({item}) => {
           return (
             <HorizontalFoodCard
-              imageStyle={styles.imageCard}
               onPress={() => onFoodItemPress(item)}
               item={item}
               containerStyle={styles.horizontalFoodCard}
             />
           );
         }}
+        ListEmptyComponent={
+          <FlatList
+            data={[...Array(4).keys()]}
+            ListHeaderComponent={<View style={{height: 10}} />}
+            scrollEnabled={false}
+            ItemSeparatorComponent={() => <View style={{height: 10}} />}
+            keyExtractor={item => item.toString()}
+            renderItem={() => <HorizontalFoodCardSkeleton />}
+          />
+        }
         onEndReached={() => fetchNextPageFoodNearYou()}
         onEndReachedThreshold={0.5}
       />
@@ -171,101 +181,130 @@ const Categories = () => (
   </View>
 );
 
-const RecommendedSection: React.FC<FoodArray> = ({data: recommends}) => {
+const RecommendedSection: React.FC<FoodArray> = ({data: recommends = []}) => {
   const {onFoodItemPress} = useHomeController();
   return (
     <Section
       title={'Gợi ý'}
       onPress={() => console.log('show all recommended')}>
-      <FlatList
-        data={recommends}
-        keyExtractor={item => `${item.id}`}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item, index}) => {
-          return (
-            <VerticalFoodCard
-              onPress={() => onFoodItemPress(item)}
-              item={item}
-              containerStyle={[
-                styles.popularContainer,
-                {
-                  marginRight:
-                    index === recommends.length - 1 ? SIZES.padding : 0,
-                },
-              ]}
-              imageStyle={styles.popularImage}
+      {recommends.length > 0 === false ? (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          data={[...Array(4).keys()]}
+          keyExtractor={item => item.toString()}
+          horizontal
+          renderItem={({_item, index}) => (
+            <VerticalFoodCardSkeleton
+              style={{marginRight: index === 3 ? SIZES.padding : 0}}
             />
-          );
-        }}
-        ListFooterComponent={
-          <View style={styles.footerHorizontalListWrapper}>
-            <TouchableOpacity>
-              <ButtonIcon
-                disabled={true}
-                containerStyle={styles.btnWatchAll}
-                iconStyle={{tintColor: COLORS.primary}}
-                icon={icons.chevron_right}
+          )}
+        />
+      ) : (
+        <FlatList
+          data={recommends}
+          keyExtractor={item => `${item.id}`}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item, index}) => {
+            return (
+              <VerticalFoodCard
+                onPress={() => onFoodItemPress(item)}
+                item={item}
+                containerStyle={[
+                  styles.popularContainer,
+                  {
+                    marginRight:
+                      index === recommends.length - 1 ? SIZES.padding : 0,
+                  },
+                ]}
+                imageStyle={styles.popularImage}
               />
-              <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
-                Xem tất cả
-              </Text>
-            </TouchableOpacity>
-          </View>
-        }
-      />
+            );
+          }}
+          ListFooterComponent={
+            <View style={styles.footerHorizontalListWrapper}>
+              <TouchableOpacity>
+                <ButtonIcon
+                  disabled={true}
+                  containerStyle={styles.btnWatchAll}
+                  iconStyle={{tintColor: COLORS.primary}}
+                  icon={icons.chevron_right}
+                />
+                <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
+                  Xem tất cả
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
+        />
+      )}
     </Section>
   );
 };
 
-const PopularSection: React.FC<FoodArray> = ({data}) => {
+const PopularSection: React.FC<FoodArray> = ({data = []}) => {
   const {onFoodItemPress} = useHomeController();
   return (
     <Section
       style={{marginTop: 0}}
       onPress={() => console.log('Popular section')}
       title={'Phổ biến'}>
-      <FlatList
-        data={data}
-        keyExtractor={item => `${item.id}`}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item, index}) => {
-          return (
-            <VerticalFoodCard
-              onPress={() => onFoodItemPress(item)}
-              item={item}
-              containerStyle={[
-                styles.popularContainer,
-                {marginRight: index == data.length - 1 ? SIZES.padding : 0},
-              ]}
-              imageStyle={styles.popularImage}
+      {data.length > 0 === false ? (
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={[...Array(5).keys()]} // Show 5 placeholder loaders
+          keyExtractor={item => item.toString()}
+          renderItem={({_item, index}) => (
+            <VerticalFoodCardSkeleton
+              style={{marginRight: index === 4 ? SIZES.padding : 0}}
             />
-          );
-        }}
-        ListFooterComponent={
-          <View style={styles.footerHorizontalListWrapper}>
-            <TouchableOpacity>
-              <ButtonIcon
-                disabled={true}
-                containerStyle={styles.btnWatchAll}
-                iconStyle={{tintColor: COLORS.primary}}
-                icon={icons.chevron_right}
+          )}
+        />
+      ) : (
+        <FlatList
+          data={data}
+          keyExtractor={item => `${item.id}`}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item, index}) => {
+            return (
+              <VerticalFoodCard
+                onPress={() => onFoodItemPress(item)}
+                item={item}
+                containerStyle={[
+                  styles.popularContainer,
+                  {
+                    marginRight: index === data.length - 1 ? SIZES.padding : 0,
+                  },
+                ]}
+                imageStyle={styles.popularImage}
               />
-              <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
-                Xem tất cả
-              </Text>
-            </TouchableOpacity>
-          </View>
-        }
-      />
+            );
+          }}
+          ListFooterComponent={
+            <View style={styles.footerHorizontalListWrapper}>
+              <TouchableOpacity>
+                <ButtonIcon
+                  disabled={true}
+                  containerStyle={styles.btnWatchAll}
+                  iconStyle={{tintColor: COLORS.primary}}
+                  icon={icons.chevron_right}
+                />
+                <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
+                  Xem tất cả
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
+        />
+      )}
     </Section>
   );
 };
 
 const DeliveryTo = () => {
   const {onEnterAddressPress} = useHomeController();
-
   return (
     <View
       style={{
@@ -452,11 +491,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-
-  imageCard: {
-    width: 110,
-    height: 110,
   },
 
   horizontalFoodCard: {
