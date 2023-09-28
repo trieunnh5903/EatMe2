@@ -19,11 +19,7 @@ const useEnterAddressController = (enableGoogleMap: boolean) => {
     longitudeDelta: 0.005,
   });
   const onBackPress = () => {
-    if (showGoogleMap === false) {
-      return navigation.goBack();
-    } else {
-      setShowGoogleMap(false);
-    }
+    return navigation.goBack();
   };
 
   const onToggleGoogleMapPress = () => setShowGoogleMap(!showGoogleMap);

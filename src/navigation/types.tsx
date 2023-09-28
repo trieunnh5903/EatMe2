@@ -2,7 +2,6 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {FoodObject} from '../screens/types';
 import {
   CompositeNavigationProp,
   CompositeScreenProps,
@@ -12,6 +11,7 @@ import {
   BottomTabNavigationProp,
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
+import {FoodObject} from '../types/types';
 
 export type RootStackParamList = {
   OnBoarding: undefined;

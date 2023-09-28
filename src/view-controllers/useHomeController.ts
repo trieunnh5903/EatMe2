@@ -17,11 +17,9 @@ const useHomeController = () => {
   const totalIndex = data.carousel.length - 1;
   const {data: popularFood} = usePopularFoodViewModel();
   const {
-    errorFoodNearYou,
-    fetchNextPageFoodNearYou,
-    foodNearYou,
-    isFetchingFoodNearYou,
-    isFetchingNextPageFoodNearYou,
+    error: errorFoodNearYou,
+    data: foodNearYou,
+    isFetching: isFetchingFoodNearYou,
   } = useFoodNearByViewModel();
   if (errorFoodNearYou === 'error') {
     console.log('errorFoodNearYou', errorFoodNearYou);
@@ -85,8 +83,6 @@ const useHomeController = () => {
     isFetchingFoodNearYou,
     getItemLayoutCarousel,
     carouselRef,
-    isFetchingNextPageFoodNearYou,
-    fetchNextPageFoodNearYou,
     totalIndex,
     popularFood,
     onFoodItemPress,

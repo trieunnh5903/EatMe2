@@ -76,7 +76,7 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
             <TouchableOpacity style={styles.searchContainer}>
               <Image source={icons.search} style={styles.iconSearch} />
               <TextInput
-                style={{width: '85%'}}
+                style={{width: '85%', color: COLORS.blackText}}
                 placeholderTextColor={COLORS.gray}
                 cursorColor={COLORS.gray}
                 placeholder={`Tìm món tại ${foodItem.name}`}

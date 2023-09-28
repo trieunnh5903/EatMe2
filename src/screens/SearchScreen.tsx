@@ -123,6 +123,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       {/* text input */}
       <TextInput
         value={keyword}
+        placeholderTextColor={COLORS.blackText}
         onChangeText={onChangeText}
         cursorColor={COLORS.black}
         placeholder="Tìm kiếm món ăn"
@@ -226,6 +227,7 @@ const styles = StyleSheet.create({
     ...FONTS.body_medium,
     flex: 1,
     marginLeft: 16,
+    color: COLORS.blackText,
   },
   searchContainer: {
     flex: 1,

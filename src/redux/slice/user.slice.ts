@@ -1,5 +1,5 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import {FoodObject} from '../../screens/types';
+import {FoodObject} from '../../types/types';
 
 interface UserState {
   favorite: FoodObject[];

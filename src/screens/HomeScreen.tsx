@@ -26,7 +26,7 @@ import {
 } from '../components';
 import {FlashList} from '@shopify/flash-list';
 import useHomeController from '../view-controllers/useHomeController';
-import {FoodArray} from '../types/types';
+import {FoodArray, FoodObject} from '../types/types';
 
 interface SectionProps {
   title: string;
@@ -37,29 +37,26 @@ interface SectionProps {
 
 const HomeScreen = () => {
   const {
-    fetchNextPageFoodNearYou,
     foodNearYou,
     carouselRef,
-    isFetchingFoodNearYou,
     getItemLayoutCarousel,
-    isFetchingNextPageFoodNearYou,
     onCarouselScroll,
     popularFood,
     onFoodItemPress,
   } = useHomeController();
 
   // footer flashlist
-  const renderFooter = () => {
-    return (
-      (isFetchingFoodNearYou || isFetchingNextPageFoodNearYou) && (
-        <ActivityIndicator
-          style={styles.indicator}
-          size="small"
-          color={COLORS.primary}
-        />
-      )
-    );
-  };
+  // const renderFooter = () => {
+  //   return (
+  //     isFetchingNextPageFoodNearYou && (
+  //       <ActivityIndicator
+  //         style={styles.indicator}
+  //         size="small"
+  //         color={COLORS.primary}
+  //       />
+  //     )
+  //   );
+  // };
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -116,10 +113,10 @@ const HomeScreen = () => {
           </View>
         }
         estimatedItemSize={150}
-        data={foodNearYou?.pages.flat()}
+        data={foodNearYou}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <Break height={2} />}
-        renderItem={({item}) => {
+        renderItem={({item}: {item: FoodObject}) => {
           return (
             <HorizontalFoodCard
               onPress={() => onFoodItemPress(item)}
@@ -138,10 +135,17 @@ const HomeScreen = () => {
             renderItem={() => <HorizontalFoodCardSkeleton />}
           />
         }
-        onEndReached={() => fetchNextPageFoodNearYou()}
-        onEndReachedThreshold={0.5}
+        // onEndReached={() => {
+        //   if (
+        //     foodNearYou?.pageParams.length &&
+        //     foodNearYou?.pageParams.length > 3 === false
+        //   ) {
+        //     return fetchNextPageFoodNearYou();
+        //   }
+        // }}
+        // onEndReachedThreshold={0.5}
       />
-      {renderFooter()}
+      {/* {renderFooter()} */}
     </SafeAreaView>
   );
 };
