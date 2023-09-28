@@ -5,32 +5,24 @@ import {
 } from '../services/food.service';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 
-// export const useFoodNearByModel = () => {
-//   const {
-//     data: foodNearYou,
-//     error: errorFoodNearYou,
-//     fetchNextPage: fetchNextPageFoodNearYou,
-//     isFetching: isFetchingFoodNearYou,
-//     isFetchingNextPage: isFetchingNextPageFoodNearYou,
-//     status: statusFoodNearYou,
-//   } = useGetAllFood();
-//   return {
-//     errorFoodNearYou,
-//     foodNearYou,
-//     fetchNextPageFoodNearYou,
-//     isFetchingFoodNearYou,
-//     isFetchingNextPageFoodNearYou,
-//     statusFoodNearYou,
-//   };
-// };
-
 export const useFoodNearByModel = () => {
-  const result = useQuery({
+  const result = useInfiniteQuery({
     queryKey: ['foodNearBy'],
     queryFn: fetchAllFoods,
+    getNextPageParam: (_lastPage, allPage) => {
+      return allPage.length + 1;
+    },
   });
   return result;
 };
+
+// export const useFoodNearByModel = () => {
+//   const result = useQuery({
+//     queryKey: ['foodNearBy'],
+//     queryFn: fetchAllFoods,
+//   });
+//   return result;
+// };
 
 export const usePopularFoodModel = () => {
   const result = useInfiniteQuery({

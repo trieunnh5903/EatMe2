@@ -8,7 +8,7 @@ import {
   StyleProp,
   ImageStyle,
 } from 'react-native';
-import React, {memo} from 'react';
+import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {Image} from 'react-native';
 import convertToVND from '../utils/convertToVND';
@@ -18,6 +18,7 @@ interface HorizontalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;
   item: FoodObject;
   imageStyle?: StyleProp<ImageStyle>;
+  textWrapperStyle?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 }
 
@@ -27,15 +28,18 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
   item,
   imageStyle,
   onPress,
+  textWrapperStyle,
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.container, containerStyle]}>
-      <Image style={[imageStyle, styles.image]} source={{uri: item.image}} />
+      <Image style={[styles.image, imageStyle]} source={{uri: item.image}} />
       {/* tên */}
-      <View style={{flex: 1, marginLeft: SIZES.spacing}}>
-        <Text style={[FONTS.title_medium, {color: COLORS.blackText}]}>
+      <View style={[{flex: 1, marginLeft: SIZES.spacing}, textWrapperStyle]}>
+        <Text
+          numberOfLines={1}
+          style={[FONTS.title_medium, {color: COLORS.blackText}]}>
           {item.name}
         </Text>
         {/* mô tả */}
@@ -45,7 +49,6 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
           {item.description}
         </Text>
 
-        <View style={{width: '100%', flex: 1}} />
         {/* giá */}
         <View style={styles.rowWrapper}>
           <Text style={[styles.price, {color: COLORS.blackText}]}>
@@ -70,7 +73,7 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
   );
 };
 
-export default memo(HorizontalFoodCard);
+export default HorizontalFoodCard;
 
 const styles = StyleSheet.create({
   price: {
@@ -80,6 +83,7 @@ const styles = StyleSheet.create({
   starWrapper: {flexDirection: 'row', alignItems: 'center', columnGap: 2},
   iconStar: {width: 18, height: 18},
   container: {
+    alignItems: 'center',
     flexDirection: 'row',
     borderRadius: SIZES.radius,
     padding: SIZES.padding,

@@ -37,26 +37,31 @@ interface SectionProps {
 
 const HomeScreen = () => {
   const {
-    foodNearYou,
     carouselRef,
     getItemLayoutCarousel,
     onCarouselScroll,
     popularFood,
     onFoodItemPress,
+    foodNearYou,
+    isLoading,
+    onEndReached,
   } = useHomeController();
 
   // footer flashlist
-  // const renderFooter = () => {
-  //   return (
-  //     isFetchingNextPageFoodNearYou && (
-  //       <ActivityIndicator
-  //         style={styles.indicator}
-  //         size="small"
-  //         color={COLORS.primary}
-  //       />
-  //     )
-  //   );
-  // };
+  const renderFooter = () => {
+    if (isLoading) {
+      return;
+    }
+    if (foodNearYou?.pages && foodNearYou.pages.flat().length < 90) {
+      return (
+        <ActivityIndicator
+          style={styles.indicator}
+          size="small"
+          color={COLORS.primary}
+        />
+      );
+    }
+  };
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -69,7 +74,6 @@ const HomeScreen = () => {
                 containerStyle={styles.headerContainer}
                 rightComponent={
                   <BadgeButton
-                    // onPress={() => navigation.navigate('Notification')}
                     icon={icons.notification}
                     iconStyle={styles.icon}
                     badgeStyle={styles.badgeNotification}
@@ -113,7 +117,7 @@ const HomeScreen = () => {
           </View>
         }
         estimatedItemSize={150}
-        data={foodNearYou}
+        data={foodNearYou?.pages.flat()}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <Break height={2} />}
         renderItem={({item}: {item: FoodObject}) => {
@@ -122,6 +126,13 @@ const HomeScreen = () => {
               onPress={() => onFoodItemPress(item)}
               item={item}
               containerStyle={styles.horizontalFoodCard}
+              imageStyle={{
+                width: SIZES.width * 0.25,
+                height: SIZES.width * 0.25,
+              }}
+              textWrapperStyle={{
+                height: SIZES.width * 0.25,
+              }}
             />
           );
         }}
@@ -135,15 +146,9 @@ const HomeScreen = () => {
             renderItem={() => <HorizontalFoodCardSkeleton />}
           />
         }
-        // onEndReached={() => {
-        //   if (
-        //     foodNearYou?.pageParams.length &&
-        //     foodNearYou?.pageParams.length > 3 === false
-        //   ) {
-        //     return fetchNextPageFoodNearYou();
-        //   }
-        // }}
-        // onEndReachedThreshold={0.5}
+        onEndReached={onEndReached}
+        ListFooterComponent={renderFooter}
+        onEndReachedThreshold={0.3}
       />
       {/* {renderFooter()} */}
     </SafeAreaView>
@@ -259,7 +264,7 @@ const PopularSection: React.FC<FoodArray> = ({data = []}) => {
           showsHorizontalScrollIndicator={false}
           data={[...Array(5).keys()]} // Show 5 placeholder loaders
           keyExtractor={item => item.toString()}
-          renderItem={({_item, index}) => (
+          renderItem={({_, index}) => (
             <VerticalFoodCardSkeleton
               style={{marginRight: index === 4 ? SIZES.padding : 0}}
             />
@@ -423,7 +428,7 @@ const styles = StyleSheet.create({
   },
   indicator: {
     alignSelf: 'flex-start',
-    marginVertical: SIZES.radius,
+    marginVertical: SIZES.padding,
     marginHorizontal: SIZES.padding,
   },
   categoryImage: {width: 48, height: 48, resizeMode: 'contain'},

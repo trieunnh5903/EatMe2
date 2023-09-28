@@ -6,9 +6,9 @@ export default function setUpMirage(environment: string | undefined) {
     environment,
     routes() {
       this.get('/products/:page', (_schema, request) => {
-        // let page = request.params.page;
-        // let offset: number = (Number(page) - 1) * 40;
-        return productsData;
+        let page = request.params.page;
+        let offset: number = (Number(page) - 1) * 40;
+        return productsData.slice(offset, offset + 40);
       });
 
       this.get('/products/popular/:page', (_schema, request) => {

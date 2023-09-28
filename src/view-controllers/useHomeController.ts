@@ -17,13 +17,11 @@ const useHomeController = () => {
   const totalIndex = data.carousel.length - 1;
   const {data: popularFood} = usePopularFoodViewModel();
   const {
-    error: errorFoodNearYou,
+    isLoading,
     data: foodNearYou,
-    isFetching: isFetchingFoodNearYou,
+    isFetchingNextPage: isFetchingFoodNearYou,
+    fetchNextPage: fetchNextFoodNearYou,
   } = useFoodNearByViewModel();
-  if (errorFoodNearYou === 'error') {
-    console.log('errorFoodNearYou', errorFoodNearYou);
-  }
 
   useEffect(() => {
     let timer = setInterval(() => {
@@ -42,6 +40,12 @@ const useHomeController = () => {
 
     return () => clearInterval(timer);
   }, [totalIndex]);
+
+  const onEndReached = () => {
+    if (foodNearYou?.pageParams && foodNearYou?.pageParams.length < 3) {
+      return fetchNextFoodNearYou();
+    }
+  };
 
   const onFoodItemPress = (item: FoodObject) =>
     navigation.navigate('DetailShop', {
@@ -79,13 +83,15 @@ const useHomeController = () => {
   return {
     onCarouselScroll,
     onEnterAddressPress,
-    foodNearYou,
-    isFetchingFoodNearYou,
     getItemLayoutCarousel,
     carouselRef,
     totalIndex,
     popularFood,
     onFoodItemPress,
+    foodNearYou,
+    isFetchingFoodNearYou,
+    onEndReached,
+    isLoading,
   };
 };
 
