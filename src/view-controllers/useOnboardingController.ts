@@ -5,7 +5,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import {OnBoardingNavigationProps} from '../navigation/types';
+import {OnBoardingNavigationProps} from '../types/navigation.type';
 
 const useOnboardingController = () => {
   const navigation = useNavigation<OnBoardingNavigationProps['navigation']>();

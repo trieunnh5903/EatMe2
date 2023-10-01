@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {RegisterNavigationProps} from '../navigation/types';
+import {RegisterNavigationProps} from '../types/navigation.type';
 import {useState} from 'react';
 import validate from '../utils/validate';
 

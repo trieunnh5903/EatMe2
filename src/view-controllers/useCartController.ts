@@ -1,6 +1,6 @@
 import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {CartScreenProp} from '../navigation/types';
+import {CartScreenProp} from '../types/navigation.type';
 import useCartViewModel from '../view-models/useCartViewModel';
 import {useCallback} from 'react';
 import {FoodObject} from '../types/types';

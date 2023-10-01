@@ -1,4 +1,3 @@
-import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 
 export const fetchAllFoods = async ({pageParam = 1}) => {

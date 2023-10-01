@@ -1,7 +1,7 @@
 import useShopModel from '../models/useShopModel';
 import {addToFavorite, removeFromFavorite} from '../redux/slice/user.slice';
+import {useAppDispatch, useAppSelector} from '../redux/store';
 import {FoodObject} from '../types/types';
-import {useAppDispatch, useAppSelector} from '../utils/hooks';
 
 export const useShopViewModel = () => {
   const data = useShopModel();

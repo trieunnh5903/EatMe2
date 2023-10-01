@@ -1,14 +1,13 @@
-import {useNavigation} from '@react-navigation/native';
-import {ConfirmOtpNavigationProps} from '../navigation/types';
 import {useState} from 'react';
 import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import useUserViewModel from '../view-models/useUserViewModel';
 
 const useConfirmOtpController = () => {
   const CELL_COUNT = 4;
-  const navigation = useNavigation<ConfirmOtpNavigationProps['navigation']>();
+  const {changeStateToLogged} = useUserViewModel();
   const [value, setValue] = useState('');
   const [timer, setTimer] = useState(60);
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
@@ -34,10 +33,7 @@ const useConfirmOtpController = () => {
   const onResendPress = () => setTimer(60);
   const onChangeTextOtp = (text: string) => setValue(text);
 
-  const onNextPress = () =>
-    navigation.navigate('Main', {
-      screen: 'Home',
-    });
+  const onNextPress = () => changeStateToLogged();
 
   return {
     onNextPress,

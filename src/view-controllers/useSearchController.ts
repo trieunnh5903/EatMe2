@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useSeachFoodByNameViewModel} from '../view-models/useFoodViewModel';
 import {FoodObject} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
-import {SreachScreenProp} from '../navigation/types';
+import {SreachScreenProp} from '../types/navigation.type';
 const useSearchController = () => {
   const [keyword, setKeyword] = useState('');
   const navigation = useNavigation<SreachScreenProp['navigation']>();

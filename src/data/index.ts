@@ -240,18 +240,6 @@ const wrapSandwich = {
     'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/wrap_sandwich.png',
 };
 
-const wrapSandwich4 = {
-  id: 44,
-  name: 'Wrap Sandwich',
-  description: 'Grilled vegetables sandwich',
-  categories: [1, 2],
-  price: 10.99,
-  calories: 78,
-  isFavourite: true,
-  image:
-    'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/wrap_sandwich.png',
-};
-
 const menu = [
   {
     id: 1,

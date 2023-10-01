@@ -2,7 +2,7 @@ import {Image, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import React from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
 import {Break, ButtonText, HeaderCustom} from '../components';
-import {EnterAddressScreenProps} from '../navigation/types';
+import {EnterAddressScreenProps} from '../types/navigation.type';
 import SearchInput from '../components/SearchInput';
 import {FlashList} from '@shopify/flash-list';
 import MapView from 'react-native-maps';

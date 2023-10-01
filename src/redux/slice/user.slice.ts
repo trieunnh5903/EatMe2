@@ -2,11 +2,13 @@ import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import {FoodObject} from '../../types/types';
 
 interface UserState {
+  logged: boolean;
   favorite: FoodObject[];
   address: {name: string; location: string}[];
 }
 
 const initialState: UserState = {
+  logged: false,
   favorite: [],
   address: [
     {
@@ -19,6 +21,9 @@ const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
+    changeLoginSate: (state, action: PayloadAction<boolean>) => {
+      state.logged = action.payload;
+    },
     addToFavorite: (state, action: PayloadAction<FoodObject>) => {
       state.favorite.push(action.payload);
     },
@@ -55,7 +60,12 @@ const userSlice = createSlice({
   },
 });
 
-export const {addToFavorite, removeFromFavorite, addAddress, removeAddress} =
-  userSlice.actions;
+export const {
+  addToFavorite,
+  removeFromFavorite,
+  addAddress,
+  removeAddress,
+  changeLoginSate,
+} = userSlice.actions;
 
 export default userSlice.reducer;

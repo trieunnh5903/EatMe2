@@ -9,7 +9,7 @@ import {
 import {FoodObject} from '../types/types';
 import useCartViewModel from '../view-models/useCartViewModel';
 import {useNavigation} from '@react-navigation/native';
-import {DetailFoodNavigationProps} from '../navigation/types';
+import {DetailFoodNavigationProps} from '../types/navigation.type';
 import {SIZES} from '../config';
 import {ViewStyle} from 'react-native';
 

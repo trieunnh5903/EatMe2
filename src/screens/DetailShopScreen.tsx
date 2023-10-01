@@ -18,7 +18,7 @@ import convertToVND from '../utils/convertToVND';
 import {Break, HeaderCustom, VerticalFoodCard} from '../components';
 import Animated from 'react-native-reanimated';
 import {FoodObject} from '../types/types';
-import {DetailShopNavigationProps} from '../navigation/types';
+import {DetailShopNavigationProps} from '../types/navigation.type';
 import useDetailShopController from '../view-controllers/useDetailShopController';
 
 interface HeaderProp {
@@ -43,7 +43,7 @@ interface ShopItem {
     image: string;
   }[];
 }
-const HEADERHEIGHT = 106;
+const HEADERHEIGHT = 110;
 const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
   const {foodItem} = route.params;
   const {
@@ -145,7 +145,7 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
         ref={detailMenuRef}
         data={allFood}
         viewabilityConfig={{
-          minimumViewTime: 300,
+          minimumViewTime: 100,
           itemVisiblePercentThreshold: 50,
         }}
         onViewableItemsChanged={onViewableItemsChanged.current}

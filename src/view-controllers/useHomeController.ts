@@ -4,7 +4,7 @@ import data from '../data';
 import {FlatList, NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
 import {SIZES} from '../config';
 import {useNavigation} from '@react-navigation/native';
-import {HomeScreenNavigationProp} from '../navigation/types';
+import {HomeScreenNavigationProp} from '../types/navigation.type';
 import {
   useFoodNearByViewModel,
   usePopularFoodViewModel,

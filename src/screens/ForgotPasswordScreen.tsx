@@ -15,7 +15,7 @@ import {
   TextInputCustom,
 } from '../components';
 import validate from '../utils/validate';
-import {ForgotPasswordNavigationProps} from '../navigation/types';
+import {ForgotPasswordNavigationProps} from '../types/navigation.type';
 
 const ForgotPasswordScreen = ({navigation}: ForgotPasswordNavigationProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');

@@ -7,17 +7,20 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageSourcePropType,
+  GestureResponderEvent,
 } from 'react-native';
 import React, {useState} from 'react';
 import data from '../data';
 import {COLORS, FONTS, SIZES, icons} from '../config';
+import useUserViewModel from '../view-models/useUserViewModel';
 
 interface OptionItemProps {
   icon: ImageSourcePropType;
   label: string;
+  onPress?: (event: GestureResponderEvent) => void;
 }
-const OptionItem: React.FC<OptionItemProps> = ({icon, label}) => (
-  <TouchableOpacity style={styles.optionItemWrapper}>
+const OptionItem: React.FC<OptionItemProps> = ({icon, label, onPress}) => (
+  <TouchableOpacity onPress={onPress} style={styles.optionItemWrapper}>
     <Image source={icon} style={styles.icon} />
     <Text style={styles.itemLabel}>{label}</Text>
     <Image source={icons.chevron_right} style={styles.icon} />
@@ -26,6 +29,7 @@ const OptionItem: React.FC<OptionItemProps> = ({icon, label}) => (
 
 const ProfileScreen = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const {changeStateToLogout} = useUserViewModel();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -72,7 +76,11 @@ const ProfileScreen = () => {
           <OptionItem icon={icons.notification_w400} label={'Thông báo'} />
         </View>
         <View style={styles.optionWrapper}>
-          <OptionItem icon={icons.logout} label={'Đăng xuất'} />
+          <OptionItem
+            onPress={changeStateToLogout}
+            icon={icons.logout}
+            label={'Đăng xuất'}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

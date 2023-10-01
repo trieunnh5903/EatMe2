@@ -11,9 +11,9 @@ import {FoodObject} from '../types/types';
 import {useShopViewModel} from '../view-models/useShopViewModel';
 import {SIZES} from '../config';
 import {useNavigation} from '@react-navigation/native';
-import {DetailShopNavigationProps} from '../navigation/types';
+import {DetailShopNavigationProps} from '../types/navigation.type';
 
-const HEADERHEIGHT = 106;
+const HEADERHEIGHT = 110;
 const useDetailShopController = (foodItem: FoodObject) => {
   const navigation = useNavigation<DetailShopNavigationProps['navigation']>();
   const {

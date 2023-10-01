@@ -1,6 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {BottomTabNavigatorParamList} from './types';
+import {BottomTabNavigatorParamList} from '../types/navigation.type';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {
@@ -11,8 +11,8 @@ import {
   SearchScreen,
 } from '../screens';
 import {FONTS} from '../config';
-import {useAppSelector} from '../utils/hooks';
 import {RouteProp} from '@react-navigation/native';
+import {useAppSelector} from '../redux/store';
 
 const Tab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 

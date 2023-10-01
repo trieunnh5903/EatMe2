@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {FoodObject} from '../types/types';
-import {FavoriteScreenProp} from '../navigation/types';
+import {FavoriteScreenProp} from '../types/navigation.type';
 import {useShopViewModel} from '../view-models/useShopViewModel';
 
 const useFavoriteController = () => {

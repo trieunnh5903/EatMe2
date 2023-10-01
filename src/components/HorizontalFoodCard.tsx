@@ -6,13 +6,13 @@ import {
   ViewStyle,
   GestureResponderEvent,
   StyleProp,
-  ImageStyle,
 } from 'react-native';
 import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {Image} from 'react-native';
 import convertToVND from '../utils/convertToVND';
 import {FoodObject} from '../types/types';
+import FastImage, {ImageStyle} from 'react-native-fast-image';
 
 interface HorizontalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;
@@ -34,7 +34,11 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
     <TouchableOpacity
       onPress={onPress}
       style={[styles.container, containerStyle]}>
-      <Image style={[styles.image, imageStyle]} source={{uri: item.image}} />
+      <FastImage
+        style={[styles.image, imageStyle]}
+        source={{uri: item.image}}
+        resizeMode={FastImage.resizeMode.cover}
+      />
       {/* tên */}
       <View style={[{flex: 1, marginLeft: SIZES.spacing}, textWrapperStyle]}>
         <Text

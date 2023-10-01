@@ -4,8 +4,8 @@ import {
   removeItem,
   updateItemQuantity,
 } from '../redux/slice/cart.slice';
+import {useAppDispatch, useAppSelector} from '../redux/store';
 import {FoodObject} from '../types/types';
-import {useAppDispatch, useAppSelector} from '../utils/hooks';
 
 const useCartViewModel = () => {
   const {cartList, totalCartPrice} = useAppSelector(state => state.cart);

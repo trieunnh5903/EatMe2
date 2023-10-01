@@ -10,7 +10,7 @@ import {
 import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {ButtonText, QuantityInput} from '../components';
-import {DetailFoodNavigationProps} from '../navigation/types';
+import {DetailFoodNavigationProps} from '../types/navigation.type';
 import convertToVND from '../utils/convertToVND';
 import Animated from 'react-native-reanimated';
 import useDetailFoodController from '../view-controllers/useDetailFoodController';

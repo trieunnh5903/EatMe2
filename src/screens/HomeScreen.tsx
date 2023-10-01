@@ -202,7 +202,7 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends = []}) => {
           data={[...Array(4).keys()]}
           keyExtractor={item => item.toString()}
           horizontal
-          renderItem={({_item, index}) => (
+          renderItem={({item, index}) => (
             <VerticalFoodCardSkeleton
               style={{marginRight: index === 3 ? SIZES.padding : 0}}
             />
