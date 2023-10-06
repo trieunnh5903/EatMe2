@@ -1,27 +1,33 @@
 import {useRef, useEffect} from 'react';
-import {FoodObject} from '../types/types';
+import {Shop} from '../types/types';
 import data from '../data';
 import {FlatList, NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
 import {SIZES} from '../config';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from '../types/navigation.type';
-import {
-  useFoodNearByViewModel,
-  usePopularFoodViewModel,
-} from '../view-models/useFoodViewModel';
+import {useShopViewModel} from '../view-models/useShopViewModel';
 
 const useHomeController = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const carouselRef = useRef<FlatList>(null);
   let carouselIndex = useRef(0);
   const totalIndex = data.carousel.length - 1;
-  const {data: popularFood} = usePopularFoodViewModel();
+  // const {data: popularShop} = usePopularShopViewModel();
+  // const {
+  //   isLoading,
+  //   data: shopNearYou,
+  //   isFetchingNextPage: isFetchingShopNearYou,
+  //   fetchNextPage: fetchNextShopNearYou,
+  // } = useShopNearByViewModel();
+
+  const {useGetPopularShop, useGetShopNearBy} = useShopViewModel();
+  const {data: popularShop} = useGetPopularShop();
   const {
     isLoading,
-    data: foodNearYou,
-    isFetchingNextPage: isFetchingFoodNearYou,
-    fetchNextPage: fetchNextFoodNearYou,
-  } = useFoodNearByViewModel();
+    data: shopNearYou,
+    isFetchingNextPage: isFetchingShopNearYou,
+    fetchNextPage: fetchNextShopNearYou,
+  } = useGetShopNearBy();
 
   useEffect(() => {
     let timer = setInterval(() => {
@@ -42,14 +48,14 @@ const useHomeController = () => {
   }, [totalIndex]);
 
   const onEndReached = () => {
-    if (foodNearYou?.pageParams && foodNearYou?.pageParams.length < 3) {
-      return fetchNextFoodNearYou();
+    if (shopNearYou?.pageParams && shopNearYou?.pageParams.length < 3) {
+      return fetchNextShopNearYou();
     }
   };
 
-  const onFoodItemPress = (item: FoodObject) =>
+  const onShopItemPress = (item: Shop) =>
     navigation.navigate('DetailShop', {
-      foodItem: item,
+      shopInfo: item,
     });
 
   const onEnterAddressPress = () =>
@@ -86,10 +92,10 @@ const useHomeController = () => {
     getItemLayoutCarousel,
     carouselRef,
     totalIndex,
-    popularFood,
-    onFoodItemPress,
-    foodNearYou,
-    isFetchingFoodNearYou,
+    popularShop,
+    onShopItemPress,
+    shopNearYou,
+    isFetchingShopNearYou,
     onEndReached,
     isLoading,
   };

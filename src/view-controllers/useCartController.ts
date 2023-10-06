@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {CartScreenProp} from '../types/navigation.type';
 import useCartViewModel from '../view-models/useCartViewModel';
 import {useCallback} from 'react';
-import {FoodObject} from '../types/types';
+import {Shop} from '../types/types';
 
 const useCartController = () => {
   const navigation = useNavigation<CartScreenProp>();
@@ -42,7 +42,7 @@ const useCartController = () => {
 
   // xử lí tăng sản phẩm
   const onIncreasePress = useCallback(
-    (item: FoodObject, previousQuantity: number) => {
+    (item: Shop, previousQuantity: number) => {
       const quantity = previousQuantity + 1;
       updateFoodItemQuantity(item, quantity);
     },
@@ -51,7 +51,7 @@ const useCartController = () => {
 
   // xử lí giảm sản phẩm
   const onDecreasePress = useCallback(
-    (item: FoodObject) => {
+    (item: Shop) => {
       const {id, quantity} = item;
       if (!quantity) {
         return;

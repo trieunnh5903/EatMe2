@@ -17,12 +17,12 @@ import {Shadow} from 'react-native-shadow-2';
 import convertToVND from '../utils/convertToVND';
 import {Break, HeaderCustom, VerticalFoodCard} from '../components';
 import Animated from 'react-native-reanimated';
-import {FoodObject} from '../types/types';
+import {Food, Shop} from '../types/types';
 import {DetailShopNavigationProps} from '../types/navigation.type';
 import useDetailShopController from '../view-controllers/useDetailShopController';
 
 interface HeaderProp {
-  foodItem: FoodObject;
+  shopInfo: Shop;
   handleToggleFavorite: () => void;
   isFavorite: boolean;
   onBackPress: (event: GestureResponderEvent) => void;
@@ -33,19 +33,10 @@ interface ButtonMenuProp {
   textColor: ColorValue;
   label: string;
 }
-interface ShopItem {
-  label: string;
-  data: {
-    name: string;
-    id: string;
-    description: string;
-    price: number;
-    image: string;
-  }[];
-}
-const HEADERHEIGHT = 110;
+
+const HEADERHEIGHT = 116;
 const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
-  const {foodItem} = route.params;
+  const {shopInfo} = route.params;
   const {
     onFoodItemPress,
     headerStyle,
@@ -60,7 +51,7 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
     currentMenuItem,
     isFavorite,
     handleToggleFavorite,
-  } = useDetailShopController(foodItem);
+  } = useDetailShopController(shopInfo);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,7 +70,8 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
                 style={{width: '85%', color: COLORS.blackText}}
                 placeholderTextColor={COLORS.gray}
                 cursorColor={COLORS.gray}
-                placeholder={`Tìm món tại ${foodItem.name}`}
+                numberOfLines={1}
+                placeholder={`Tìm món tại ${shopInfo.name}`}
               />
             </TouchableOpacity>
 
@@ -129,12 +121,12 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
         ListHeaderComponent={
           <View>
             <RenderHeader
-              foodItem={foodItem}
+              shopInfo={shopInfo}
               handleToggleFavorite={() => handleToggleFavorite()}
               isFavorite={isFavorite}
               onBackPress={onBackPress}
             />
-            <RenderInformationFood foodItem={foodItem} />
+            <RenderInformationShop shopInfo={shopInfo} />
             <RenderListHighLight
               highLightList={hightLightFood}
               onFoodItemPress={onFoodItemPress}
@@ -151,7 +143,7 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
         onViewableItemsChanged={onViewableItemsChanged.current}
         onEndReachedThreshold={0.2}
         renderItem={({item}) => (
-          <FlastListItem item={item} onFoodItemPress={onFoodItemPress} />
+          <MenuFoodItem menuData={item} onFoodItemPress={onFoodItemPress} />
         )}
       />
     </SafeAreaView>
@@ -159,7 +151,7 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
 };
 
 const RenderHeader: React.FC<HeaderProp> = ({
-  foodItem,
+  shopInfo,
   handleToggleFavorite,
   isFavorite,
   onBackPress,
@@ -167,7 +159,7 @@ const RenderHeader: React.FC<HeaderProp> = ({
   return (
     <ImageBackground
       style={{height: SIZES.height * 0.3}}
-      source={{uri: foodItem.image}}>
+      source={{uri: shopInfo.image}}>
       <HeaderCustom
         containerStyle={{
           marginVertical: SIZES.spacing,
@@ -201,14 +193,14 @@ const RenderHeader: React.FC<HeaderProp> = ({
   );
 };
 
-const RenderInformationFood = ({foodItem}: {foodItem: FoodObject}) => {
+const RenderInformationShop = ({shopInfo}: {shopInfo: Shop}) => {
   return (
     <View style={{margin: 2 * SIZES.spacing}}>
       {/* thông tin chính */}
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
           source={icons.verified}
-          style={{width: 24, height: 24}}
+          style={{width: 20, height: 20}}
           resizeMode="contain"
         />
         <Text
@@ -219,9 +211,9 @@ const RenderInformationFood = ({foodItem}: {foodItem: FoodObject}) => {
           Đã xác thực
         </Text>
       </View>
-      <Text style={[FONTS.title_large, styles.foodName]}>{foodItem.name}</Text>
+      <Text style={[FONTS.title_large, styles.foodName]}>{shopInfo.name}</Text>
       <Text style={{color: COLORS.blackText, ...FONTS.body_large}}>
-        0.3km - {foodItem.description}
+        0.3km - {shopInfo.address}
       </Text>
       {/* thông tin phụ */}
       <View style={styles.subInfo}>
@@ -257,8 +249,8 @@ const RenderListHighLight = ({
   highLightList,
   onFoodItemPress,
 }: {
-  highLightList: FoodObject[];
-  onFoodItemPress: (item: FoodObject) => void;
+  highLightList: Food[];
+  onFoodItemPress: (item: Food) => void;
 }) => {
   return (
     <FlatList
@@ -305,23 +297,35 @@ const ButtonMenu: React.FC<ButtonMenuProp> = ({
   </TouchableOpacity>
 );
 
-const FlastListItem = ({
-  item: categoryItem,
+interface MenuFood {
+  label: string;
+  data: {
+    name: string;
+    id: string;
+    description: string;
+    price: number;
+    image: string;
+  }[];
+}
+
+interface MenuFoodItemProp {
+  menuData: MenuFood;
+  onFoodItemPress: (item: Food) => void;
+}
+const MenuFoodItem: React.FC<MenuFoodItemProp> = ({
+  menuData,
   onFoodItemPress,
-}: {
-  item: ShopItem;
-  onFoodItemPress: (item: FoodObject) => void;
 }) => {
-  const lastIndex = categoryItem.data.length - 1;
+  const lastIndex = menuData.data.length - 1;
   return (
     <View
       style={{
         width: SIZES.width,
         paddingVertical: SIZES.spacing,
       }}>
-      <Text style={styles.categoryWrapper}>{categoryItem.label}</Text>
+      <Text style={styles.categoryWrapper}>{menuData.label}</Text>
       <View>
-        {categoryItem.data.map((item, index) => (
+        {menuData.data.map((item, index) => (
           <TouchableOpacity
             onPress={() => {
               onFoodItemPress(item);
@@ -330,11 +334,17 @@ const FlastListItem = ({
             style={{width: '100%'}}>
             <View style={styles.foodItemWrapper}>
               <View style={{flex: 1, justifyContent: 'space-between'}}>
-                <Text style={[{color: COLORS.blackText}, FONTS.title_medium]}>
+                <Text
+                  numberOfLines={2}
+                  style={[{color: COLORS.blackText}, FONTS.body_large]}>
                   {item.name}
                 </Text>
-                <Text style={[{color: COLORS.gray}]}>{item.description}</Text>
-                <Text>{convertToVND(item.price)}</Text>
+                <Text style={[{color: COLORS.gray, ...FONTS.body_medium}]}>
+                  {item.description}
+                </Text>
+                <Text style={[{color: COLORS.blackText, ...FONTS.body_medium}]}>
+                  {convertToVND(item.price)}
+                </Text>
               </View>
               <Image
                 source={{uri: item.image}}
@@ -429,7 +439,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: SIZES.radius,
+    marginTop: SIZES.radius,
     backgroundColor: COLORS.white,
   },
 

@@ -19,14 +19,14 @@ import {
   Break,
   ButtonIcon,
   HeaderCustom,
-  HorizontalFoodCard,
-  HorizontalFoodCardSkeleton,
-  VerticalFoodCard,
-  VerticalFoodCardSkeleton,
+  HorizontalCardSkeleton,
+  VerticalCardSkeleton,
+  VerticalShopCard,
+  HorizontalShopCard,
 } from '../components';
 import {FlashList} from '@shopify/flash-list';
 import useHomeController from '../view-controllers/useHomeController';
-import {FoodArray, FoodObject} from '../types/types';
+import {Shop} from '../types/types';
 
 interface SectionProps {
   title: string;
@@ -35,14 +35,18 @@ interface SectionProps {
   style?: ViewStyle;
 }
 
+interface ShopArray {
+  data?: Shop[];
+}
+
 const HomeScreen = () => {
   const {
     carouselRef,
     getItemLayoutCarousel,
     onCarouselScroll,
-    popularFood,
-    onFoodItemPress,
-    foodNearYou,
+    popularShop,
+    onShopItemPress,
+    shopNearYou,
     isLoading,
     onEndReached,
   } = useHomeController();
@@ -52,7 +56,7 @@ const HomeScreen = () => {
     if (isLoading) {
       return;
     }
-    if (foodNearYou?.pages && foodNearYou.pages.flat().length < 90) {
+    if (shopNearYou?.pages && shopNearYou.pages.flat().length < 90) {
       return (
         <ActivityIndicator
           style={styles.indicator}
@@ -108,22 +112,22 @@ const HomeScreen = () => {
             <Categories />
             <Break marginVertical={30} />
             {/* list popular */}
-            <PopularSection data={popularFood?.pages.flat()} />
+            <PopularSection data={popularShop?.pages.flat()} />
             <Break marginTop={30} />
             {/* list recommended */}
-            <RecommendedSection data={popularFood?.pages.flat()} />
+            <RecommendedSection data={popularShop?.pages.flat()} />
             <Break marginTop={30} />
             <Text style={styles.headlineNearYou}>Gần bạn</Text>
           </View>
         }
         estimatedItemSize={150}
-        data={foodNearYou?.pages.flat()}
+        data={shopNearYou?.pages.flat()}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <Break height={2} />}
-        renderItem={({item}: {item: FoodObject}) => {
+        renderItem={({item}: {item: Shop}) => {
           return (
-            <HorizontalFoodCard
-              onPress={() => onFoodItemPress(item)}
+            <HorizontalShopCard
+              onPress={() => onShopItemPress(item)}
               item={item}
               containerStyle={styles.horizontalFoodCard}
               imageStyle={{
@@ -143,7 +147,7 @@ const HomeScreen = () => {
             scrollEnabled={false}
             ItemSeparatorComponent={() => <View style={{height: 10}} />}
             keyExtractor={item => item.toString()}
-            renderItem={() => <HorizontalFoodCardSkeleton />}
+            renderItem={() => <HorizontalCardSkeleton />}
           />
         }
         onEndReached={onEndReached}
@@ -190,8 +194,8 @@ const Categories = () => (
   </View>
 );
 
-const RecommendedSection: React.FC<FoodArray> = ({data: recommends = []}) => {
-  const {onFoodItemPress} = useHomeController();
+const RecommendedSection: React.FC<ShopArray> = ({data: recommends = []}) => {
+  const {onShopItemPress} = useHomeController();
   return (
     <Section
       title={'Gợi ý'}
@@ -202,8 +206,8 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends = []}) => {
           data={[...Array(4).keys()]}
           keyExtractor={item => item.toString()}
           horizontal
-          renderItem={({item, index}) => (
-            <VerticalFoodCardSkeleton
+          renderItem={({item: _item, index}) => (
+            <VerticalCardSkeleton
               style={{marginRight: index === 3 ? SIZES.padding : 0}}
             />
           )}
@@ -216,8 +220,8 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends = []}) => {
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
             return (
-              <VerticalFoodCard
-                onPress={() => onFoodItemPress(item)}
+              <VerticalShopCard
+                onPress={() => onShopItemPress(item)}
                 item={item}
                 containerStyle={[
                   styles.popularContainer,
@@ -251,8 +255,8 @@ const RecommendedSection: React.FC<FoodArray> = ({data: recommends = []}) => {
   );
 };
 
-const PopularSection: React.FC<FoodArray> = ({data = []}) => {
-  const {onFoodItemPress} = useHomeController();
+const PopularSection: React.FC<ShopArray> = ({data = []}) => {
+  const {onShopItemPress} = useHomeController();
   return (
     <Section
       style={{marginTop: 0}}
@@ -264,8 +268,8 @@ const PopularSection: React.FC<FoodArray> = ({data = []}) => {
           showsHorizontalScrollIndicator={false}
           data={[...Array(5).keys()]} // Show 5 placeholder loaders
           keyExtractor={item => item.toString()}
-          renderItem={({_, index}) => (
-            <VerticalFoodCardSkeleton
+          renderItem={({item: _item, index}) => (
+            <VerticalCardSkeleton
               style={{marginRight: index === 4 ? SIZES.padding : 0}}
             />
           )}
@@ -278,8 +282,8 @@ const PopularSection: React.FC<FoodArray> = ({data = []}) => {
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
             return (
-              <VerticalFoodCard
-                onPress={() => onFoodItemPress(item)}
+              <VerticalShopCard
+                onPress={() => onShopItemPress(item)}
                 item={item}
                 containerStyle={[
                   styles.popularContainer,
@@ -412,7 +416,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginHorizontal: SIZES.padding,
     fontWeight: 'bold',
-    ...FONTS.headline_small,
+    ...FONTS.title_large,
     color: COLORS.blackText,
   },
   headerContainer: {
@@ -433,7 +437,7 @@ const styles = StyleSheet.create({
   },
   categoryImage: {width: 48, height: 48, resizeMode: 'contain'},
   sectionHeadline: {
-    ...FONTS.headline_small,
+    ...FONTS.title_large,
     fontWeight: 'bold',
     color: COLORS.blackText,
   },
@@ -478,7 +482,6 @@ const styles = StyleSheet.create({
   },
   deliveryTo: {
     flexDirection: 'row',
-    marginTop: SIZES.base,
     alignItems: 'center',
   },
   iconBottomTab: {

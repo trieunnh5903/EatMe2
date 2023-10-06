@@ -10,20 +10,19 @@ import {
 import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {Image} from 'react-native';
-import convertToVND from '../utils/convertToVND';
-import {Food} from '../types/types';
+import {Shop} from '../types/types';
 import FastImage, {ImageStyle} from 'react-native-fast-image';
+import Dot from './Dot';
 
-interface HorizontalFoodCardProps {
+interface HorizontalShopCardProps {
   containerStyle?: StyleProp<ViewStyle>;
-  item: Food;
+  item: Shop;
   imageStyle?: StyleProp<ImageStyle>;
   textWrapperStyle?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 }
 
-const VericalLine = () => <View style={styles.line} />;
-const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
+const HorizontalShopCard: React.FC<HorizontalShopCardProps> = ({
   containerStyle,
   item,
   imageStyle,
@@ -41,44 +40,49 @@ const HorizontalFoodCard: React.FC<HorizontalFoodCardProps> = ({
       />
       {/* tên */}
       <View style={[{flex: 1, marginLeft: SIZES.spacing}, textWrapperStyle]}>
-        <Text
-          numberOfLines={1}
-          style={[FONTS.title_medium, {color: COLORS.blackText}]}>
+        <Text style={[FONTS.body_large, {color: COLORS.blackText}]}>
+          <Image
+            source={icons.verified}
+            style={{width: 20, height: 20}}
+            resizeMode="contain"
+          />{' '}
           {item.name}
         </Text>
+        {/* address */}
+        <Text
+          numberOfLines={1}
+          style={[FONTS.body_small, {color: COLORS.darkGray2}]}>
+          {item.address}
+        </Text>
 
-        {/* giá */}
-        <View style={styles.rowWrapper}>
-          <Text style={[styles.price, {color: COLORS.blackText}]}>
-            {convertToVND(item.price)}
-          </Text>
-          <VericalLine />
-          {/* sao */}
-          <View style={styles.starWrapper}>
+        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          {/* giá */}
+          <View style={styles.rowWrapper}>
+            {/* sao */}
             <Image
               source={icons.star}
               resizeMode="contain"
               style={styles.iconStar}
             />
-            <Text style={[styles.price, {color: COLORS.gray}]}>4.5</Text>
+            <Text style={[styles.price]}>4.5</Text>
+            <Text style={[styles.price, {color: COLORS.gray}]}>(999+)</Text>
+            <Dot />
+            <Text style={[styles.price]}>0.3km</Text>
           </View>
-          <VericalLine />
-          {/* km */}
-          <Text style={[styles.price, {color: COLORS.gray}]}>0.3km </Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default HorizontalFoodCard;
+export default HorizontalShopCard;
 
 const styles = StyleSheet.create({
   price: {
-    ...FONTS.title_small,
+    color: COLORS.blackText,
   },
-  rowWrapper: {flexDirection: 'row', alignItems: 'center'},
-  starWrapper: {flexDirection: 'row', alignItems: 'center', columnGap: 2},
+  rowWrapper: {flexDirection: 'row', gap: 3},
+  starWrapper: {flexDirection: 'row', columnGap: 2},
   iconStar: {width: 18, height: 18},
   container: {
     alignItems: 'center',

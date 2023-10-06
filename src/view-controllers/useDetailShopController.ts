@@ -7,23 +7,26 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {FoodObject} from '../types/types';
+import {Food, Shop} from '../types/types';
 import {useShopViewModel} from '../view-models/useShopViewModel';
 import {SIZES} from '../config';
 import {useNavigation} from '@react-navigation/native';
 import {DetailShopNavigationProps} from '../types/navigation.type';
 
-const HEADERHEIGHT = 110;
-const useDetailShopController = (foodItem: FoodObject) => {
+const HEADERHEIGHT = 116;
+const useDetailShopController = (shopInfo: Shop) => {
   const navigation = useNavigation<DetailShopNavigationProps['navigation']>();
-  const {
-    data: {data: allFood, hightLight: hightLightFood},
-    addToFavoriteList,
-    favoriteList,
-    removeFromFavoriteList,
-  } = useShopViewModel();
+  const {getShopById, addToFavoriteList, favoriteList, removeFromFavoriteList} =
+    useShopViewModel();
 
-  const isFavorite = favoriteList.some(product => product.id === foodItem.id);
+  const {
+    data: allFood,
+    hightLight: hightLightFood,
+    topping,
+    options,
+  } = getShopById(shopInfo.id);
+
+  const isFavorite = favoriteList.some(shop => shop.id === shopInfo.id);
   const [currentMenuItem, setCurrentMenuItem] = useState(allFood[0].label);
   const menuListRef = useRef<FlatList>(null);
   const detailMenuRef = useRef<Animated.FlatList<any> & FlatList>(null);
@@ -31,15 +34,15 @@ const useDetailShopController = (foodItem: FoodObject) => {
 
   const handleToggleFavorite = () => {
     if (isFavorite) {
-      removeFromFavoriteList(foodItem);
+      removeFromFavoriteList(shopInfo);
     } else {
-      addToFavoriteList(foodItem);
+      addToFavoriteList(shopInfo);
     }
   };
   const onBackPress = () => navigation.goBack();
-  const onFoodItemPress = (item: FoodObject) => {
+  const onFoodItemPress = (item: Food) => {
     navigation.navigate('DetailFood', {
-      foodItem: {...item, priceTotal: 0, quantity: 0},
+      foodItem: {...item, quantity: 0, toppings: topping, options: options},
     });
   };
 
@@ -75,7 +78,7 @@ const useDetailShopController = (foodItem: FoodObject) => {
   });
 
   const headerStyle = useAnimatedStyle(() => {
-    const height = interpolate(
+    const marginTop = interpolate(
       scrollY.value,
       [0, SIZES.height * 0.5],
       [-HEADERHEIGHT, 0],
@@ -90,7 +93,7 @@ const useDetailShopController = (foodItem: FoodObject) => {
 
     return {
       opacity,
-      marginTop: height,
+      marginTop,
     };
   });
 

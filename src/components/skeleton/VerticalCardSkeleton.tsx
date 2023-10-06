@@ -3,7 +3,7 @@ import React from 'react';
 import Skeleton from './Skeleton';
 import {SIZES} from '../../config';
 
-const VerticalFoodCardSkeleton = ({style}: {style: ViewStyle}) => {
+const VerticalCardSkeleton = ({style}: {style: ViewStyle}) => {
   return (
     <View
       style={[{width: SIZES.width * 0.4, marginLeft: SIZES.padding}, style]}>
@@ -15,7 +15,7 @@ const VerticalFoodCardSkeleton = ({style}: {style: ViewStyle}) => {
   );
 };
 
-export default VerticalFoodCardSkeleton;
+export default VerticalCardSkeleton;
 
 const styles = StyleSheet.create({
   image: {

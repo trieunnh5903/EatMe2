@@ -4,7 +4,7 @@ const SIZES = {
   // global sizes
   spacing: 10,
   font: 14,
-  radius: 6,
+  radius: 10,
   padding: 18,
   base: 6,
 

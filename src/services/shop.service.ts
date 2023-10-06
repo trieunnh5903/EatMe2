@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const fetchAllFoods = async ({pageParam = 1}) => {
+export const fetchAllShops = async ({pageParam = 1}) => {
   try {
-    const response = await axios.get(`/products/${pageParam}`);
+    const response = await axios.get(`/shop/${pageParam}`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -15,9 +15,9 @@ export const fetchAllFoods = async ({pageParam = 1}) => {
   }
 };
 
-export const fetchPolpularFood = async ({pageParam = 1}) => {
+export const fetchPolpularShop = async ({pageParam = 1}) => {
   try {
-    const response = await axios.get(`/products/popular/${pageParam}`);
+    const response = await axios.get(`/shop/popular/${pageParam}`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -29,21 +29,10 @@ export const fetchPolpularFood = async ({pageParam = 1}) => {
     }
   }
 };
-
-// export const useGetAllFood = () => {
-//   const result = useInfiniteQuery({
-//     queryKey: ['food'],
-//     queryFn: fetchAllFoods,
-//     getNextPageParam: (_lastPage, allPage) => {
-//       return allPage.length + 1;
-//     },
-//   });
-//   return result;
-// };
 
 export const fetchSearchResults = async (keyword: string) => {
   try {
-    const response = await axios.get(`/products/search?q=${keyword}`);
+    const response = await axios.get(`/shop/search?q=${keyword}`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

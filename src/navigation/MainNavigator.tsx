@@ -22,14 +22,12 @@ const MainNavigator = () => {
     SplashScreen.hide();
   }, []);
   return (
-    <Stack.Navigator
-      initialRouteName="ConfirmOtp"
-      screenOptions={{headerShown: false}}>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       {logged ? (
         <>
           <Stack.Screen name="Main" component={TabNavigator} />
-          <Stack.Screen name="DetailShop" component={DetailShopScreen} />
           <Stack.Screen name="DetailFood" component={DetailFoodScreen} />
+          <Stack.Screen name="DetailShop" component={DetailShopScreen} />
           <Stack.Screen
             name="EnterAddressScreen"
             component={EnterAddressScreen}

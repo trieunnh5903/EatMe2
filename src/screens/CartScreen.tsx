@@ -11,10 +11,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {HeaderCustom, QuantityInput} from '../components';
 import convertToVND from '../utils/convertToVND';
-import {FoodObject} from '../types/types';
+import {Shop} from '../types/types';
 import useCartController from '../view-controllers/useCartController';
 
-const FoodItem = ({data}: {data: FoodObject}) => {
+const FoodItem = ({data}: {data: Shop}) => {
   const {onDecreasePress, onIncreasePress} = useCartController();
   return (
     <View style={styles.itemContainer}>

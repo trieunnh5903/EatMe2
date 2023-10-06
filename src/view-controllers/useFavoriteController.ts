@@ -1,11 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
-import {FoodObject} from '../types/types';
+import {Shop} from '../types/types';
 import {FavoriteScreenProp} from '../types/navigation.type';
 import {useShopViewModel} from '../view-models/useShopViewModel';
 
 const useFavoriteController = () => {
   const navigation = useNavigation<FavoriteScreenProp['navigation']>();
-  const onFoodItemPress = (foodItem: FoodObject) =>
+  const onFoodItemPress = (foodItem: Shop) =>
     navigation.navigate('DetailShop', {foodItem});
 
   const {removeFromFavoriteList, favoriteList} = useShopViewModel();

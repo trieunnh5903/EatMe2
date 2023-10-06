@@ -5,6 +5,8 @@ const COLORS = {
   lightOrange: 'rgb(255, 161, 51)',
   lightOrange2: '#FDDED4',
   lightOrange3: '#FFD9AD',
+  lightPrimary: 'rgb(250, 248, 247)',
+  lightPrimary_05: 'rgba(255, 240, 236)',
   green: '#27AE60',
   red: '#FF1717',
   blue: '#0064C0',
@@ -22,6 +24,7 @@ const COLORS = {
   blackText: '#1C1E21',
   transparent: 'transparent',
   transparentBlack1: 'rgba(0, 0, 0, 0.1)',
+  black06: 'rgba(0,0,0,0.6)',
   transparentBlack7: 'rgba(0, 0, 0, 0.7)',
 };
 

@@ -1,46 +1,147 @@
 import {nanoid} from '@reduxjs/toolkit';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
+import {
+  fetchAllShops,
+  fetchPolpularShop,
+  fetchSearchResults,
+} from '../services/shop.service';
 
-const useShopModel = () => {
-  return DATA;
+export const useShopModel = () => {
+  const getShopByIdModel = (_shopId: string) => {
+    return DATA;
+  };
+
+  const useGetShopNearBy = () => {
+    const result = useInfiniteQuery({
+      queryKey: ['shopNearBy'],
+      queryFn: fetchAllShops,
+      getNextPageParam: (_lastPage, allPage) => {
+        return allPage.length + 1;
+      },
+    });
+    return result;
+  };
+
+  const useGetPopularShop = () => {
+    const result = useInfiniteQuery({
+      queryKey: ['shopPopular'],
+      queryFn: fetchPolpularShop,
+      getNextPageParam: (_lastPage, allPage) => {
+        return allPage.length + 1;
+      },
+    });
+    return result;
+  };
+
+  const useSeachShopByName = (keyword: string) => {
+    const result = useQuery({
+      queryKey: ['search', keyword],
+      queryFn: async () => {
+        const data = await fetchSearchResults(keyword);
+        return data;
+      },
+      enabled: !!keyword,
+    });
+
+    return result;
+  };
+
+  return {
+    getShopByIdModel,
+    useGetPopularShop,
+    useGetShopNearBy,
+    useSeachShopByName,
+  };
 };
-export default useShopModel;
 
 const DATA = {
   hightLight: [
     {
       id: nanoid(),
-      name: 'Zangzang Food - Gà Tươi Ủ Muối Cầu Kỳ',
-      price: 20000,
-      description: '226 Lê Đức Thọ, P. 6, Gò Vấp, TP. HCM',
+      name: 'Cơm dương châu đùi mắm tỏi',
+      price: 69000,
+      description: 'description',
       image:
-        'https://images.foody.vn/res/g117/1163373/prof/s460x300/foody-upload-api-foody-mobile-fi-365302c3-230320112903.jpeg',
+        'https://images.foody.vn/res/g2/11349/s460x300/2a4778de-db37-4a23-9315-468e514a-8adc8f7d-201109124532.jpeg',
     },
     {
       id: nanoid(),
-      name: 'Mì Trộn Park Kim Thang - Phạm Văn Đồng',
-      price: 20000,
-      description: '259 Phạm Văn Đồng, P.1, Gò Vấp, TP. HCM',
+      name: 'Cơm gà hấp muối',
+      price: 55000,
+      description: 'description',
       image:
-        'https://images.foody.vn/res/g108/1076096/prof/s460x300/foody-upload-api-foody-mobile-36-e6f8587b-230729083030.jpeg',
+        'https://images.foody.vn/res/g2/11349/s400x400/10fd85e2-4bbf-4d7c-862b-7563022c-cd365cde-201109124621.jpeg',
     },
     {
       id: nanoid(),
-      name: 'Bún Thịt Nướng Dì 7 & Cơm Tấm, Lẩu - Khu Phố 2A',
-      price: 20000,
-      description:
-        '1779/21/6 Khu Phố 2A, Quốc Lộ 1A, P. Tân Thới Hiệp, Quận 12, TP. HCM',
+      name: 'Cơm gà chiên mắm tỏi',
+      price: 55000,
+      description: 'description',
+
       image:
-        'https://images.foody.vn/res/g105/1043305/prof/s480x300/foody-upload-api-foody-mobile-89039049_10754428753-200820145636.jpg',
+        'https://images.foody.vn/res/g2/11349/s400x400/ef94ceab-cd98-4ee9-af03-a6febffe-deaad5dd-201109124708.jpeg',
     },
     {
       id: nanoid(),
-      name: 'Thành Đạt - Hủ Tiếu Nam Vang - 22C Nguyễn Hữu Cầu',
-      price: 20000,
-      description: 'Thành Đạt - Hủ Tiếu Nam Vang - 22C Nguyễn Hữu Cầu',
+      name: 'Cơm gà xối mỡ',
+      price: 55000,
+      description: 'description',
       image:
-        'https://images.foody.vn/res/g112/1114707/prof/s460x300/foody-upload-api-foody-mobile-un-de857048-211105141117.jpeg',
+        'https://images.foody.vn/res/g2/11349/s400x400/ef94ceab-cd98-4ee9-af03-a6febffe-deaad5dd-201109124708.jpeg',
     },
   ],
+
+  options: [
+    {
+      title: 'Size',
+      optionGroup: [
+        {option: 'Lớn', price: 5000},
+        {option: 'Nhỏ', price: 0},
+      ],
+    },
+    {
+      title: 'Chọn sốt',
+      optionGroup: [
+        {option: 'Sốt mayonnaise', price: 0},
+        {option: 'Sốt bò', price: 0},
+      ],
+    },
+    {
+      title: 'Chọn độ cay',
+      optionGroup: [
+        {option: 'Không cay', price: 2000},
+        {option: 'Cay ít', price: 0},
+        {option: 'Siêu cay', price: 0},
+      ],
+    },
+  ],
+
+  topping: {
+    title: 'Topping',
+    maximum: 5,
+    data: [
+      {
+        name: 'Sốt bò',
+        price: 7000,
+      },
+      {
+        name: 'Sốt bò không cay',
+        price: 7000,
+      },
+      {
+        name: 'Sốt bơ cay',
+        price: 7000,
+      },
+      {
+        name: 'Muối tôm Tây Ninh (hũ sốt)',
+        price: 7000,
+      },
+      {
+        name: 'Trứng cút (3 trứng)',
+        price: 7000,
+      },
+    ],
+  },
 
   data: [
     {

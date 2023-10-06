@@ -1,33 +1,33 @@
 import {
-  addItem,
+  addInvoice,
   clearCart,
   removeItem,
   updateItemQuantity,
 } from '../redux/slice/cart.slice';
 import {useAppDispatch, useAppSelector} from '../redux/store';
-import {FoodObject} from '../types/types';
+import {Shop, ShopDetailWithQuantity} from '../types/types';
 
 const useCartViewModel = () => {
-  const {cartList, totalCartPrice} = useAppSelector(state => state.cart);
+  const {invoices, totalCartPrice} = useAppSelector(state => state.cart);
   const dispatch = useAppDispatch();
 
   const clearFoodCart = () => dispatch(clearCart());
 
-  const updateFoodItemQuantity = (item: FoodObject, newQuantity: number) => {
-    return dispatch(updateItemQuantity({...item, quantity: newQuantity}));
+  const updateFoodItemQuantity = (item: Shop, newQuantity: number) => {
+    // return dispatch(updateItemQuantity({...item, quantity: newQuantity}));
   };
 
   const removeFoodItem = (id: string) => {
     return dispatch(removeItem(id));
   };
 
-  const addItemToCart = (item: FoodObject, quantity: number) => {
-    return dispatch(addItem({...item, quantity}));
+  const addInvoiceToCart = (item: ShopDetailWithQuantity) => {
+    dispatch(addInvoice(item));
   };
 
   return {
-    addItemToCart,
-    cartList,
+    addInvoiceToCart,
+    invoices,
     removeFoodItem,
     totalCartPrice,
     clearFoodCart,

@@ -5,171 +5,381 @@ import {
   View,
   Image,
   TouchableOpacity,
-  ImageBackground,
+  FlatList,
 } from 'react-native';
 import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
-import {ButtonText, QuantityInput} from '../components';
+import {ButtonIcon, QuantityInput, RadioButtonGroup} from '../components';
 import {DetailFoodNavigationProps} from '../types/navigation.type';
 import convertToVND from '../utils/convertToVND';
 import Animated from 'react-native-reanimated';
 import useDetailFoodController from '../view-controllers/useDetailFoodController';
 
-const HEADER_MAX_HEIGHT = SIZES.height * 0.3;
-const HEADER_MIN_HEIGHT = 60;
-const AnimatedImageBackGround =
-  Animated.createAnimatedComponent(ImageBackground);
+const HEADER_HEIGHT = 50;
 const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
   const {foodItem} = route.params;
   const {
-    quantity,
-    animtedStyles,
-    onAddPress,
     onAddToCartPress,
+    options,
+    toppingData,
+    bgColorIconClose,
+    onAddPress,
+    quantity,
     onBackPress,
-    onListViewScroll,
     onRemovePress,
-  } = useDetailFoodController();
-
+    headerAnimatedStyle,
+    totalPrice,
+    topping,
+    canAddToCart,
+    selectedOption,
+    onIncreasePress,
+    onDecreasePress,
+    onScroll,
+    tintColorIconClose,
+    quantityTopping,
+    setSelectedOption,
+  } = useDetailFoodController(foodItem);
+  const AnimatedTouchableOpacity =
+    Animated.createAnimatedComponent(TouchableOpacity);
   return (
     <SafeAreaView style={styles.container}>
-      {/* header */}
-      <Animated.ScrollView
-        onScroll={onListViewScroll}
-        showsVerticalScrollIndicator={false}>
-        {/* image */}
-        <View style={styles.imageFoodWrapper}>
-          <AnimatedImageBackGround
-            resizeMode={'cover'}
-            style={[styles.imageFood, animtedStyles]}
-            source={{uri: foodItem.image}}>
-            <TouchableOpacity
-              onPress={onBackPress}
-              style={styles.iconHeaderWrapper}>
-              <Image
-                style={[styles.icon, {tintColor: COLORS.white}]}
-                source={icons.arrow_back}
-              />
-            </TouchableOpacity>
-          </AnimatedImageBackGround>
-        </View>
+      <AnimatedTouchableOpacity
+        onPress={onBackPress}
+        style={[styles.buttonBackWrapper, bgColorIconClose]}>
+        <Animated.Image
+          source={icons.close}
+          style={[styles.icon, tintColorIconClose]}
+        />
+      </AnimatedTouchableOpacity>
 
-        {/* content */}
-        <View style={styles.infoFoodWrapper}>
-          {/* input quantity */}
-          <QuantityInput
-            iconLeft={icons.remove_wght500}
-            iconRight={icons.add_wght500}
-            onAddPress={onAddPress}
-            onRemovePress={onRemovePress}
-            labelStyle={styles.quantityLabel}
-            iconContainerStyle={styles.quantityIconContainer}
-            quantity={quantity}
-            iconStyle={styles.quantityIcon}
-            containerStyle={styles.quantityContainer}
-          />
-          {/* title */}
-          <View style={styles.foodTitle}>
-            <View style={{flex: 1}}>
-              <Text style={styles.textTitle}>{foodItem.name}</Text>
-            </View>
-          </View>
-          {/* địa chỉ */}
-          <View>
-            <Text style={styles.textAddress}>
-              142 Ba Đình, P. 10, Quận 8, TP. HCM
-            </Text>
-          </View>
-          <Text style={styles.textPrice}>
-            Giá: {convertToVND(foodItem.price)}
-          </Text>
-          {/* desc */}
-          <TextMore />
-          {/* delivery */}
-          <View style={styles.deliveryWrapper}>
-            <Image source={icons.clock} style={styles.icon} />
-            <Text
-              style={{
-                marginHorizontal: SIZES.radius,
-                color: COLORS.black,
-                ...FONTS.title_medium,
-              }}>
-              Thời gian giao hàng dự kiến:
-              <Text
-                style={{
-                  color: COLORS.gray,
-                  ...FONTS.title_medium,
-                }}>
-                {' '}
-                30 Phút
+      <Animated.View style={[styles.headerContainer, headerAnimatedStyle]}>
+        <Text style={{color: COLORS.blackText, ...FONTS.label_large}}>
+          {foodItem.name}
+        </Text>
+      </Animated.View>
+
+      <View style={styles.imageFood}>
+        <Image
+          source={{
+            uri: foodItem.image,
+          }}
+          style={{width: '100%', height: '100%'}}
+        />
+      </View>
+
+      <FlatList
+        ListHeaderComponent={
+          <View style={{backgroundColor: COLORS.white, padding: SIZES.padding}}>
+            <View style={styles.nameWrapper}>
+              <Text style={styles.name}>{foodItem.name}</Text>
+              <Text style={styles.mainPrice}>
+                {convertToVND(foodItem.price)}
               </Text>
-            </Text>
-          </View>
-        </View>
-      </Animated.ScrollView>
-      {/* footer */}
-      <ButtonText
-        onPress={() => onAddToCartPress(foodItem)}
-        label={'Thêm vào giỏ hàng'}
-        containerStyle={styles.buttonFooter}
-        labelStyle={styles.labelFooter}
-      />
-    </SafeAreaView>
-  );
-};
+            </View>
 
-const TextMore = () => {
-  const descText =
-    "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)" +
-    "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).";
-  return (
-    <>
-      <Text
-        style={{
-          color: COLORS.blackText,
-          ...FONTS.body_large,
-        }}>
-        {descText}
-      </Text>
-    </>
+            <Text style={[styles.description]}>
+              Bao gồm: hộp, muỗng, đũa mang về
+            </Text>
+
+            <TouchableOpacity style={{flexDirection: 'row'}}>
+              <Image
+                source={icons.note}
+                style={styles.iconNote}
+                resizeMode="contain"
+              />
+              <Text style={styles.note}>
+                Bạn có muốn nhắn gì đến cửa hàng không
+              </Text>
+            </TouchableOpacity>
+          </View>
+        }
+        onScroll={event => onScroll(event)}
+        contentContainerStyle={{
+          paddingTop: SIZES.height * 0.3 - HEADER_HEIGHT,
+        }}
+        showsVerticalScrollIndicator={true}
+        data={options}
+        renderItem={({item}) => (
+          <View style={{backgroundColor: COLORS.white}}>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.labelText}>{item.title}</Text>
+              <Text
+                style={[
+                  styles.subLabelText,
+                  {color: COLORS.primary, marginVertical: SIZES.base},
+                ]}>
+                Chọn ít nhất 1 mục
+              </Text>
+            </View>
+            <RadioButtonGroup
+              selectedOption={selectedOption}
+              setSelectedOption={setSelectedOption}
+              data={item}
+            />
+          </View>
+        )}
+        ListFooterComponent={
+          toppingData && (
+            <View style={{paddingBottom: SIZES.height * 0.1}}>
+              <View style={styles.toppingHeader}>
+                <Text style={styles.labelText}>{toppingData.title}</Text>
+
+                <Text
+                  style={[
+                    styles.subLabelText,
+                    {color: COLORS.gray, marginVertical: SIZES.base},
+                  ]}>
+                  {'Chọn tối đa ' + toppingData.maximum}
+                </Text>
+              </View>
+
+              {toppingData.data.map((item: {name: string; price: number}) => {
+                const currentItem = topping?.find(
+                  toppingItem => toppingItem.name === item.name,
+                );
+                const maximum = toppingData.maximum;
+                const isMaximum = quantityTopping >= maximum;
+                const textColor =
+                  isMaximum && (currentItem?.quantity || 0) > 0 === false
+                    ? COLORS.lightGray1
+                    : COLORS.blackText;
+
+                return (
+                  <View key={item.name} style={styles.toppingBody}>
+                    {currentItem?.quantity === undefined ||
+                    currentItem?.quantity === 0 ? (
+                      <ButtonIcon
+                        disabled={isMaximum}
+                        onPress={() =>
+                          onIncreasePress(item.name, item.price, undefined)
+                        }
+                        containerStyle={[
+                          styles.iconQuantityInputContainer,
+                          {
+                            backgroundColor: isMaximum
+                              ? COLORS.lightPrimary_05
+                              : COLORS.lightPrimary,
+                          },
+                        ]}
+                        icon={icons.add_wght700}
+                        iconStyle={[
+                          styles.iconQuantityInput,
+                          {
+                            tintColor: isMaximum
+                              ? COLORS.lightGray1
+                              : COLORS.primary,
+                          },
+                        ]}
+                      />
+                    ) : (
+                      <QuantityInput
+                        maximumQuantity={maximum}
+                        iconLeft={icons.remove_wght700}
+                        iconRight={icons.add_wght700}
+                        onAddPress={() =>
+                          onIncreasePress(
+                            item.name,
+                            item.price,
+                            currentItem.quantity,
+                          )
+                        }
+                        onRemovePress={() =>
+                          onDecreasePress(item.name, currentItem.quantity)
+                        }
+                        labelStyle={[styles.labelQuantityInput]}
+                        iconContainerStyle={styles.iconQuantityInputContainer}
+                        quantity={currentItem.quantity}
+                        iconStyle={styles.iconQuantityInput}
+                      />
+                    )}
+
+                    <View style={styles.toppingTextWrapper}>
+                      <Text
+                        style={{
+                          color: textColor,
+                          fontWeight:
+                            currentItem?.quantity || 0 > 0 ? 'bold' : 'normal',
+                        }}>
+                        {item.name}
+                      </Text>
+                      <Text style={{color: textColor, ...FONTS.body_medium}}>
+                        {convertToVND(item.price)}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          )
+        }
+      />
+      <View style={styles.toppingFooter}>
+        <QuantityInput
+          minimumQuantity={1}
+          maximumQuantity={15}
+          iconLeft={icons.remove_wght700}
+          iconRight={icons.add_wght700}
+          onAddPress={onAddPress}
+          onRemovePress={onRemovePress}
+          labelStyle={styles.labelQuantityInput}
+          iconContainerStyle={styles.iconQuantityInputContainer}
+          quantity={quantity}
+          iconStyle={styles.iconQuantityInput}
+        />
+        <TouchableOpacity
+          disabled={!canAddToCart}
+          onPress={() => onAddToCartPress()}
+          style={[
+            {
+              backgroundColor: canAddToCart ? COLORS.primary : COLORS.gray3,
+            },
+            styles.btnAddToCartWrapper,
+          ]}>
+          {canAddToCart ? (
+            <>
+              <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
+                Thêm
+              </Text>
+              <View style={styles.dot} />
+              <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
+                {convertToVND(totalPrice())}
+              </Text>
+            </>
+          ) : (
+            <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
+              Chọn thông tin
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default DetailFoodScreen;
 
 const styles = StyleSheet.create({
-  header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: HEADER_MIN_HEIGHT,
-    backgroundColor: COLORS.white,
+  mainText: {color: COLORS.blackText, ...FONTS.body_large},
+  labelText: {color: COLORS.blackText, ...FONTS.label_large},
+  subLabelText: {color: COLORS.primary, ...FONTS.body_small},
+  toppingHeader: {
+    padding: SIZES.padding,
+    paddingBottom: 0,
+    backgroundColor: COLORS.lightPrimary,
+  },
+  toppingTextWrapper: {
+    marginLeft: SIZES.spacing,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 1,
   },
 
-  iconHeaderWrapper: {
-    backgroundColor: COLORS.transparentBlack7,
-    width: 40,
-    height: 40,
-    borderRadius: 40,
+  note: {
+    color: COLORS.gray,
+    ...FONTS.body_large,
+    marginLeft: SIZES.base,
+    marginRight: SIZES.padding,
+  },
+  description: {
+    color: COLORS.gray,
+    ...FONTS.body_medium,
+    marginBottom: SIZES.padding,
+  },
+
+  btnAddToCartWrapper: {
+    flex: 1,
+    marginLeft: 3 * SIZES.spacing,
+    height: 60,
+    borderRadius: SIZES.radius,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  headerContainer: {
-    height: '100%',
-    width: SIZES.width,
+  nameWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
 
+  dot: {
+    width: 3,
+    height: 3,
+    borderRadius: 20,
+    backgroundColor: COLORS.white,
+    marginHorizontal: SIZES.base,
+  },
+  titleWrapper: {
+    padding: SIZES.padding,
+    paddingBottom: 0,
+    backgroundColor: COLORS.lightPrimary,
+  },
+  name: {
+    width: '70%',
+    color: COLORS.blackText,
+    ...FONTS.headline_medium,
+    fontWeight: 'bold',
+  },
+  toppingFooter: {
+    height: SIZES.height * 0.15,
+    borderColor: COLORS.lightGray2,
+    borderTopWidth: 1,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: SIZES.padding,
+    alignItems: 'center',
+  },
+  toppingBody: {
+    backgroundColor: COLORS.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: COLORS.lightGray1,
+    padding: SIZES.padding,
+  },
+
+  labelQuantityInput: {
+    color: COLORS.blackText,
+    ...FONTS.label_large,
+    marginHorizontal: 15,
+  },
+  headerContainer: {
+    zIndex: 1,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: HEADER_HEIGHT,
+  },
+
+  iconQuantityInputContainer: {
+    height: 32,
+    width: 32,
+    backgroundColor: COLORS.lightPrimary,
+    borderRadius: SIZES.base,
+    paddingHorizontal: SIZES.base,
+  },
+
+  iconNote: {
+    width: 24,
+    height: 24,
+    tintColor: COLORS.black,
+  },
+  iconQuantityInput: {
+    width: 16,
+    height: 16,
+    tintColor: COLORS.primary,
+  },
+
   buttonBackWrapper: {
-    width: 40,
-    height: 40,
+    width: 32,
+    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1,
+    zIndex: 2,
+    backgroundColor: COLORS.transparentBlack7,
+    borderRadius: 40,
+    top: 9,
+    left: 10,
+    position: 'absolute',
   },
 
   textPrice: {
@@ -177,132 +387,27 @@ const styles = StyleSheet.create({
     ...FONTS.title_medium,
   },
 
-  buttonFavoriteWrapper: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1,
-  },
-  deliveryWrapper: {
-    flexDirection: 'row',
-    marginTop: SIZES.base,
-  },
-
-  quantityIconContainer: {
-    backgroundColor: COLORS.primary,
-    borderRadius: 100,
-    marginHorizontal: SIZES.radius,
-  },
-
-  imageFoodWrapper: {justifyContent: 'center', alignItems: 'center'},
-
-  labelFooter: {
-    color: COLORS.white,
-    ...FONTS.title_medium,
-    fontWeight: 'bold',
-  },
-
-  searchContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    height: 46,
-    backgroundColor: COLORS.lightGray2,
-    paddingHorizontal: 12,
-    borderRadius: SIZES.padding,
-    alignItems: 'center',
-  },
-
-  foodTitle: {
-    marginTop: 4 * SIZES.spacing,
-  },
-
-  quantityIcon: {
-    width: 36,
-    height: 36,
-    tintColor: COLORS.white,
-  },
-
-  quantityContainer: {
-    backgroundColor: COLORS.primary,
-    borderRadius: 2 * SIZES.radius,
-    height: 50,
-    alignSelf: 'center',
-    position: 'absolute',
-    top: -25,
-  },
-
-  quantityLabel: {
-    color: COLORS.white,
-    marginHorizontal: 5,
+  mainPrice: {
+    textAlign: 'center',
+    width: '30%',
+    color: COLORS.blackText,
     ...FONTS.title_large,
-    fontWeight: 'bold',
-  },
-
-  readLess: {
-    color: COLORS.primary,
-    ...FONTS.body_large,
-    fontWeight: 'bold',
-  },
-
-  readMore: {
-    color: COLORS.primary,
-    ...FONTS.body_large,
-    fontWeight: 'bold',
-  },
-
-  infoFoodWrapper: {
-    flex: 1,
-    paddingHorizontal: SIZES.padding,
-    backgroundColor: COLORS.white,
-  },
-
-  buttonFooter: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    marginTop: SIZES.radius,
-    marginBottom: SIZES.radius,
-    marginHorizontal: SIZES.padding,
-    height: 50,
-    borderRadius: SIZES.radius,
-    backgroundColor: COLORS.primary,
-  },
-
-  textTitle: {
-    color: COLORS.blackText,
-    ...FONTS.headline_medium,
-    fontWeight: 'bold',
-  },
-  textAddress: {
-    color: COLORS.blackText,
-    ...FONTS.body_medium,
-    marginBottom: SIZES.spacing,
   },
 
   imageFood: {
-    height: HEADER_MAX_HEIGHT,
-    width: SIZES.width * 1.3,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    paddingHorizontal: SIZES.width * 0.17,
-    paddingTop: SIZES.spacing,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'red',
+    height: SIZES.height * 0.3,
   },
 
   icon: {
     width: 24,
     height: 24,
     resizeMode: 'contain',
-    tintColor: COLORS.primary,
-  },
-
-  iconSearch: {
-    width: 24,
-    height: 24,
-    marginRight: SIZES.spacing,
-    resizeMode: 'contain',
-    tintColor: COLORS.gray2,
+    tintColor: COLORS.white,
   },
 
   container: {

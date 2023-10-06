@@ -3,7 +3,7 @@ import React from 'react';
 import {SIZES} from '../../config';
 import Skeleton from './Skeleton';
 
-const HorizontalFoodCardSkeleton = () => {
+const HorizontalCardSkeleton = () => {
   return (
     <View style={styles.wrapper}>
       <Skeleton width={SIZES.width} style={styles.image} />
@@ -17,7 +17,7 @@ const HorizontalFoodCardSkeleton = () => {
   );
 };
 
-export default HorizontalFoodCardSkeleton;
+export default HorizontalCardSkeleton;
 
 const styles = StyleSheet.create({
   wrapper: {

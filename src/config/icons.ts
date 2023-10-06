@@ -1,6 +1,6 @@
 const icons = {
   close: require('../assets/icons/close.png'),
-  verified: require('../assets/icons/icons8-verified-64.png'),
+  verified: require('../assets/icons/verified.png'),
   card: require('../assets/icons/card.png'),
   zalo_pay: require('../assets/icons/zalo.png'),
   apple_pay: require('../assets/icons/icons8-apple-pay-50.png'),
@@ -8,6 +8,7 @@ const icons = {
   master_card: require('../assets/icons/icons8-mastercard-48.png'),
   paypal: require('../assets/icons/icons8-paypal-48.png'),
   visa: require('../assets/icons/icons8-visa-48.png'),
+  note: require('../assets/icons/description_FILL0_wght400_GRAD0_opsz48.png'),
   radio_button_checked: require('../assets/icons/radio_button_checked_FILL0_wght500_GRAD0_opsz48.png'),
   radio_button_unchecked: require('../assets/icons/radio_button_unchecked_FILL0_wght500_GRAD0_opsz48.png'),
   delete: require('../assets/icons/delete_FILL0_wght500_GRAD0_opsz48.png'),

@@ -1,18 +1,18 @@
 import {useState} from 'react';
-import {useSeachFoodByNameViewModel} from '../view-models/useFoodViewModel';
-import {FoodObject} from '../types/types';
+import {Shop} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
 import {SreachScreenProp} from '../types/navigation.type';
+import {useShopViewModel} from '../view-models/useShopViewModel';
 const useSearchController = () => {
   const [keyword, setKeyword] = useState('');
   const navigation = useNavigation<SreachScreenProp['navigation']>();
-  const {data} = useSeachFoodByNameViewModel(keyword);
-
+  const {useSeachShopByName} = useShopViewModel();
+  const {data} = useSeachShopByName(keyword);
   const onChangeTextSeach = (text: string) => setKeyword(text);
   const onDeletePress = () => setKeyword('');
-  const onFoodItemPress = (item: FoodObject) =>
+  const onFoodItemPress = (item: Shop) =>
     navigation.navigate('DetailShop', {
-      foodItem: item,
+      shopInfo: item,
     });
   return {
     keyword,

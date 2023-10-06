@@ -11,7 +11,7 @@ import {
   BottomTabNavigationProp,
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
-import {FoodObject} from './types';
+import {Food, Shop} from './types';
 
 export type RootStackParamList = {
   OnBoarding: undefined;
@@ -21,10 +21,10 @@ export type RootStackParamList = {
   Main: NavigatorScreenParams<BottomTabNavigatorParamList>;
   ForgotPassword: undefined;
   DetailFood: {
-    foodItem: FoodObject;
+    foodItem: Food;
   };
   DetailShop: {
-    foodItem: FoodObject;
+    shopInfo: Shop;
   };
   EnterAddressScreen: {
     enableGoogleMap: boolean;

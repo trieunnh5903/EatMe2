@@ -1,9 +1,9 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import {FoodObject} from '../../types/types';
+import {Shop} from '../../types/types';
 
 interface UserState {
   logged: boolean;
-  favorite: FoodObject[];
+  favorite: Shop[];
   address: {name: string; location: string}[];
 }
 
@@ -24,10 +24,10 @@ const userSlice = createSlice({
     changeLoginSate: (state, action: PayloadAction<boolean>) => {
       state.logged = action.payload;
     },
-    addToFavorite: (state, action: PayloadAction<FoodObject>) => {
+    addToFavorite: (state, action: PayloadAction<Shop>) => {
       state.favorite.push(action.payload);
     },
-    removeFromFavorite: (state, action: PayloadAction<FoodObject>) => {
+    removeFromFavorite: (state, action: PayloadAction<Shop>) => {
       const index = state.favorite.findIndex(
         item => item.id === action.payload.id,
       );
