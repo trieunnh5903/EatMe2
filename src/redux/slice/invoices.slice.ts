@@ -1,4 +1,4 @@
-import {PayloadAction, createSlice} from '@reduxjs/toolkit';
+import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {FoodReduxType, Invoice, Shop} from '../../types/types';
 
 interface InvoiceState {
@@ -13,6 +13,15 @@ const initialState: InvoiceState = {
   allIds: [],
 };
 
+export const addFood = createAsyncThunk(
+  'invoice/addFoodMiddleware',
+  ({food, idInvoice}: {food: FoodReduxType; idInvoice: string}, {dispatch}) => {
+    dispatch(invoiceSlice.actions.addFood({food, idInvoice}));
+    dispatch(invoiceSlice.actions.caculateTotalFood({invoiceId: idInvoice}));
+    dispatch(invoiceSlice.actions.caculateTotalPrice({invoiceId: idInvoice}));
+  },
+);
+
 const invoiceSlice = createSlice({
   initialState,
   name: 'invoice',
@@ -20,7 +29,12 @@ const invoiceSlice = createSlice({
     createInvoice: (state, action: PayloadAction<Shop>) => {
       const {id} = action.payload;
       if (state.byId[id] === undefined) {
-        state.byId[id] = {...action.payload, listFood: [], totalPrice: 0};
+        state.byId[id] = {
+          ...action.payload,
+          listFood: [],
+          totalPrice: 0,
+          numOfFood: 0,
+        };
       }
       const isEsixtingId = state.allIds.find(item => item === id);
       if (isEsixtingId === undefined) {
@@ -64,8 +78,26 @@ const invoiceSlice = createSlice({
         };
       }
     },
+
+    caculateTotalFood: (state, action: PayloadAction<{invoiceId: string}>) => {
+      const id = action.payload.invoiceId;
+      const invoice = state.byId[id];
+      invoice.numOfFood = invoice.listFood.reduce(
+        (acc, item) => acc + item.quantity,
+        0,
+      );
+    },
+
+    caculateTotalPrice: (state, action: PayloadAction<{invoiceId: string}>) => {
+      const id = action.payload.invoiceId;
+      const invoice = state.byId[id];
+      invoice.totalPrice = invoice.listFood.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0,
+      );
+    },
   },
 });
 
 export default invoiceSlice.reducer;
-export const {addFood, createInvoice} = invoiceSlice.actions;
+export const {createInvoice} = invoiceSlice.actions;

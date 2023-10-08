@@ -44,7 +44,9 @@ const FoodItem = ({data}: {data: FoodReduxType}) => {
           </Text>
         </View>
         <View style={styles.quantityWrapper}>
-          <Text style={styles.totalPrice}>{convertToVND(data.price || 0)}</Text>
+          <Text style={styles.totalPrice}>
+            {convertToVND(data.price * data.quantity)}
+          </Text>
           <View style={styles.paymentWrapper}>
             {/* quantity input */}
             <QuantityInput
@@ -63,9 +65,12 @@ const FoodItem = ({data}: {data: FoodReduxType}) => {
 };
 
 const CartScreen = ({route}: CartScreenProp) => {
-  const {cartList = [], onBackPress} = useCartController(
-    route.params.idInvoices,
-  );
+  const {
+    cartList = [],
+    numOfFood,
+    totalPrice,
+    onBackPress,
+  } = useCartController(route.params.idInvoices);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -73,7 +78,7 @@ const CartScreen = ({route}: CartScreenProp) => {
       <HeaderCustom
         leftComponent={
           <TouchableOpacity onPress={onBackPress}>
-            <Image source={icons.arrow_back} style={styles.icon} />
+            <Image source={icons.close} style={styles.icon} />
           </TouchableOpacity>
         }
         rightComponent={
@@ -113,9 +118,9 @@ const CartScreen = ({route}: CartScreenProp) => {
           {/* nút thanh toán */}
           <View>
             <TouchableOpacity style={styles.checkoutButton}>
-              <Text style={styles.textTitle}>{0} sản phẩm</Text>
+              <Text style={styles.textTitle}>{numOfFood} sản phẩm</Text>
               <Text style={styles.textTitle}>Thanh toán</Text>
-              <Text style={styles.textTitle}>{convertToVND(0)}</Text>
+              <Text style={styles.textTitle}>{convertToVND(totalPrice)}</Text>
             </TouchableOpacity>
           </View>
         </>

@@ -76,6 +76,6 @@ export interface FoodReduxType {
 
 export interface Invoice extends Shop {
   totalPrice: number;
-  // foodIds: string[];
+  numOfFood: number;
   listFood: FoodReduxType[];
 }

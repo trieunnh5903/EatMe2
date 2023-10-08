@@ -154,12 +154,12 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
           <MenuFoodItem menuData={item} onFoodItemPress={onFoodItemPress} />
         )}
       />
-      {invoiceData?.listFood?.length > 0 && (
+      {invoiceData?.numOfFood > 0 && (
         <View style={styles.checkout}>
           <ButtonTextIcon
             onPress={onCartPress}
             icon={icons.cart_fill}
-            label={invoiceData.listFood.length.toString()}
+            label={invoiceData.numOfFood.toString()}
             containerStyle={styles.btnCart}
             iconStyle={styles.iconCart}
             labelStyle={{color: COLORS.primary}}

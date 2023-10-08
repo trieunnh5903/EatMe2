@@ -30,14 +30,14 @@ export type RootStackParamList = {
   EnterAddressScreen: {
     enableGoogleMap: boolean;
   };
+  CartScreen: {
+    idInvoices: string;
+  };
 };
 
 export type BottomTabNavigatorParamList = {
   Home: undefined;
   Search: undefined;
-  Cart: {
-    idInvoices: string;
-  };
   Favorite: undefined;
   Profile: undefined;
 };
@@ -52,9 +52,9 @@ export type HomeScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<RootStackParamList>
 >;
 
-export type CartScreenProp = CompositeScreenProps<
-  BottomTabScreenProps<BottomTabNavigatorParamList, 'Cart'>,
-  NativeStackScreenProps<RootStackParamList>
+export type CartScreenProp = NativeStackScreenProps<
+  RootStackParamList,
+  'CartScreen'
 >;
 
 export type SreachScreenProp = CompositeScreenProps<

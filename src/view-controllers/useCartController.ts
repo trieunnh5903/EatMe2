@@ -39,7 +39,11 @@ const useCartController = (idInvoice: string) => {
   //   );
   // };
 
-  const {listFood: cartList} = getDataInvoiceById(idInvoice);
+  const {
+    listFood: cartList,
+    numOfFood,
+    totalPrice,
+  } = getDataInvoiceById(idInvoice);
   // xử lí tăng sản phẩm
   // const onIncreasePress = useCallback(
   //   (item: Shop, previousQuantity: number) => {
@@ -78,7 +82,8 @@ const useCartController = (idInvoice: string) => {
     // onDeleteAllPress,
     // onGoHomePress,
     // sumQuantityProduct,
-
+    numOfFood,
+    totalPrice,
     cartList,
     // totalCartPrice,
   };

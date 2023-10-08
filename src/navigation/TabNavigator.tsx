@@ -4,7 +4,6 @@ import {BottomTabNavigatorParamList} from '../types/navigation.type';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {
-  CartScreen,
   FavoriteScreen,
   HomeScreen,
   ProfileScreen,
@@ -12,7 +11,6 @@ import {
 } from '../screens';
 import {FONTS} from '../config';
 import {RouteProp} from '@react-navigation/native';
-import {useAppSelector} from '../redux/store';
 
 const Tab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -36,8 +34,6 @@ const tabBarIcon = ({
     iconName = focused ? 'home' : 'home-outline';
   } else if (route.name === 'Search') {
     iconName = focused ? 'search' : 'search-outline';
-  } else if (route.name === 'Cart') {
-    iconName = focused ? 'cart' : 'cart-outline';
   } else if (route.name === 'Favorite') {
     iconName = focused ? 'heart' : 'heart-outline';
   } else if (route.name === 'Profile') {
@@ -47,7 +43,6 @@ const tabBarIcon = ({
 };
 
 const TabNavigator = () => {
-  let badge = useAppSelector(state => state.cart.totalProductQuantity);
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -70,7 +65,7 @@ const TabNavigator = () => {
         component={SearchScreen}
         options={{tabBarLabel: 'Tìm kiếm'}}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Cart"
         component={CartScreen}
         options={{
@@ -78,7 +73,7 @@ const TabNavigator = () => {
           tabBarStyle: {display: 'none'},
           tabBarBadge: badge === 0 ? undefined : badge,
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Favorite"
         component={FavoriteScreen}

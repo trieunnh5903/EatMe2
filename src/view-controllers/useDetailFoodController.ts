@@ -16,7 +16,6 @@ import {
   ShopOption,
   ShopTopping,
 } from '../types/types';
-import useCartViewModel from '../view-models/useCartViewModel';
 import {nanoid} from '@reduxjs/toolkit';
 import useInvoiceModel from '../view-models/useInvoiceViewModel';
 

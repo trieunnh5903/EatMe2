@@ -93,9 +93,8 @@ const useDetailShopController = (shopInfo: Shop) => {
   });
 
   const onCartPress = () => {
-    navigation.navigate('Main', {
-      screen: 'Cart',
-      params: {idInvoices: shopInfo.id},
+    navigation.navigate('CartScreen', {
+      idInvoices: shopInfo.id,
     });
   };
 
