@@ -15,7 +15,15 @@ import {FoodReduxType} from '../types/types';
 import useCartController from '../view-controllers/useCartController';
 import {CartScreenProp} from '../types/navigation.type';
 
-const FoodItem = ({data}: {data: FoodReduxType}) => {
+const FoodItem = ({
+  data,
+  onDecreaseFoodFress,
+  onIncreaseFoodFress,
+}: {
+  data: FoodReduxType;
+  onIncreaseFoodFress: (id: string) => void;
+  onDecreaseFoodFress: (id: string) => void;
+}) => {
   return (
     <View style={styles.itemContainer}>
       {/* content */}
@@ -50,6 +58,8 @@ const FoodItem = ({data}: {data: FoodReduxType}) => {
           <View style={styles.paymentWrapper}>
             {/* quantity input */}
             <QuantityInput
+              onAddPress={() => onIncreaseFoodFress(data.id)}
+              onRemovePress={() => onDecreaseFoodFress(data.id)}
               iconLeft={icons.remove_wght700}
               iconRight={icons.add_wght700}
               labelStyle={styles.labelQuantityInput}
@@ -70,6 +80,8 @@ const CartScreen = ({route}: CartScreenProp) => {
     numOfFood,
     totalPrice,
     onBackPress,
+    onDecreaseFoodFress,
+    onIncreaseFoodFress,
   } = useCartController(route.params.idInvoices);
 
   return (
@@ -113,7 +125,13 @@ const CartScreen = ({route}: CartScreenProp) => {
             keyExtractor={item => {
               return item.id;
             }}
-            renderItem={({item}) => <FoodItem data={item} />}
+            renderItem={({item}) => (
+              <FoodItem
+                data={item}
+                onDecreaseFoodFress={onDecreaseFoodFress}
+                onIncreaseFoodFress={onIncreaseFoodFress}
+              />
+            )}
           />
           {/* nút thanh toán */}
           <View>

@@ -22,14 +22,12 @@ import useInvoiceModel from '../view-models/useInvoiceViewModel';
 const HEADER_HEIGHT = 50;
 const useDetailFoodController = (foodItem: Food, _shopInfo: Shop) => {
   const navigation = useNavigation<DetailFoodNavigationProps['navigation']>();
-  // const {addFoodToInvoice, addInvoiceToCart, invoices} = useInvoiceModel();
   const {toppings: toppingData, options} = foodItem;
   const [quantity, setQuantity] = useState<number>(1);
   const scrollY = useSharedValue(0);
   const [selectedOption, setSelectedOption] = useState<ShopOption[]>([]);
   const [topping, setTopping] = useState<ShopTopping[]>([]);
-  // const {byId, allIds, addFoodToCart} = useCartViewModel();
-  const {addInvoiceToCart, addFoodToInvoice} = useInvoiceModel();
+  const {addFoodToInvoice} = useInvoiceModel();
   const headerAnimatedStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       scrollY.value,
@@ -174,8 +172,7 @@ const useDetailFoodController = (foodItem: Food, _shopInfo: Shop) => {
     // } else {
     //   addFoodToCart(food);
     // }
-    addInvoiceToCart(_shopInfo);
-    addFoodToInvoice(food, _shopInfo.id);
+    addFoodToInvoice(food, _shopInfo);
     navigation.goBack();
     // if (existingItem) {
     //   updateQuantityFood(food);

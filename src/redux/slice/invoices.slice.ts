@@ -15,10 +15,21 @@ const initialState: InvoiceState = {
 
 export const addFood = createAsyncThunk(
   'invoice/addFoodMiddleware',
-  ({food, idInvoice}: {food: FoodReduxType; idInvoice: string}, {dispatch}) => {
-    dispatch(invoiceSlice.actions.addFood({food, idInvoice}));
-    dispatch(invoiceSlice.actions.caculateTotalFood({invoiceId: idInvoice}));
-    dispatch(invoiceSlice.actions.caculateTotalPrice({invoiceId: idInvoice}));
+  ({food, shop}: {food: FoodReduxType; shop: Shop}, {dispatch}) => {
+    const invoiceId = shop.id;
+    dispatch(invoiceSlice.actions.createInvoice(shop));
+    dispatch(invoiceSlice.actions.addFood({food, idInvoice: invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalFood({invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalPrice({invoiceId}));
+  },
+);
+
+export const increaseFoodQuantity = createAsyncThunk(
+  'invoice/increaseFoodQuantityMiddleware',
+  ({foodId, invoiceId}: {foodId: string; invoiceId: string}, {dispatch}) => {
+    dispatch(invoiceSlice.actions.increaseFoodQuantity({foodId, invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalFood({invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalPrice({invoiceId}));
   },
 );
 
@@ -41,6 +52,7 @@ const invoiceSlice = createSlice({
         state.allIds.push(id);
       }
     },
+
     addFood: (
       state,
       action: PayloadAction<{food: FoodReduxType; idInvoice: string}>,
@@ -96,8 +108,19 @@ const invoiceSlice = createSlice({
         0,
       );
     },
+
+    increaseFoodQuantity(
+      state,
+      action: PayloadAction<{foodId: string; invoiceId: string}>,
+    ) {
+      const {foodId, invoiceId} = action.payload;
+      const invoice = state.byId[invoiceId];
+      const food = invoice.listFood.find(item => item.id === foodId);
+      if (food) {
+        food.quantity++;
+      }
+    },
   },
 });
 
 export default invoiceSlice.reducer;
-export const {createInvoice} = invoiceSlice.actions;

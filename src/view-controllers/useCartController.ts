@@ -12,7 +12,12 @@ const useCartController = (idInvoice: string) => {
     // updateFoodItemQuantity,
     // totalCartPrice,
   } = useCartViewModel();
-  const {getDataInvoiceById} = useInvoiceViewModel();
+  const {getDataInvoiceById, increaseQuantity} = useInvoiceViewModel();
+  const {
+    listFood: cartList,
+    numOfFood,
+    totalPrice,
+  } = getDataInvoiceById(idInvoice);
   // tổng số lượng sản phẩm
   // const sumQuantityProduct = () => {
   //   return cartList.reduce((sum, item) => sum + item.quantity, 0);
@@ -38,12 +43,12 @@ const useCartController = (idInvoice: string) => {
   //     },
   //   );
   // };
-
-  const {
-    listFood: cartList,
-    numOfFood,
-    totalPrice,
-  } = getDataInvoiceById(idInvoice);
+  const onIncreaseFoodFress = (foodId: string) => {
+    increaseQuantity(foodId, idInvoice);
+  };
+  const onDecreaseFoodFress = (foodId: string) => {
+    console.log(foodId);
+  };
   // xử lí tăng sản phẩm
   // const onIncreasePress = useCallback(
   //   (item: Shop, previousQuantity: number) => {
@@ -76,6 +81,8 @@ const useCartController = (idInvoice: string) => {
   // const onCheckoutPress = () =>
   //   navigation.navigate('EnterAddressScreen', {enableGoogleMap: true});
   return {
+    onIncreaseFoodFress,
+    onDecreaseFoodFress,
     // onIncreasePress,
     // onDecreasePress,
     onBackPress,
