@@ -13,16 +13,18 @@ import {
 } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
+import invoicesSlice from './slice/invoices.slice';
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['user', 'cart'],
+  whitelist: ['user', 'cart', 'invoice'],
 };
 
 const rootReducer = combineReducers({
   user: userSlice,
   cart: cartSlice,
+  invoice: invoicesSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -15,7 +15,13 @@ import React from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
 import {Shadow} from 'react-native-shadow-2';
 import convertToVND from '../utils/convertToVND';
-import {Break, HeaderCustom, VerticalFoodCard} from '../components';
+import {
+  Break,
+  ButtonText,
+  ButtonTextIcon,
+  HeaderCustom,
+  VerticalFoodCard,
+} from '../components';
 import Animated from 'react-native-reanimated';
 import {Food, Shop} from '../types/types';
 import {DetailShopNavigationProps} from '../types/navigation.type';
@@ -38,6 +44,8 @@ const HEADERHEIGHT = 116;
 const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
   const {shopInfo} = route.params;
   const {
+    invoiceData,
+    onCartPress,
     onFoodItemPress,
     headerStyle,
     onBackPress,
@@ -146,6 +154,23 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
           <MenuFoodItem menuData={item} onFoodItemPress={onFoodItemPress} />
         )}
       />
+      {invoiceData?.listFood?.length > 0 && (
+        <View style={styles.checkout}>
+          <ButtonTextIcon
+            onPress={onCartPress}
+            icon={icons.cart_fill}
+            label={invoiceData.listFood.length.toString()}
+            containerStyle={styles.btnCart}
+            iconStyle={styles.iconCart}
+            labelStyle={{color: COLORS.primary}}
+          />
+          <ButtonText
+            labelStyle={{color: COLORS.white}}
+            containerStyle={styles.btnCheckout}
+            label={'Trang thanh toán'}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -365,6 +390,30 @@ const MenuFoodItem: React.FC<MenuFoodItemProp> = ({
 export default DetailShopScreen;
 
 const styles = StyleSheet.create({
+  iconCart: {width: 32, height: 32, tintColor: COLORS.primary},
+  btnCart: {
+    height: 60,
+    width: '25%',
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  btnCheckout: {
+    backgroundColor: COLORS.primary,
+    height: 60,
+    flex: 1,
+    marginLeft: SIZES.spacing,
+    paddingHorizontal: SIZES.spacing,
+    borderRadius: SIZES.radius,
+  },
+
+  checkout: {
+    width: '100%',
+    height: SIZES.height * 0.12,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: SIZES.spacing,
+    paddingHorizontal: SIZES.padding,
+  },
   subInfo: {
     marginTop: SIZES.padding,
     flexDirection: 'row',

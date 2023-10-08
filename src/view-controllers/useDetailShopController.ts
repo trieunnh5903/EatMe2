@@ -12,26 +12,20 @@ import {useShopViewModel} from '../view-models/useShopViewModel';
 import {SIZES} from '../config';
 import {useNavigation} from '@react-navigation/native';
 import {DetailShopNavigationProps} from '../types/navigation.type';
+import useInvoiceViewModel from '../view-models/useInvoiceViewModel';
 
 const HEADERHEIGHT = 116;
 const useDetailShopController = (shopInfo: Shop) => {
   const navigation = useNavigation<DetailShopNavigationProps['navigation']>();
   const {getShopById, addToFavoriteList, favoriteList, removeFromFavoriteList} =
     useShopViewModel();
-
-  const {
-    data: allFood,
-    hightLight: hightLightFood,
-    topping,
-    options,
-  } = getShopById(shopInfo.id);
-
+  const {data: allFood, hightLight: hightLightFood} = getShopById(shopInfo.id);
+  const {getDataInvoiceById} = useInvoiceViewModel();
   const isFavorite = favoriteList.some(shop => shop.id === shopInfo.id);
   const [currentMenuItem, setCurrentMenuItem] = useState(allFood[0].label);
   const menuListRef = useRef<FlatList>(null);
   const detailMenuRef = useRef<Animated.FlatList<any> & FlatList>(null);
   const scrollY = useSharedValue(0);
-
   const handleToggleFavorite = () => {
     if (isFavorite) {
       removeFromFavoriteList(shopInfo);
@@ -42,7 +36,8 @@ const useDetailShopController = (shopInfo: Shop) => {
   const onBackPress = () => navigation.goBack();
   const onFoodItemPress = (item: Food) => {
     navigation.navigate('DetailFood', {
-      foodItem: {...item, quantity: 0, toppings: topping, options: options},
+      foodItem: {...item},
+      shopInfo,
     });
   };
 
@@ -97,7 +92,17 @@ const useDetailShopController = (shopInfo: Shop) => {
     };
   });
 
+  const onCartPress = () => {
+    navigation.navigate('Main', {
+      screen: 'Cart',
+      params: {idInvoices: shopInfo.id},
+    });
+  };
+
+  const invoiceData = getDataInvoiceById(shopInfo.id);
   return {
+    invoiceData,
+    onCartPress,
     onFoodItemPress,
     headerStyle,
     onBackPress,

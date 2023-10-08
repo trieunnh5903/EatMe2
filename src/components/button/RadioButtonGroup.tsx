@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: COLORS.lightGray1,
+    borderColor: COLORS.lightGray2,
     padding: SIZES.padding,
   },
 });

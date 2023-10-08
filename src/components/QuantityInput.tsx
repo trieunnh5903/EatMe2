@@ -56,7 +56,7 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
           {
             backgroundColor:
               quantity === minimumQuantity
-                ? COLORS.lightPrimary_05
+                ? COLORS.lightPrimary
                 : COLORS.lightPrimary,
           },
         ]}

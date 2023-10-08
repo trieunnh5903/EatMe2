@@ -14,7 +14,9 @@ import VerticalCardSkeleton from './skeleton/VerticalCardSkeleton';
 import HorizontalCardSkeleton from './skeleton/HorizontalCardSkeleton';
 import HorizontalShopCard from './HorizontalShopCard';
 import Dot from './Dot';
+import ButtonTextIcon from './button/ButtonTextIcon';
 export {
+  ButtonTextIcon,
   Dot,
   HorizontalShopCard,
   HorizontalCardSkeleton,

@@ -22,6 +22,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   DetailFood: {
     foodItem: Food;
+    shopInfo: Shop;
   };
   DetailShop: {
     shopInfo: Shop;
@@ -34,7 +35,9 @@ export type RootStackParamList = {
 export type BottomTabNavigatorParamList = {
   Home: undefined;
   Search: undefined;
-  Cart: undefined;
+  Cart: {
+    idInvoices: string;
+  };
   Favorite: undefined;
   Profile: undefined;
 };
@@ -49,9 +52,9 @@ export type HomeScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<RootStackParamList>
 >;
 
-export type CartScreenProp = CompositeNavigationProp<
-  BottomTabNavigationProp<BottomTabNavigatorParamList, 'Cart'>,
-  NativeStackNavigationProp<RootStackParamList>
+export type CartScreenProp = CompositeScreenProps<
+  BottomTabScreenProps<BottomTabNavigatorParamList, 'Cart'>,
+  NativeStackScreenProps<RootStackParamList>
 >;
 
 export type SreachScreenProp = CompositeScreenProps<

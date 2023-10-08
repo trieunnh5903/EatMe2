@@ -17,7 +17,10 @@ import useDetailFoodController from '../view-controllers/useDetailFoodController
 
 const HEADER_HEIGHT = 50;
 const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
-  const {foodItem} = route.params;
+  // const {foodItem, shopInfo} = route.params;
+  const {foodItem, shopInfo} = route.params;
+  // const {getFoodById} = useFoodViewModel();
+  // const foodItem = getFoodById(foodId);
   const {
     onAddToCartPress,
     options,
@@ -38,7 +41,7 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
     tintColorIconClose,
     quantityTopping,
     setSelectedOption,
-  } = useDetailFoodController(foodItem);
+  } = useDetailFoodController(foodItem, shopInfo);
   const AnimatedTouchableOpacity =
     Animated.createAnimatedComponent(TouchableOpacity);
   return (
@@ -77,9 +80,7 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
               </Text>
             </View>
 
-            <Text style={[styles.description]}>
-              Bao gồm: hộp, muỗng, đũa mang về
-            </Text>
+            <Text style={[styles.description]}>{foodItem.description}</Text>
 
             <TouchableOpacity style={{flexDirection: 'row'}}>
               <Image
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: COLORS.lightGray1,
+    borderColor: COLORS.lightGray2,
     padding: SIZES.padding,
   },
 

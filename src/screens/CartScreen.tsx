@@ -11,36 +11,45 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {HeaderCustom, QuantityInput} from '../components';
 import convertToVND from '../utils/convertToVND';
-import {Shop} from '../types/types';
+import {FoodReduxType} from '../types/types';
 import useCartController from '../view-controllers/useCartController';
+import {CartScreenProp} from '../types/navigation.type';
 
-const FoodItem = ({data}: {data: Shop}) => {
-  const {onDecreasePress, onIncreasePress} = useCartController();
+const FoodItem = ({data}: {data: FoodReduxType}) => {
   return (
     <View style={styles.itemContainer}>
-      {/* image */}
-      <Image
-        style={styles.itemImage}
-        source={{
-          uri: data.image,
-        }}
-      />
       {/* content */}
       <View style={{flex: 1}}>
         <View style={{flex: 1}}>
           <Text style={styles.itemName}>{data.name}</Text>
+          <Text style={{color: COLORS.gray, ...FONTS.body_small}}>
+            {data.options?.map((item, index) => {
+              const lastIndex = data.options?.length;
+              if (lastIndex) {
+                if (index === lastIndex - 1) {
+                  return item.option;
+                }
+              }
+              return item.option + ', ';
+            })}
+            {data.toppings?.map((item, index) => {
+              const lastIndex = data.toppings?.length;
+              if (lastIndex) {
+                if (index === lastIndex - 1) {
+                  return item.name;
+                }
+              }
+              return item.name + ', ';
+            })}
+          </Text>
         </View>
         <View style={styles.quantityWrapper}>
-          <Text style={styles.totalPrice}>
-            {convertToVND(data.priceTotal || 0)}
-          </Text>
+          <Text style={styles.totalPrice}>{convertToVND(data.price || 0)}</Text>
           <View style={styles.paymentWrapper}>
             {/* quantity input */}
             <QuantityInput
               iconLeft={icons.remove_wght700}
               iconRight={icons.add_wght700}
-              onAddPress={() => onIncreasePress(data, data.quantity || 0)}
-              onRemovePress={() => onDecreasePress(data)}
               labelStyle={styles.labelQuantityInput}
               iconContainerStyle={styles.iconQuantityInputContainer}
               quantity={data.quantity || 0}
@@ -53,16 +62,10 @@ const FoodItem = ({data}: {data: Shop}) => {
   );
 };
 
-const CartScreen = () => {
-  const {
-    cartList,
-    onBackPress,
-    onDeleteAllPress,
-    onGoHomePress,
-    sumQuantityProduct,
-    totalCartPrice,
-    onCheckoutPress,
-  } = useCartController();
+const CartScreen = ({route}: CartScreenProp) => {
+  const {cartList = [], onBackPress} = useCartController(
+    route.params.idInvoices,
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -76,7 +79,7 @@ const CartScreen = () => {
         rightComponent={
           cartList.length > 0 ? (
             // có sản phẩm
-            <TouchableOpacity onPress={onDeleteAllPress}>
+            <TouchableOpacity>
               <Text
                 style={{
                   color: COLORS.red,
@@ -109,16 +112,10 @@ const CartScreen = () => {
           />
           {/* nút thanh toán */}
           <View>
-            <TouchableOpacity
-              onPress={onCheckoutPress}
-              style={styles.checkoutButton}>
-              <Text style={styles.textTitle}>
-                {sumQuantityProduct() || 0} sản phẩm
-              </Text>
+            <TouchableOpacity style={styles.checkoutButton}>
+              <Text style={styles.textTitle}>{0} sản phẩm</Text>
               <Text style={styles.textTitle}>Thanh toán</Text>
-              <Text style={styles.textTitle}>
-                {convertToVND(totalCartPrice)}
-              </Text>
+              <Text style={styles.textTitle}>{convertToVND(0)}</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -135,9 +132,7 @@ const CartScreen = () => {
               Giỏ hàng của bạn trống!
             </Text>
           </View>
-          <TouchableOpacity
-            onPress={onGoHomePress}
-            style={styles.buttonStartShopping}>
+          <TouchableOpacity style={styles.buttonStartShopping}>
             <Text style={styles.textTitle}>Mua sắm ngay</Text>
           </TouchableOpacity>
         </>
@@ -234,7 +229,7 @@ const styles = StyleSheet.create({
   },
 
   totalPrice: {
-    color: COLORS.primary,
+    color: COLORS.black,
     ...FONTS.title_medium,
     fontWeight: 'bold',
   },
@@ -279,7 +274,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: COLORS.lightGray2,
-    height: 110,
+    minHeight: 130,
   },
 
   textTitle: {

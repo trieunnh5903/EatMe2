@@ -9,17 +9,28 @@ import {useNavigation} from '@react-navigation/native';
 import {DetailFoodNavigationProps} from '../types/navigation.type';
 import {COLORS, SIZES} from '../config';
 import {NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
-import {Food, ShopOption, ShopTopping} from '../types/types';
+import {
+  Food,
+  FoodReduxType,
+  Shop,
+  ShopOption,
+  ShopTopping,
+} from '../types/types';
+import useCartViewModel from '../view-models/useCartViewModel';
+import {nanoid} from '@reduxjs/toolkit';
+import useInvoiceModel from '../view-models/useInvoiceViewModel';
 
 const HEADER_HEIGHT = 50;
-const useDetailFoodController = (foodItem: Food) => {
+const useDetailFoodController = (foodItem: Food, _shopInfo: Shop) => {
   const navigation = useNavigation<DetailFoodNavigationProps['navigation']>();
+  // const {addFoodToInvoice, addInvoiceToCart, invoices} = useInvoiceModel();
   const {toppings: toppingData, options} = foodItem;
   const [quantity, setQuantity] = useState<number>(1);
   const scrollY = useSharedValue(0);
   const [selectedOption, setSelectedOption] = useState<ShopOption[]>([]);
   const [topping, setTopping] = useState<ShopTopping[]>([]);
-
+  // const {byId, allIds, addFoodToCart} = useCartViewModel();
+  const {addInvoiceToCart, addFoodToInvoice} = useInvoiceModel();
   const headerAnimatedStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       scrollY.value,
@@ -116,8 +127,7 @@ const useDetailFoodController = (foodItem: Food) => {
       return pre + curr.price * (curr.quantity || 1);
     }, 0);
 
-    console.log(totalPriceTopping);
-    return (totalPriceOptions + totalPriceTopping) * quantity;
+    return (totalPriceOptions + totalPriceTopping + foodItem.price) * quantity;
   };
 
   const quantityTopping = topping.reduce((pre, curr) => {
@@ -135,7 +145,48 @@ const useDetailFoodController = (foodItem: Food) => {
     }
   };
 
-  const onAddToCartPress = () => {};
+  const onAddToCartPress = () => {
+    const food: FoodReduxType = {
+      id: nanoid(),
+      image: foodItem.image,
+      name: foodItem.name,
+      price: foodItem.price,
+      quantity: quantity,
+      description: foodItem.description,
+      options: selectedOption,
+      toppings: topping,
+    };
+
+    // const existingFoodId = allIds.find(foodId => {
+    //   const currentFood = byId[foodId];
+    //   return (
+    //     currentFood.name === food.name &&
+    //     JSON.stringify(currentFood.options) === JSON.stringify(food.options) &&
+    //     JSON.stringify(currentFood.toppings) === JSON.stringify(food.toppings)
+    //   );
+    // });
+
+    // if (existingFoodId !== undefined) {
+    //   const existingFood = byId[existingFoodId];
+    //   addFoodToCart({
+    //     ...existingFood,
+    //     quantity: existingFood.quantity + quantity,
+    //   });
+    // } else {
+    //   addFoodToCart(food);
+    // }
+    addInvoiceToCart(_shopInfo);
+    addFoodToInvoice(food, _shopInfo.id);
+    navigation.goBack();
+    // if (existingItem) {
+    //   updateQuantityFood(food);
+    //   navigation.goBack();
+    // } else {
+    //   addFoodToCart(food);
+    //   // addInvoiceToCart({...shopInfo, foodIds: [food.id], numberOfFood: 1});
+    //   navigation.goBack();
+    // }
+  };
 
   return {
     onAddToCartPress,
