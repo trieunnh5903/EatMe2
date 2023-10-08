@@ -33,6 +33,33 @@ export const increaseFoodQuantity = createAsyncThunk(
   },
 );
 
+export const decreaseFoodQuantity = createAsyncThunk(
+  'invoice/decreaseFoodQuantityMiddleware',
+  ({foodId, invoiceId}: {foodId: string; invoiceId: string}, {dispatch}) => {
+    dispatch(invoiceSlice.actions.decreaseFoodQuantity({foodId, invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalFood({invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalPrice({invoiceId}));
+  },
+);
+
+export const removeFood = createAsyncThunk(
+  'invoice/removeFoodMiddleware',
+  ({foodId, invoiceId}: {foodId: string; invoiceId: string}, {dispatch}) => {
+    dispatch(invoiceSlice.actions.removeFood({foodId, invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalFood({invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalPrice({invoiceId}));
+  },
+);
+
+export const removeAllFood = createAsyncThunk(
+  'invoice/removeAllFoodMiddleware',
+  ({invoiceId}: {invoiceId: string}, {dispatch}) => {
+    dispatch(invoiceSlice.actions.removeAllFood({invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalFood({invoiceId}));
+    dispatch(invoiceSlice.actions.caculateTotalPrice({invoiceId}));
+  },
+);
+
 const invoiceSlice = createSlice({
   initialState,
   name: 'invoice',
@@ -119,6 +146,33 @@ const invoiceSlice = createSlice({
       if (food) {
         food.quantity++;
       }
+    },
+
+    decreaseFoodQuantity(
+      state,
+      action: PayloadAction<{foodId: string; invoiceId: string}>,
+    ) {
+      const {foodId, invoiceId} = action.payload;
+      const invoice = state.byId[invoiceId];
+      const food = invoice.listFood.find(item => item.id === foodId);
+      if (food) {
+        food.quantity--;
+      }
+    },
+
+    removeFood(
+      state,
+      action: PayloadAction<{foodId: string; invoiceId: string}>,
+    ) {
+      const {foodId, invoiceId} = action.payload;
+      const invoice = state.byId[invoiceId];
+      invoice.listFood = invoice.listFood.filter(item => item.id !== foodId);
+    },
+
+    removeAllFood(state, action: PayloadAction<{invoiceId: string}>) {
+      const {invoiceId} = action.payload;
+      const invoice = state.byId[invoiceId];
+      invoice.listFood = [];
     },
   },
 });

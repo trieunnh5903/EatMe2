@@ -22,7 +22,7 @@ const FoodItem = ({
 }: {
   data: FoodReduxType;
   onIncreaseFoodFress: (id: string) => void;
-  onDecreaseFoodFress: (id: string) => void;
+  onDecreaseFoodFress: (id: string, quantity: number) => void;
 }) => {
   return (
     <View style={styles.itemContainer}>
@@ -59,7 +59,7 @@ const FoodItem = ({
             {/* quantity input */}
             <QuantityInput
               onAddPress={() => onIncreaseFoodFress(data.id)}
-              onRemovePress={() => onDecreaseFoodFress(data.id)}
+              onRemovePress={() => onDecreaseFoodFress(data.id, data.quantity)}
               iconLeft={icons.remove_wght700}
               iconRight={icons.add_wght700}
               labelStyle={styles.labelQuantityInput}
