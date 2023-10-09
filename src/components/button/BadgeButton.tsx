@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   Image,
   StyleProp,
@@ -10,7 +9,9 @@ import {
   ImageSourcePropType,
   ImageStyle,
   GestureResponderEvent,
+  Pressable,
 } from 'react-native';
+import {COLORS} from '../../config';
 
 interface BadgeButtonProps {
   containerStyle?: StyleProp<ViewStyle>;
@@ -18,7 +19,7 @@ interface BadgeButtonProps {
   iconStyle?: ImageStyle;
   onPress?: (event: GestureResponderEvent) => void;
   badgeText?: string;
-  badgeStyle?: ViewStyle;
+  badgeContainerStyle?: ViewStyle;
 }
 const BadgeButton: React.FC<BadgeButtonProps> = ({
   containerStyle,
@@ -26,29 +27,31 @@ const BadgeButton: React.FC<BadgeButtonProps> = ({
   iconStyle,
   onPress,
   badgeText,
-  badgeStyle,
+  badgeContainerStyle,
 }) => {
   return (
-    <TouchableOpacity style={[containerStyle]} onPress={onPress}>
+    <Pressable style={[containerStyle]} onPress={onPress}>
       <Image source={icon} style={iconStyle} />
-      <View style={[badgeStyle]}>
+      <View style={[badgeContainerStyle, styles.badge]}>
         <Text style={styles.badgeText}>{badgeText}</Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   badge: {
     position: 'absolute',
-    top: -5,
-    right: -5,
-    backgroundColor: 'red',
+    borderRadius: 1000,
+    top: 0,
+    right: 0,
+    backgroundColor: COLORS.lightOrange2,
     alignItems: 'center',
     justifyContent: 'center',
   },
   badgeText: {
-    color: '#FFFFFF',
+    color: COLORS.primary,
+    fontWeight: 'bold',
     fontSize: 12,
   },
 });

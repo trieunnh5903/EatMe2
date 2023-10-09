@@ -4,22 +4,17 @@ import data from '../data';
 import {FlatList, NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
 import {SIZES} from '../config';
 import {useNavigation} from '@react-navigation/native';
-import {HomeScreenNavigationProp} from '../types/navigation.type';
 import {useShopViewModel} from '../view-models/useShopViewModel';
+import {HomeScreenProp} from '../types/navigation.type';
+import useInvoiceViewModel from '../view-models/useInvoiceViewModel';
 
 const useHomeController = () => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const navigation = useNavigation<HomeScreenProp['navigation']>();
   const carouselRef = useRef<FlatList>(null);
   let carouselIndex = useRef(0);
   const totalIndex = data.carousel.length - 1;
-  // const {data: popularShop} = usePopularShopViewModel();
-  // const {
-  //   isLoading,
-  //   data: shopNearYou,
-  //   isFetchingNextPage: isFetchingShopNearYou,
-  //   fetchNextPage: fetchNextShopNearYou,
-  // } = useShopNearByViewModel();
-
+  const {byId, allIds} = useInvoiceViewModel();
+  const listInvoices = allIds.map(id => byId[id]);
   const {useGetPopularShop, useGetShopNearBy} = useShopViewModel();
   const {data: popularShop} = useGetPopularShop();
   const {
@@ -87,6 +82,7 @@ const useHomeController = () => {
   };
 
   return {
+    listInvoices,
     onCarouselScroll,
     onEnterAddressPress,
     getItemLayoutCarousel,

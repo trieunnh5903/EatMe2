@@ -6,13 +6,16 @@ import {
   DetailFoodScreen,
   DetailShopScreen,
   EnterAddressScreen,
+  FavoriteScreen,
   ForgotPasswordScreen,
+  HomeScreen,
   LoginScreen,
   OnBoardingScreen,
+  ProfileScreen,
   RegisterScreen,
+  SearchScreen,
 } from '../screens';
 import {RootStackParamList} from '../types/navigation.type';
-import TabNavigator from './TabNavigator';
 import SplashScreen from 'react-native-splash-screen';
 import useUserViewModel from '../view-models/useUserViewModel';
 
@@ -26,7 +29,7 @@ const MainNavigator = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {logged ? (
         <>
-          <Stack.Screen name="Main" component={TabNavigator} />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="DetailFood" component={DetailFoodScreen} />
           <Stack.Screen name="DetailShop" component={DetailShopScreen} />
           <Stack.Screen
@@ -34,6 +37,9 @@ const MainNavigator = () => {
             component={EnterAddressScreen}
           />
           <Stack.Screen name="CartScreen" component={CartScreen} />
+          <Stack.Screen name="SearchScreen" component={SearchScreen} />
+          <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
         </>
       ) : (
         <>

@@ -42,6 +42,7 @@ interface ShopArray {
 const HomeScreen = () => {
   const {
     carouselRef,
+    listInvoices,
     getItemLayoutCarousel,
     onCarouselScroll,
     popularShop,
@@ -80,7 +81,7 @@ const HomeScreen = () => {
                   <BadgeButton
                     icon={icons.notification}
                     iconStyle={styles.icon}
-                    badgeStyle={styles.badgeNotification}
+                    badgeContainerStyle={styles.badgeNotification}
                   />
                 }
                 leftComponent={
@@ -154,7 +155,15 @@ const HomeScreen = () => {
         ListFooterComponent={renderFooter}
         onEndReachedThreshold={0.3}
       />
-      {/* {renderFooter()} */}
+      {listInvoices?.length > 0 && (
+        <BadgeButton
+          badgeText={listInvoices.length.toString()}
+          icon={icons.cart_fill}
+          iconStyle={styles.iconCart}
+          containerStyle={styles.btnCart}
+          badgeContainerStyle={{width: '38%', height: '38%'}}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -380,6 +389,23 @@ const CarouselItem = memo(
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  btnCart: {
+    width: 70,
+    height: 70,
+    position: 'absolute',
+    backgroundColor: COLORS.white,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom: SIZES.height * 0.1,
+    right: SIZES.padding,
+    elevation: 5,
+  },
+  iconCart: {
+    tintColor: COLORS.primary,
+    width: 35,
+    height: 35,
+  },
   popularContainer: {width: SIZES.width * 0.4, marginLeft: SIZES.padding},
   deliveryAddress: {
     ...FONTS.title_medium,

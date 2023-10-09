@@ -1,16 +1,4 @@
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
-import {
-  CompositeNavigationProp,
-  CompositeScreenProps,
-  NavigatorScreenParams,
-} from '@react-navigation/native';
-import {
-  BottomTabNavigationProp,
-  BottomTabScreenProps,
-} from '@react-navigation/bottom-tabs';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Food, Shop} from './types';
 
 export type RootStackParamList = {
@@ -18,7 +6,6 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   ConfirmOtp: undefined;
-  Main: NavigatorScreenParams<BottomTabNavigatorParamList>;
   ForgotPassword: undefined;
   DetailFood: {
     foodItem: Food;
@@ -33,38 +20,32 @@ export type RootStackParamList = {
   CartScreen: {
     idInvoices: string;
   };
+  HomeScreen: undefined;
+  SearchScreen: undefined;
+  FavoriteScreen: undefined;
+  ProfileScreen: undefined;
 };
 
-export type BottomTabNavigatorParamList = {
-  Home: undefined;
-  Search: undefined;
-  Favorite: undefined;
-  Profile: undefined;
-};
-
-export type HomeScreenProp = CompositeScreenProps<
-  BottomTabScreenProps<BottomTabNavigatorParamList, 'Home'>,
-  NativeStackScreenProps<RootStackParamList>
+export type HomeScreenProp = NativeStackScreenProps<
+  RootStackParamList,
+  'HomeScreen'
 >;
-
-export type HomeScreenNavigationProp = CompositeNavigationProp<
-  BottomTabNavigationProp<BottomTabNavigatorParamList, 'Home'>,
-  NativeStackNavigationProp<RootStackParamList>
+export type ProfileScreenProp = NativeStackScreenProps<
+  RootStackParamList,
+  'ProfileScreen'
+>;
+export type SearchScreenProp = NativeStackScreenProps<
+  RootStackParamList,
+  'SearchScreen'
+>;
+export type FavoriteScreenProp = NativeStackScreenProps<
+  RootStackParamList,
+  'FavoriteScreen'
 >;
 
 export type CartScreenProp = NativeStackScreenProps<
   RootStackParamList,
   'CartScreen'
->;
-
-export type SreachScreenProp = CompositeScreenProps<
-  BottomTabScreenProps<BottomTabNavigatorParamList, 'Search'>,
-  NativeStackScreenProps<RootStackParamList>
->;
-
-export type FavoriteScreenProp = CompositeScreenProps<
-  BottomTabScreenProps<BottomTabNavigatorParamList, 'Favorite'>,
-  NativeStackScreenProps<RootStackParamList>
 >;
 
 export type OnBoardingNavigationProps = NativeStackScreenProps<
