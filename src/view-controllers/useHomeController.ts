@@ -81,7 +81,12 @@ const useHomeController = () => {
     carouselIndex.current = index;
   };
 
+  const onListCartPress = () => {
+    navigation.navigate('ListCart');
+  };
+
   return {
+    onListCartPress,
     listInvoices,
     onCarouselScroll,
     onEnterAddressPress,

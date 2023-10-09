@@ -19,7 +19,6 @@ router.get('/:page', function (req, res, next) {
   try {
     let page = req.params.page;
     let offset = (page - 1) * 20;
-    console.log(page);
     res.status(200).json(productsData.slice(offset, offset + 20));
   } catch (error) {
     res.status(404).json({message: error.message});

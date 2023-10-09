@@ -41,6 +41,7 @@ interface ShopArray {
 
 const HomeScreen = () => {
   const {
+    onListCartPress,
     carouselRef,
     listInvoices,
     getItemLayoutCarousel,
@@ -157,6 +158,7 @@ const HomeScreen = () => {
       />
       {listInvoices?.length > 0 && (
         <BadgeButton
+          onPress={onListCartPress}
           badgeText={listInvoices.length.toString()}
           icon={icons.cart_fill}
           iconStyle={styles.iconCart}

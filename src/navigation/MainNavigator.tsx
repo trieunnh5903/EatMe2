@@ -9,6 +9,7 @@ import {
   FavoriteScreen,
   ForgotPasswordScreen,
   HomeScreen,
+  ListCart,
   LoginScreen,
   OnBoardingScreen,
   ProfileScreen,
@@ -40,6 +41,7 @@ const MainNavigator = () => {
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
           <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="ListCart" component={ListCart} />
         </>
       ) : (
         <>
