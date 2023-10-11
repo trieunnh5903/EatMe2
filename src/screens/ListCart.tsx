@@ -7,9 +7,8 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {Break, Dot, HeaderCustom} from '../components';
+import {Break, ButtonIcon, Dot, HeaderCustom} from '../components';
 import {COLORS, FONTS, SIZES, icons} from '../config';
-import {Image} from 'react-native';
 import useListCartController from '../view-controllers/useListCartController';
 import {Invoice} from '../types/types';
 import FastImage from 'react-native-fast-image';
@@ -20,12 +19,15 @@ const ListCart = () => {
   return (
     <View style={styles.container}>
       <HeaderCustom
-        containerStyle={styles.btnBack}
+        containerStyle={styles.headerWrapperContainer}
         title="Danh sách giỏ hàng"
         leftComponent={
-          <TouchableOpacity onPress={onBackPress}>
-            <Image source={icons.arrow_back} style={styles.icon} />
-          </TouchableOpacity>
+          <ButtonIcon
+            onPress={onBackPress}
+            icon={icons.arrow_back}
+            containerStyle={styles.btnBack}
+            iconStyle={styles.icon}
+          />
         }
       />
 
@@ -55,12 +57,7 @@ const FoodItem: React.FC<ListRenderItemInfo<Invoice>> = ({item}) => {
         resizeMode={FastImage.resizeMode.cover}
       />
       {/* tên */}
-      <View
-        style={{
-          marginLeft: SIZES.spacing,
-          height: SIZES.width * 0.25,
-          flex: 1,
-        }}>
+      <View style={styles.contentWrapper}>
         <Text
           numberOfLines={2}
           style={[FONTS.body_large, {color: COLORS.blackText}]}>
@@ -91,6 +88,16 @@ const FoodItem: React.FC<ListRenderItemInfo<Invoice>> = ({item}) => {
 export default ListCart;
 
 const styles = StyleSheet.create({
+  contentWrapper: {
+    marginLeft: SIZES.spacing,
+    height: SIZES.width * 0.25,
+    flex: 1,
+  },
+  btnBack: {
+    paddingLeft: SIZES.base,
+    paddingRight: SIZES.spacing,
+    height: '100%',
+  },
   rowWrapper: {flexDirection: 'row', gap: 3},
   imageFood: {
     width: SIZES.width * 0.25,
@@ -123,10 +130,10 @@ const styles = StyleSheet.create({
     ...FONTS.title_small,
   },
   icon: {width: 26, height: 26, tintColor: COLORS.black},
-  btnBack: {
+  headerWrapperContainer: {
     backgroundColor: COLORS.white,
     height: 55,
-    paddingHorizontal: SIZES.radius,
+    // paddingHorizontal: SIZES.radius,
   },
   container: {
     flex: 1,
