@@ -15,30 +15,21 @@ const RadioButtonGroup: React.FC<RadioGroupProp> = ({
   setSelectedOption,
 }) => {
   const handleOptionSelect = (item: ShopOption) => {
-    // item đã tồn tại
-    const exsited = selectedOption.some(
-      selectedItem => JSON.stringify(selectedItem) === JSON.stringify(item),
-    );
-    if (exsited) {
-      return;
-    }
-    // xử lí item cùng title nhưng khác option
-    let newArr = selectedOption.map(selectedItem => {
-      if (
-        selectedItem.title === item.title &&
-        selectedItem.option !== item.option
-      ) {
-        return item;
-      } else {
+    if (
+      selectedOption.some(selectedItem => selectedItem.title === item.title)
+    ) {
+      // Nếu đã tồn tại, cập nhật selectedOption
+      const updatedOptions = selectedOption.map(selectedItem => {
+        if (selectedItem.title === item.title) {
+          return item;
+        }
         return selectedItem;
-      }
-    });
-
-    // xử lí item khác title
-    if (selectedOption.every(selected => selected.title !== item.title)) {
-      newArr.push(item);
+      });
+      setSelectedOption(updatedOptions);
+    } else {
+      // Nếu item chưa tồn tại, thêm nó vào selectedOption
+      setSelectedOption([...selectedOption, item]);
     }
-    setSelectedOption(newArr);
   };
   return (
     <View>
