@@ -4,6 +4,7 @@ import {FavoriteScreenProp} from '../types/navigation.type';
 import {useShopViewModel} from '../view-models/useShopViewModel';
 
 const useFavoriteController = () => {
+  console.log('useFavoriteController');
   const navigation = useNavigation<FavoriteScreenProp['navigation']>();
   const onFoodItemPress = (foodItem: Shop) =>
     navigation.navigate('DetailShop', {foodItem});

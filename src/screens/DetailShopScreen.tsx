@@ -60,7 +60,7 @@ const DetailShopScreen = ({navigation, route}: DetailShopNavigationProps) => {
     isFavorite,
     handleToggleFavorite,
   } = useDetailShopController(shopInfo);
-
+  console.log('DetailShopScreen');
   return (
     <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.headerWrapper, headerStyle]}>

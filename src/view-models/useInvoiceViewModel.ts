@@ -9,10 +9,12 @@ import {useAppDispatch, useAppSelector} from '../redux/store';
 import {FoodReduxType, Shop} from '../types/types';
 
 const useInvoiceViewModel = () => {
+  console.log('useInvoiceViewModel');
   const {allIds, byId} = useAppSelector(state => state.invoice);
   const dispatch = useAppDispatch();
 
   const addFoodToInvoice = (food: FoodReduxType, shop: Shop) => {
+    console.log('addFoodToInvoice');
     dispatch(addFood({food, shop}));
   };
 

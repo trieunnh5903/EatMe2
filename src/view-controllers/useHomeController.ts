@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import {useRef, useMemo, useEffect} from 'react';
 import {Shop} from '../types/types';
 import data from '../data';
 import {FlatList, NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
@@ -9,12 +9,16 @@ import {HomeScreenProp} from '../types/navigation.type';
 import useInvoiceViewModel from '../view-models/useInvoiceViewModel';
 
 const useHomeController = () => {
+  console.log('useHomeController');
   const navigation = useNavigation<HomeScreenProp['navigation']>();
   const carouselRef = useRef<FlatList>(null);
   let carouselIndex = useRef(0);
   const totalIndex = data.carousel.length - 1;
   const {byId, allIds} = useInvoiceViewModel();
-  const listInvoices = allIds.map(id => byId[id]);
+  const listInvoices = useMemo(
+    () => allIds.map(id => byId[id]),
+    [allIds, byId],
+  );
   const {useGetPopularShop, useGetShopNearBy} = useShopViewModel();
   const {data: popularShop} = useGetPopularShop();
   const {

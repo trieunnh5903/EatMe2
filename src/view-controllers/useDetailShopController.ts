@@ -16,6 +16,7 @@ import useInvoiceViewModel from '../view-models/useInvoiceViewModel';
 
 const HEADERHEIGHT = 116;
 const useDetailShopController = (shopInfo: Shop) => {
+  console.log('useDetailShopController');
   const navigation = useNavigation<DetailShopNavigationProps['navigation']>();
   const {getShopById, addToFavoriteList, favoriteList, removeFromFavoriteList} =
     useShopViewModel();

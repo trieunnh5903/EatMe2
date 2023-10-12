@@ -13,6 +13,7 @@ export const useShopViewModel = () => {
   const getShopById = (shopId: string) => {
     return getShopByIdModel(shopId);
   };
+  console.log('useShopViewModel');
   const dispatch = useAppDispatch();
   const favoriteList = useAppSelector(state => state.user.favorite);
   const removeFromFavoriteList = (foodItem: Shop) => {

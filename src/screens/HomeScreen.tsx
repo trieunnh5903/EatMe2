@@ -52,7 +52,7 @@ const HomeScreen = () => {
     isLoading,
     onEndReached,
   } = useHomeController();
-
+  console.log('HomeScreen');
   // footer flashlist
   const renderFooter = () => {
     if (isLoading) {

@@ -7,6 +7,7 @@ import {
 import {FOOD_DATA} from './useFoodModel';
 
 export const useShopModel = () => {
+  console.log('useShopModel');
   const getShopByIdModel = (_shopId: string) => {
     return DATA;
   };

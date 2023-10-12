@@ -3,6 +3,7 @@ import {useAppDispatch, useAppSelector} from '../redux/store';
 import {FoodReduxType} from '../types/types';
 
 const useCartViewModel = () => {
+  console.log('useCartViewModel');
   const {allIds, byId} = useAppSelector(state => state.cart);
   const dispatch = useAppDispatch();
   // const clearFoodCart = () => dispatch(clearCart());
