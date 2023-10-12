@@ -74,10 +74,12 @@ const invoiceSlice = createSlice({
           numOfFood: 0,
         };
       }
-      const isEsixtingId = state.allIds.find(item => item === id);
-      if (isEsixtingId === undefined) {
+
+      if (!state.allIds.includes(id)) {
         state.allIds.push(id);
       }
+
+      console.log('createInvoice');
     },
 
     addFood: (
@@ -86,7 +88,7 @@ const invoiceSlice = createSlice({
     ) => {
       const {food, idInvoice} = action.payload;
       const invoice = state.byId[idInvoice];
-      const foodAlreadyExsited = invoice.listFood.find(item => {
+      const existingFood = invoice.listFood.find(item => {
         return (
           item.name === food.name &&
           JSON.stringify(item.options) === JSON.stringify(food.options) &&
@@ -94,28 +96,34 @@ const invoiceSlice = createSlice({
         );
       });
 
-      if (foodAlreadyExsited === undefined) {
-        const newListFood = [...invoice.listFood, food];
-        state.byId[action.payload.idInvoice] = {
-          ...invoice,
-          listFood: newListFood,
-        };
+      if (existingFood === undefined) {
+        invoice.listFood.push(food);
       } else {
-        const newFood = {
-          ...foodAlreadyExsited,
-          quantity: food.quantity + foodAlreadyExsited.quantity,
-        };
-        const newListFood = invoice.listFood.map(item => {
-          if (item.id === foodAlreadyExsited.id) {
-            return newFood;
-          }
-          return item;
-        });
-        state.byId[action.payload.idInvoice] = {
-          ...invoice,
-          listFood: newListFood,
-        };
+        existingFood.quantity += food.quantity;
       }
+      console.log('addFood');
+      // if (foodAlreadyExsited === undefined) {
+      //   const newListFood = [...invoice.listFood, food];
+      //   state.byId[action.payload.idInvoice] = {
+      //     ...invoice,
+      //     listFood: newListFood,
+      //   };
+      // } else {
+      //   const newFood = {
+      //     ...foodAlreadyExsited,
+      //     quantity: food.quantity + foodAlreadyExsited.quantity,
+      //   };
+      //   const newListFood = invoice.listFood.map(item => {
+      //     if (item.id === foodAlreadyExsited.id) {
+      //       return newFood;
+      //     }
+      //     return item;
+      //   });
+      //   state.byId[action.payload.idInvoice] = {
+      //     ...invoice,
+      //     listFood: newListFood,
+      //   };
+      // }
     },
 
     caculateTotalFood: (state, action: PayloadAction<{invoiceId: string}>) => {
@@ -125,6 +133,7 @@ const invoiceSlice = createSlice({
         (acc, item) => acc + item.quantity,
         0,
       );
+      console.log('caculateTotalFood');
     },
 
     caculateTotalPrice: (state, action: PayloadAction<{invoiceId: string}>) => {
@@ -134,6 +143,7 @@ const invoiceSlice = createSlice({
         (sum, item) => sum + item.price * item.quantity,
         0,
       );
+      console.log('caculateTotalPrice');
     },
 
     increaseFoodQuantity(
@@ -146,6 +156,7 @@ const invoiceSlice = createSlice({
       if (food) {
         food.quantity++;
       }
+      console.log('increaseFoodQuantity');
     },
 
     decreaseFoodQuantity(
@@ -158,6 +169,7 @@ const invoiceSlice = createSlice({
       if (food) {
         food.quantity--;
       }
+      console.log('decreaseFoodQuantity');
     },
 
     removeFood(
@@ -167,12 +179,14 @@ const invoiceSlice = createSlice({
       const {foodId, invoiceId} = action.payload;
       const invoice = state.byId[invoiceId];
       invoice.listFood = invoice.listFood.filter(item => item.id !== foodId);
+      console.log('removeFood');
     },
 
     removeAllFood(state, action: PayloadAction<{invoiceId: string}>) {
       const {invoiceId} = action.payload;
       const invoice = state.byId[invoiceId];
       invoice.listFood = [];
+      console.log('removeAllFood');
     },
   },
 });

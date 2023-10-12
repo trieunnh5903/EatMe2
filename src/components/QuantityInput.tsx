@@ -16,15 +16,18 @@ import {COLORS} from '../config';
 interface QuantityInputProps {
   containerStyle?: StyleProp<ViewStyle>;
   iconContainerStyle?: StyleProp<ViewStyle>;
+  iconRightContainerStyle?: StyleProp<ViewStyle>;
   onAddPress?: (event: GestureResponderEvent) => void;
   onRemovePress?: (event: GestureResponderEvent) => void;
   quantity: number;
   iconStyle?: ImageStyle;
+  iconRightStyle?: ImageStyle;
   labelStyle?: StyleProp<TextStyle>;
   iconLeft: ImageSourcePropType;
   iconRight: ImageSourcePropType;
   maximumQuantity?: number;
   minimumQuantity?: number;
+  disableRight?: boolean;
 }
 const QuantityInput: React.FC<QuantityInputProps> = ({
   containerStyle,
@@ -33,6 +36,9 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
   onRemovePress,
   quantity = 1,
   maximumQuantity,
+  disableRight,
+  iconRightContainerStyle,
+  iconRightStyle,
   minimumQuantity = 0,
   iconStyle,
   labelStyle,
@@ -64,7 +70,7 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
       />
       <Text style={labelStyle}>{`${quantity}`}</Text>
       <ButtonIcon
-        disabled={maximumQuantity && quantity >= maximumQuantity ? true : false}
+        disabled={disableRight}
         icon={iconRight}
         iconStyle={[
           iconStyle,
@@ -74,9 +80,11 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
                 ? COLORS.lightGray1
                 : COLORS.primary,
           },
+          iconRightStyle,
         ]}
         containerStyle={[
           iconContainerStyle,
+          iconRightContainerStyle,
           {
             backgroundColor:
               maximumQuantity && quantity >= maximumQuantity

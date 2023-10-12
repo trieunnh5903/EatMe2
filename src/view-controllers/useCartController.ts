@@ -4,8 +4,13 @@ import useInvoiceViewModel from '../view-models/useInvoiceViewModel';
 
 const useCartController = (idInvoice: string) => {
   const navigation = useNavigation<CartScreenProp['navigation']>();
-  const {getDataInvoiceById, increaseQuantity, decreaseQuantity, deleteFood} =
-    useInvoiceViewModel();
+  const {
+    getDataInvoiceById,
+    increaseQuantity,
+    decreaseQuantity,
+    deleteAllFood,
+    deleteFood,
+  } = useInvoiceViewModel();
   const {
     listFood: cartList,
     numOfFood,
@@ -23,8 +28,12 @@ const useCartController = (idInvoice: string) => {
     }
   };
 
+  const onClearCartPress = () => {
+    deleteAllFood(idInvoice);
+  };
   const onBackPress = () => navigation.goBack();
   return {
+    onClearCartPress,
     onIncreaseFoodFress,
     onDecreaseFoodFress,
     onBackPress,

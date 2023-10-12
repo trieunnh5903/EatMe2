@@ -82,6 +82,7 @@ const CartScreen = ({route}: CartScreenProp) => {
     onBackPress,
     onDecreaseFoodFress,
     onIncreaseFoodFress,
+    onClearCartPress,
   } = useCartController(route.params.idInvoices);
 
   return (
@@ -96,7 +97,7 @@ const CartScreen = ({route}: CartScreenProp) => {
         rightComponent={
           cartList.length > 0 ? (
             // có sản phẩm
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onClearCartPress}>
               <Text
                 style={{
                   color: COLORS.red,

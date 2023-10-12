@@ -17,10 +17,7 @@ import useDetailFoodController from '../view-controllers/useDetailFoodController
 
 const HEADER_HEIGHT = 50;
 const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
-  // const {foodItem, shopInfo} = route.params;
   const {foodItem, shopInfo} = route.params;
-  // const {getFoodById} = useFoodViewModel();
-  // const foodItem = getFoodById(foodId);
   const {
     onAddToCartPress,
     options,
@@ -46,6 +43,7 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
     Animated.createAnimatedComponent(TouchableOpacity);
   return (
     <SafeAreaView style={styles.container}>
+      {/* navigation*/}
       <AnimatedTouchableOpacity
         onPress={onBackPress}
         style={[styles.buttonBackWrapper, bgColorIconClose]}>
@@ -61,6 +59,7 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
         </Text>
       </Animated.View>
 
+      {/* img food */}
       <View style={styles.imageFood}>
         <Image
           source={{
@@ -72,6 +71,7 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
 
       <FlatList
         ListHeaderComponent={
+          // name, price
           <View style={{backgroundColor: COLORS.white, padding: SIZES.padding}}>
             <View style={styles.nameWrapper}>
               <Text style={styles.name}>{foodItem.name}</Text>
@@ -124,7 +124,6 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
             <View style={{paddingBottom: SIZES.height * 0.1}}>
               <View style={styles.toppingHeader}>
                 <Text style={styles.labelText}>{toppingData.title}</Text>
-
                 <Text
                   style={[
                     styles.subLabelText,
@@ -148,12 +147,11 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
                 return (
                   <View key={item.name} style={styles.toppingBody}>
                     {currentItem?.quantity === undefined ||
+                    // quantity
                     currentItem?.quantity === 0 ? (
                       <ButtonIcon
                         disabled={isMaximum}
-                        onPress={() =>
-                          onIncreasePress(item.name, item.price, undefined)
-                        }
+                        onPress={() => onIncreasePress(item.name, item.price)}
                         containerStyle={[
                           styles.iconQuantityInputContainer,
                           {
@@ -174,26 +172,26 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
                       />
                     ) : (
                       <QuantityInput
-                        maximumQuantity={maximum}
                         iconLeft={icons.remove_wght700}
                         iconRight={icons.add_wght700}
                         onAddPress={() =>
-                          onIncreasePress(
-                            item.name,
-                            item.price,
-                            currentItem.quantity,
-                          )
+                          onIncreasePress(item.name, item.price)
                         }
-                        onRemovePress={() =>
-                          onDecreasePress(item.name, currentItem.quantity)
-                        }
+                        disableRight={isMaximum}
+                        iconRightStyle={{
+                          tintColor: isMaximum
+                            ? COLORS.lightGray1
+                            : COLORS.primary,
+                        }}
+                        onRemovePress={() => onDecreasePress(item.name)}
                         labelStyle={[styles.labelQuantityInput]}
                         iconContainerStyle={styles.iconQuantityInputContainer}
                         quantity={currentItem.quantity}
                         iconStyle={styles.iconQuantityInput}
                       />
                     )}
-
+                    {/* end quantity */}
+                    {/* name */}
                     <View style={styles.toppingTextWrapper}>
                       <Text
                         style={{
@@ -218,6 +216,7 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
         <QuantityInput
           minimumQuantity={1}
           maximumQuantity={15}
+          disableRight={quantity === 15}
           iconLeft={icons.remove_wght700}
           iconRight={icons.add_wght700}
           onAddPress={onAddPress}
