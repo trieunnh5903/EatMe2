@@ -6,68 +6,121 @@ import {
   FlatList,
   View,
   SafeAreaView,
-  ActivityIndicator,
   GestureResponderEvent,
   ViewStyle,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  Pressable,
 } from 'react-native';
-import React, {ReactNode, memo} from 'react';
+import React, {ReactNode, useRef, useEffect, memo} from 'react';
 import {icons, COLORS, SIZES, FONTS, images} from '../config';
-import data from '../data';
-
 import {
   BadgeButton,
   Break,
   ButtonIcon,
   HeaderCustom,
   HorizontalCardSkeleton,
-  VerticalCardSkeleton,
-  VerticalShopCard,
-  HorizontalShopCard,
+  HorizontalRestaurantCard,
+  VerticalRestaurantCard,
 } from '../components';
 import {FlashList} from '@shopify/flash-list';
-import useHomeController from '../view-controllers/useHomeController';
-import {Shop} from '../types/types';
+import {Restaurant} from '../types/types';
+import dummy_data from '../data';
+import {useNavigation} from '@react-navigation/native';
+import {HomeScreenProp} from '../types/navigation.type';
 
 interface SectionProps {
   title: string;
+  subtitle: string;
   onPress: (event: GestureResponderEvent) => void;
   children: ReactNode;
   style?: ViewStyle;
 }
 
-interface ShopArray {
-  data?: Shop[];
-}
-
 const HomeScreen = () => {
-  const {
-    onListCartPress,
-    carouselRef,
-    listInvoices,
-    getItemLayoutCarousel,
-    onCarouselScroll,
-    popularShop,
-    onShopItemPress,
-    shopNearYou,
-    isLoading,
-    onEndReached,
-  } = useHomeController();
   console.log('HomeScreen');
-  // footer flashlist
-  const renderFooter = () => {
-    if (isLoading) {
-      return;
+  const navigation = useNavigation<HomeScreenProp['navigation']>();
+  const carouselRef = useRef<FlatList>(null);
+  let carouselIndex = useRef(0);
+  const totalIndex = dummy_data.carousel.length - 1;
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      if (carouselIndex.current < totalIndex) {
+        carouselRef?.current?.scrollToIndex({
+          index: carouselIndex.current + 1,
+          animated: true,
+        });
+      } else {
+        carouselRef?.current?.scrollToIndex({
+          index: 0,
+          animated: true,
+        });
+      }
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [totalIndex]);
+
+  const getItemLayoutCarousel = (index: number) => {
+    let itemWidth;
+    if (index === 0) {
+      itemWidth = SIZES.width - 2 * SIZES.padding + SIZES.padding;
+    } else if (index === dummy_data.carousel.length - 1) {
+      itemWidth = SIZES.width - 2 * SIZES.padding + 20;
+    } else {
+      itemWidth = SIZES.width - 2 * SIZES.padding + 10;
     }
-    if (shopNearYou?.pages && shopNearYou.pages.flat().length < 90) {
-      return (
-        <ActivityIndicator
-          style={styles.indicator}
-          size="small"
-          color={COLORS.primary}
-        />
-      );
-    }
+    return {
+      length: itemWidth,
+      offset: itemWidth * index,
+      index,
+    };
   };
+
+  const onCarouselScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollOffset = event.nativeEvent.contentOffset.x;
+    const index = parseInt(
+      (scrollOffset / (SIZES.width - 2 * SIZES.padding)).toString(),
+      10,
+    );
+    carouselIndex.current = index;
+  };
+
+  const onRestaurantItemPress = (item: Restaurant) =>
+    navigation.navigate('DetailRestaurant', {
+      restaurant: item,
+    });
+
+  const onEnterAddressPress = () =>
+    navigation.navigate('EnterAddressScreen', {enableGoogleMap: false});
+
+  // const {
+  //   // onListCartPress,
+  //   carouselRef,
+  //   // listInvoices,
+  //   getItemLayoutCarousel,
+  //   onCarouselScroll,
+  //   onShopItemPress,
+  //   // shopNearYou,
+  //   // isLoading,
+  //   onEnterAddressPress,
+  // } = useHomeController();
+  // footer flashlist
+  // const renderFooter = () => {
+  //   if (isLoading) {
+  //     return;
+  //   }
+  //   if (shopNearYou?.pages && shopNearYou.pages.flat().length < 90) {
+  //     return (
+  //       <ActivityIndicator
+  //         style={styles.indicator}
+  //         size="small"
+  //         color={COLORS.primary}
+  //       />
+  //     );
+  //   }
+  // };
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -93,12 +146,32 @@ const HomeScreen = () => {
               />
             </View>
             {/* delivery to */}
-            <DeliveryTo />
+            <View
+              style={{
+                marginHorizontal: SIZES.padding,
+              }}>
+              <Text
+                style={{
+                  color: COLORS.primary,
+                  ...FONTS.title_medium,
+                }}>
+                GIAO ĐẾN
+              </Text>
+
+              <TouchableOpacity
+                onPress={() => onEnterAddressPress()}
+                style={styles.deliveryTo}>
+                <Text style={styles.deliveryAddress}>
+                  {dummy_data?.myProfile?.address}
+                </Text>
+                <Image source={icons.down_arrow} style={styles.icon} />
+              </TouchableOpacity>
+            </View>
             {/* carousel */}
             <FlatList
               onScroll={onCarouselScroll}
               ref={carouselRef}
-              data={data.carousel}
+              data={dummy_data.carousel}
               style={{marginTop: SIZES.padding}}
               keyExtractor={item => `${item.id}`}
               horizontal
@@ -112,24 +185,73 @@ const HomeScreen = () => {
             />
             {/* category */}
             <Categories />
-            <Break marginVertical={30} />
             {/* list popular */}
-            <PopularSection data={popularShop?.pages.flat()} />
-            <Break marginTop={30} />
-            {/* list recommended */}
-            <RecommendedSection data={popularShop?.pages.flat()} />
-            <Break marginTop={30} />
-            <Text style={styles.headlineNearYou}>Gần bạn</Text>
+            {dummy_data.featureCategory.map(feature => {
+              return (
+                <View key={feature.id}>
+                  <Break marginVertical={30} />
+                  <Section
+                    subtitle={feature.subtitle}
+                    onPress={() => console.log(feature.title + 'pressed')}
+                    title={feature.title}>
+                    <FlatList
+                      data={feature.restaurants}
+                      keyExtractor={item => `${item.id}`}
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      renderItem={({item, index}) => {
+                        const marginRight =
+                          index === feature.restaurants.length - 1
+                            ? SIZES.padding
+                            : 0;
+                        return (
+                          <VerticalRestaurantCard
+                            onPress={() => onRestaurantItemPress(item)}
+                            item={item}
+                            containerStyle={[
+                              styles.popularContainer,
+                              {marginRight: marginRight},
+                            ]}
+                            imageStyle={styles.popularImage}
+                          />
+                        );
+                      }}
+                      ListFooterComponent={
+                        <View style={styles.footerHorizontalListWrapper}>
+                          <TouchableOpacity>
+                            <ButtonIcon
+                              disabled={true}
+                              containerStyle={styles.btnWatchAll}
+                              iconStyle={{tintColor: COLORS.primary}}
+                              icon={icons.chevron_right}
+                            />
+                            <Text
+                              style={{
+                                color: COLORS.primary,
+                                ...FONTS.title_medium,
+                              }}>
+                              Xem tất cả
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      }
+                    />
+                  </Section>
+                </View>
+              );
+            })}
+            <Break height={10} marginTop={30} marginBottom={10} />
+            <Text style={styles.headlineNearYou}>Quanh đây có gì ngon?</Text>
           </View>
         }
         estimatedItemSize={150}
-        data={shopNearYou?.pages.flat()}
+        data={dummy_data.popularRestaurant}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <Break height={2} />}
-        renderItem={({item}: {item: Shop}) => {
+        ItemSeparatorComponent={() => <Break height={1} />}
+        renderItem={({item}: {item: Restaurant}) => {
           return (
-            <HorizontalShopCard
-              onPress={() => onShopItemPress(item)}
+            <HorizontalRestaurantCard
+              onPress={() => onRestaurantItemPress(item)}
               item={item}
               containerStyle={styles.horizontalFoodCard}
               imageStyle={{
@@ -152,11 +274,11 @@ const HomeScreen = () => {
             renderItem={() => <HorizontalCardSkeleton />}
           />
         }
-        onEndReached={onEndReached}
-        ListFooterComponent={renderFooter}
+        // onEndReached={onEndReached}
+        // ListFooterComponent={renderFooter}
         onEndReachedThreshold={0.3}
       />
-      {listInvoices?.length > 0 && (
+      {/* {listInvoices?.length > 0 && (
         <BadgeButton
           onPress={onListCartPress}
           badgeText={listInvoices.length.toString()}
@@ -165,30 +287,38 @@ const HomeScreen = () => {
           containerStyle={styles.btnCart}
           badgeContainerStyle={{width: '38%', height: '38%'}}
         />
-      )}
+      )} */}
     </SafeAreaView>
   );
 };
 
-const Section: React.FC<SectionProps> = ({title, onPress, children, style}) => {
+const Section: React.FC<SectionProps> = ({
+  title,
+  subtitle,
+  onPress,
+  children,
+  style,
+}) => {
   return (
-    <View>
+    <Pressable onPress={onPress}>
       <View style={[styles.section, style]}>
-        <Text style={styles.sectionHeadline}>{title}</Text>
-        <TouchableOpacity onPress={onPress}>
-          <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
-            Tất cả
-          </Text>
-        </TouchableOpacity>
+        <View style={{flex: 1}}>
+          <Text style={styles.sectionHeadline}>{title}</Text>
+          <Text style={styles.sectionSubtitle}>{subtitle}</Text>
+        </View>
+        <Image
+          source={icons.chevron_right}
+          style={[styles.icon, {marginLeft: SIZES.spacing}]}
+        />
       </View>
       {children}
-    </View>
+    </Pressable>
   );
 };
 
 const Categories = () => (
   <View style={styles.categoriesWrapper}>
-    {data.categories.map(item => {
+    {dummy_data.categories.map(item => {
       return (
         <TouchableOpacity key={item.id} style={styles.categoriesItem}>
           <Image source={item.icon} style={styles.categoryImage} />
@@ -205,153 +335,6 @@ const Categories = () => (
   </View>
 );
 
-const RecommendedSection: React.FC<ShopArray> = ({data: recommends = []}) => {
-  const {onShopItemPress} = useHomeController();
-  return (
-    <Section
-      title={'Gợi ý'}
-      onPress={() => console.log('show all recommended')}>
-      {recommends.length > 0 === false ? (
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={[...Array(4).keys()]}
-          keyExtractor={item => item.toString()}
-          horizontal
-          renderItem={({item: _item, index}) => (
-            <VerticalCardSkeleton
-              style={{marginRight: index === 3 ? SIZES.padding : 0}}
-            />
-          )}
-        />
-      ) : (
-        <FlatList
-          data={recommends}
-          keyExtractor={item => `${item.id}`}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return (
-              <VerticalShopCard
-                onPress={() => onShopItemPress(item)}
-                item={item}
-                containerStyle={[
-                  styles.popularContainer,
-                  {
-                    marginRight:
-                      index === recommends.length - 1 ? SIZES.padding : 0,
-                  },
-                ]}
-                imageStyle={styles.popularImage}
-              />
-            );
-          }}
-          ListFooterComponent={
-            <View style={styles.footerHorizontalListWrapper}>
-              <TouchableOpacity>
-                <ButtonIcon
-                  disabled={true}
-                  containerStyle={styles.btnWatchAll}
-                  iconStyle={{tintColor: COLORS.primary}}
-                  icon={icons.chevron_right}
-                />
-                <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
-                  Xem tất cả
-                </Text>
-              </TouchableOpacity>
-            </View>
-          }
-        />
-      )}
-    </Section>
-  );
-};
-
-const PopularSection: React.FC<ShopArray> = ({data = []}) => {
-  const {onShopItemPress} = useHomeController();
-  return (
-    <Section
-      style={{marginTop: 0}}
-      onPress={() => console.log('Popular section')}
-      title={'Phổ biến'}>
-      {data.length > 0 === false ? (
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={[...Array(5).keys()]} // Show 5 placeholder loaders
-          keyExtractor={item => item.toString()}
-          renderItem={({item: _item, index}) => (
-            <VerticalCardSkeleton
-              style={{marginRight: index === 4 ? SIZES.padding : 0}}
-            />
-          )}
-        />
-      ) : (
-        <FlatList
-          data={data}
-          keyExtractor={item => `${item.id}`}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => {
-            return (
-              <VerticalShopCard
-                onPress={() => onShopItemPress(item)}
-                item={item}
-                containerStyle={[
-                  styles.popularContainer,
-                  {
-                    marginRight: index === data.length - 1 ? SIZES.padding : 0,
-                  },
-                ]}
-                imageStyle={styles.popularImage}
-              />
-            );
-          }}
-          ListFooterComponent={
-            <View style={styles.footerHorizontalListWrapper}>
-              <TouchableOpacity>
-                <ButtonIcon
-                  disabled={true}
-                  containerStyle={styles.btnWatchAll}
-                  iconStyle={{tintColor: COLORS.primary}}
-                  icon={icons.chevron_right}
-                />
-                <Text style={{color: COLORS.primary, ...FONTS.title_medium}}>
-                  Xem tất cả
-                </Text>
-              </TouchableOpacity>
-            </View>
-          }
-        />
-      )}
-    </Section>
-  );
-};
-
-const DeliveryTo = () => {
-  const {onEnterAddressPress} = useHomeController();
-  return (
-    <View
-      style={{
-        marginHorizontal: SIZES.padding,
-      }}>
-      <Text
-        style={{
-          color: COLORS.primary,
-          ...FONTS.title_medium,
-        }}>
-        GIAO ĐẾN
-      </Text>
-
-      <TouchableOpacity
-        onPress={() => onEnterAddressPress()}
-        style={styles.deliveryTo}>
-        <Text style={styles.deliveryAddress}>{data?.myProfile?.address}</Text>
-        <Image source={icons.down_arrow} style={styles.icon} />
-      </TouchableOpacity>
-    </View>
-  );
-};
-
 const CarouselItem = memo(
   ({
     item,
@@ -363,7 +346,7 @@ const CarouselItem = memo(
     };
     index: number;
   }) => {
-    const marginRight = index === data.carousel.length - 1 ? 10 : 0;
+    const marginRight = index === dummy_data.carousel.length - 1 ? 10 : 0;
     const marginLeft = index === 0 ? SIZES.padding : 10;
     return (
       <TouchableOpacity
@@ -464,6 +447,11 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.padding,
   },
   categoryImage: {width: 48, height: 48, resizeMode: 'contain'},
+  sectionSubtitle: {
+    ...FONTS.body_medium,
+    color: COLORS.gray,
+  },
+
   sectionHeadline: {
     ...FONTS.title_large,
     fontWeight: 'bold',
@@ -527,7 +515,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     marginHorizontal: SIZES.padding,
-    marginTop: 30,
     marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'space-between',

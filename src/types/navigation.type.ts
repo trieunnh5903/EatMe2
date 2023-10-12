@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Food, Shop} from './types';
+import {Food, Restaurant} from './types';
 
 export type RootStackParamList = {
   OnBoarding: undefined;
@@ -9,10 +9,10 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   DetailFood: {
     foodItem: Food;
-    shopInfo: Shop;
+    restaurant: Restaurant;
   };
-  DetailShop: {
-    shopInfo: Shop;
+  DetailRestaurant: {
+    restaurant: Restaurant;
   };
   EnterAddressScreen: {
     enableGoogleMap: boolean;
@@ -68,9 +68,9 @@ export type DetailFoodNavigationProps = NativeStackScreenProps<
   'DetailFood'
 >;
 
-export type DetailShopNavigationProps = NativeStackScreenProps<
+export type DetailRestaurantNavigationProps = NativeStackScreenProps<
   RootStackParamList,
-  'DetailShop'
+  'DetailRestaurant'
 >;
 
 export type LoginNavigationProps = NativeStackScreenProps<

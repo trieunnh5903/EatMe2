@@ -7,7 +7,7 @@ import HomeScreen from './HomeScreen';
 import CartScreen from './CartScreen';
 import ProfileScreen from './ProfileScreen';
 import SearchScreen from './SearchScreen';
-import DetailShopScreen from './DetailShopScreen';
+import DetailRestaurantScreen from './DetailRestaurantScreen';
 import FavoriteScreen from './FavoriteScreen';
 import EnterAddressScreen from './EnterAddressScreen';
 import DetailFoodScreen from './DetailFoodScreen';
@@ -17,7 +17,7 @@ export {
   DetailFoodScreen,
   EnterAddressScreen,
   SearchScreen,
-  DetailShopScreen,
+  DetailRestaurantScreen,
   FavoriteScreen,
   CartScreen,
   ProfileScreen,

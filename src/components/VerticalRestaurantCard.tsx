@@ -11,16 +11,16 @@ import {
 } from 'react-native';
 import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
-import {Shop} from '../types/types';
+import {Restaurant} from '../types/types';
 import Dot from './Dot';
 
-interface VerticalShopCardProps {
+interface VerticalRestaurantCardProps {
   containerStyle?: StyleProp<ViewStyle>;
-  item: Shop;
+  item: Restaurant;
   imageStyle?: StyleProp<ImageStyle>;
   onPress?: (event: GestureResponderEvent) => any;
 }
-const VerticalShopCard: React.FC<VerticalShopCardProps> = ({
+const VerticalRestaurantCard: React.FC<VerticalRestaurantCardProps> = ({
   containerStyle,
   item,
   imageStyle,
@@ -61,7 +61,7 @@ const VerticalShopCard: React.FC<VerticalShopCardProps> = ({
   );
 };
 
-export default memo(VerticalShopCard);
+export default memo(VerticalRestaurantCard);
 
 const styles = StyleSheet.create({
   rowWrapper: {

@@ -1,5 +1,6 @@
 const COLORS = {
-  primary: 'rgb(255, 108, 68)', //orange
+  primary: 'rgb(255, 108, 68)',
+  primary2: (opacity: number) => `rgba(255, 108, 68, 0.${opacity})`,
   transparentPrimray: 'rgba(227, 120, 75, 0.4)',
   orange: '#FFA133',
   lightOrange: 'rgb(255, 161, 51)',
@@ -21,6 +22,7 @@ const COLORS = {
   white2: '#FBFBFB',
   white: '#FFFFFF',
   black: '#000000',
+  black2: (opacity: number = 9) => `rgba(0, 0, 0, 0.${opacity})`,
   blackText: '#1C1E21',
   transparent: 'transparent',
   transparentBlack1: 'rgba(0, 0, 0, 0.1)',

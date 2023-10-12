@@ -4,7 +4,7 @@ import {
   CartScreen,
   ConfirmOtpScreen,
   DetailFoodScreen,
-  DetailShopScreen,
+  DetailRestaurantScreen,
   EnterAddressScreen,
   FavoriteScreen,
   ForgotPasswordScreen,
@@ -32,7 +32,10 @@ const MainNavigator = () => {
         <>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="DetailFood" component={DetailFoodScreen} />
-          <Stack.Screen name="DetailShop" component={DetailShopScreen} />
+          <Stack.Screen
+            name="DetailRestaurant"
+            component={DetailRestaurantScreen}
+          />
           <Stack.Screen
             name="EnterAddressScreen"
             component={EnterAddressScreen}

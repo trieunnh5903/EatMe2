@@ -1,4 +1,3 @@
-import {nanoid} from '@reduxjs/toolkit';
 import {createServer} from 'miragejs';
 
 export default function setUpMirage(environment: string | undefined) {

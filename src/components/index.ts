@@ -9,19 +9,19 @@ import BadgeButton from './button/BadgeButton';
 import QuantityInput from './QuantityInput';
 import Break from './Break';
 import RadioButtonGroup from './button/RadioButtonGroup';
-import VerticalShopCard from './VerticalShopCard';
 import VerticalCardSkeleton from './skeleton/VerticalCardSkeleton';
 import HorizontalCardSkeleton from './skeleton/HorizontalCardSkeleton';
-import HorizontalShopCard from './HorizontalShopCard';
 import Dot from './Dot';
 import ButtonTextIcon from './button/ButtonTextIcon';
+import HorizontalRestaurantCard from './HorizontalRestaurantCard';
+import VerticalRestaurantCard from './VerticalRestaurantCard';
 export {
   ButtonTextIcon,
   Dot,
-  HorizontalShopCard,
+  HorizontalRestaurantCard,
   HorizontalCardSkeleton,
   VerticalCardSkeleton,
-  VerticalShopCard,
+  VerticalRestaurantCard,
   RadioButtonGroup,
   Break,
   BadgeButton,

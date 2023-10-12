@@ -1,20 +1,20 @@
-export interface ShopOptionGroup {
+export interface RestaurantOptionGroup {
   title: string;
   optionGroup: {option: string; price: number}[];
 }
 
-export interface ShopOption {
+export interface RestaurantOption {
   title: string;
   option: string;
   price: number;
 }
 
-export interface ShopTopping {
+export interface RestaurantTopping {
   name: string;
   price: number;
   quantity: number;
 }
-export interface ShopToppings {
+export interface RestaurantToppings {
   title: string;
   maximum: number;
   data: {
@@ -31,20 +31,26 @@ export interface Food {
   price: number;
   image: string;
   quantity?: number;
-  options?: ShopOptionGroup[];
-  toppings?: ShopToppings;
+  options?: RestaurantOptionGroup[];
+  toppings?: RestaurantToppings;
 }
 
 export interface FoodWithQuantity extends Food {
   quantity: number;
 }
 
-export type Shop = {
+export type Restaurant = {
   id: string;
   name: string;
   image: string;
   address: string;
-  // listFood?: Food[];
+  allFoods: {
+    bestSeller: Food[];
+    menuFoods: {
+      label: string;
+      foods: Food[];
+    }[];
+  };
   // totalPrice?: number;
 };
 
@@ -55,12 +61,12 @@ export interface FoodReduxType {
   price: number;
   image: string;
   quantity: number;
-  options?: ShopOption[];
-  toppings?: ShopTopping[];
+  options?: RestaurantOption[];
+  toppings?: RestaurantTopping[];
   // totalPrice: number;
 }
 
-// export interface Invoice extends Shop {
+// export interface Invoice extends Restaurant {
 //   listFood: {
 //     id: string;
 //     name: string;
@@ -68,13 +74,13 @@ export interface FoodReduxType {
 //     price: number;
 //     image: string;
 //     quantity: number;
-//     options?: ShopOption[];
-//     toppings?: ShopTopping[];
+//     options?: RestaurantOption[];
+//     toppings?: RestaurantTopping[];
 //     totalPrice: number;
 //   }[];
 // }
 
-export interface Invoice extends Shop {
+export interface Invoice extends Restaurant {
   totalPrice: number;
   numOfFood: number;
   listFood: FoodReduxType[];

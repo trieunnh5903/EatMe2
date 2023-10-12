@@ -54,7 +54,7 @@ const useHomeController = () => {
 
   const onShopItemPress = (item: Shop) =>
     navigation.navigate('DetailShop', {
-      shopInfo: item,
+      restaurant: item,
     });
 
   const onEnterAddressPress = () =>

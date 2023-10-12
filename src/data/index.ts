@@ -35,78 +35,6 @@ const onboarding_screens = [
       'Bạn sẽ nhận được những món ăn tuyệt vời trong vòng vài giờ. Và nhận tín dụng giao hàng miễn phí cho mỗi đơn hàng.',
   },
 ];
-const delivery_time = [
-  {
-    id: 1,
-    label: '10 Mins',
-  },
-  {
-    id: 2,
-    label: '20 Mins',
-  },
-  {
-    id: 3,
-    label: '30 Mins',
-  },
-];
-
-const ratings = [
-  {
-    id: 1,
-    label: 1,
-  },
-  {
-    id: 2,
-    label: 2,
-  },
-  {
-    id: 3,
-    label: 3,
-  },
-  {
-    id: 4,
-    label: 4,
-  },
-  {
-    id: 5,
-    label: 5,
-  },
-];
-
-const tags = [
-  {
-    id: 1,
-    label: 'Burger',
-  },
-  {
-    id: 2,
-    label: 'Fast Food',
-  },
-  {
-    id: 3,
-    label: 'Pizza',
-  },
-  {
-    id: 4,
-    label: 'Asian',
-  },
-  {
-    id: 5,
-    label: 'Dessert',
-  },
-  {
-    id: 6,
-    label: 'Breakfast',
-  },
-  {
-    id: 7,
-    label: 'Vegetable',
-  },
-  {
-    id: 8,
-    label: 'Taccos',
-  },
-];
 
 const categories = [
   {
@@ -153,174 +81,6 @@ const categories = [
     id: 9,
     name: 'Pizza',
     icon: icons.pizza,
-  },
-];
-
-const hamburger = {
-  id: 1,
-  name: 'Hamburger',
-  description: 'Chicken patty hamburger',
-  categories: [1, 2],
-  price: 15.99,
-  calories: 78,
-  isFavourite: true,
-  image:
-    'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/hamburger.png',
-};
-
-const hamburger2 = {
-  id: 22,
-  name: 'Hamburger',
-  description: 'Chicken patty hamburger',
-  categories: [1, 2],
-  price: 15.99,
-  calories: 78,
-  isFavourite: true,
-  image:
-    'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/hamburger.png',
-};
-
-const hotTacos = {
-  id: 2,
-  name: 'Hot Tacos',
-  description: 'Mexican tortilla & tacos',
-  categories: [1, 3],
-  price: 10.99,
-  calories: 78,
-  isFavourite: false,
-  image:
-    'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/hot_tacos.png',
-};
-
-const hotTacos2 = {
-  id: 23,
-  name: 'Hot Tacos',
-  description: 'Mexican tortilla & tacos',
-  categories: [1, 3],
-  price: 10.99,
-  calories: 78,
-  isFavourite: false,
-  image:
-    'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/hot_tacos.png',
-};
-
-const vegBiryani = {
-  id: 3,
-  name: 'Veg Biryani',
-  description: 'Indian Vegetable Biryani',
-  categories: [1, 2, 3],
-  price: 10.99,
-  calories: 78,
-  isFavourite: true,
-  image:
-    'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/veg_biryani.png',
-};
-
-const vegBiryani3 = {
-  id: 33,
-  name: 'Veg Biryani',
-  description: 'Indian Vegetable Biryani',
-  categories: [1, 2, 3],
-  price: 10.99,
-  calories: 78,
-  isFavourite: true,
-  image:
-    'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/veg_biryani.png',
-};
-
-const wrapSandwich = {
-  id: 4,
-  name: 'Wrap Sandwich',
-  description: 'Grilled vegetables sandwich',
-  categories: [1, 2],
-  price: 10.99,
-  calories: 78,
-  isFavourite: true,
-  image:
-    'https://raw.githubusercontent.com/byprogrammers/LCRN16-food-delivery-app-lite-starter/master/assets/dummyData/wrap_sandwich.png',
-};
-
-const menu = [
-  {
-    id: 1,
-    name: 'Featured',
-    list: [hamburger, hotTacos, vegBiryani, hamburger2, hotTacos2, vegBiryani3],
-  },
-  {
-    id: 2,
-    name: 'Nearby you',
-    list: [
-      hamburger,
-      vegBiryani,
-      wrapSandwich,
-      hamburger2,
-      hotTacos2,
-      vegBiryani3,
-    ],
-  },
-  {
-    id: 3,
-    name: 'Popular',
-    list: [
-      hamburger,
-      hotTacos,
-      wrapSandwich,
-      hamburger2,
-      hotTacos2,
-      vegBiryani3,
-    ],
-  },
-  {
-    id: 4,
-    name: 'Newest',
-    list: [hamburger, hotTacos, vegBiryani],
-  },
-  {
-    id: 5,
-    name: 'Trending',
-    list: [hamburger, vegBiryani, wrapSandwich],
-  },
-  {
-    id: 6,
-    name: 'Recommended',
-    list: [
-      hamburger,
-      hotTacos,
-      wrapSandwich,
-      hamburger2,
-      hotTacos2,
-      vegBiryani3,
-    ],
-  },
-];
-
-const myCart = [
-  hamburger,
-  hotTacos,
-  vegBiryani,
-  hamburger2,
-  hotTacos2,
-  vegBiryani3,
-];
-
-const myCard = [
-  {
-    id: 1,
-    name: 'Zalo Pay',
-    icon: icons.zalo_pay,
-  },
-];
-
-const allCards = [
-  {
-    id: 1,
-    name: 'Zalo Pay',
-    icon: icons.zalo_pay,
-  },
-  {
-    id: 3,
-    name: 'Visa',
-    icon: icons.visa,
   },
 ];
 
@@ -385,20 +145,1076 @@ const mostSrearched = [
   {id: 6, label: 'Bánh ngọt'},
   {id: 7, label: 'Coca'},
 ];
-const data = {
+const FOODS_DATA = [
+  {
+    id: '1a7b8b84-6591-11ee-8c99-0242ac120002',
+    name: 'Cơm dương châu đùi mắm tỏi',
+    price: 69000,
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    image:
+      'https://images.foody.vn/res/g2/11349/s460x300/2a4778de-db37-4a23-9315-468e514a-8adc8f7d-201109124532.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    id: '2061c8e2-6591-11ee-8c99-0242ac120002',
+    name: 'Cơm gà hấp muối',
+    price: 55000,
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    image:
+      'https://images.foody.vn/res/g2/11349/s400x400/10fd85e2-4bbf-4d7c-862b-7563022c-cd365cde-201109124621.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    id: '2061c8e2-6591-11ee-8c99-0242ac12000u',
+    name: 'Cơm gà chiên mắm tỏi',
+    price: 55000,
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+
+    image:
+      'https://images.foody.vn/res/g2/11349/s400x400/ef94ceab-cd98-4ee9-af03-a6febffe-deaad5dd-201109124708.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    id: '27720890-6591-11ee-8c99-0242ac120002',
+    name: 'Cơm gà xối mỡ',
+    price: 55000,
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    image:
+      'https://images.foody.vn/res/g2/11349/s400x400/ef94ceab-cd98-4ee9-af03-a6febffe-deaad5dd-201109124708.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '2db8c6e4-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '34eb8474-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '3b47a1ea-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '4139fbac-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '45a92334-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '81362aaa-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '86cd3918-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '8bb25012-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Bún bò - chả',
+    id: '904ddfa6-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+];
+
+const popularRestaurant = [
+  {
+    id: '97b27cbe-658e-11ee-8c99-0242ac120002',
+    name: 'Cơm Gà Xối Mỡ 142 - Ba Đình',
+    address: '142 Ba Đình, P. 10, Quận 8, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+  },
+  {
+    id: 'b086e31a-658e-11ee-8c99-0242ac120002',
+    name: 'Tiên Tiên - Bún Thái Cay - Phan Văn Trị',
+    address: '317B Phan Văn Trị, P. 2, Quận 5, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g97/963183/prof/s480x300/image-f472b1f5-200910114135.jpeg',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+  },
+  {
+    id: 'b8319f74-658e-11ee-8c99-0242ac120002',
+    name: 'Bún Bò Đất Thánh - Shop Online',
+    address: '221/16 Đất Thánh, P. 6, Tân Bình, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g103/1020115/prof/s460x300/foody-upload-api-foody-mobile-hmzz-200421103141.jpg',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+  },
+  {
+    id: 'c29ad052-658e-11ee-8c99-0242ac120002',
+    name: 'Tocotoco - Chung Cư Richstar - 278 Hòa Bình',
+    address: 'Chung Cư Richstar, 278 Hòa Bình, P. Hiệp Tân, Tân Phú, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g96/956871/prof/s460x300/foody-upload-api-foody-mobile-toco-toco-191008095032.jpg',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+  },
+  {
+    id: 'cb626114-658e-11ee-8c99-0242ac120002',
+    name: 'TocoToco Bubble Tea - Lê Văn Việt',
+    address: '84 Lê Văn Việt, P. Hiệp Phú, Thành Phố Thủ Đức, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g81/801344/prof/s640x400/image-9c40a4fe-210113164540.jpeg',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+  },
+  {
+    id: 'd42e99b6-658e-11ee-8c99-0242ac120002',
+    name: 'Gà Ta Tường Vy - Cơm Gà, Cháo & Gỏi Gà - Nguyễn Văn Quá',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+    address: '661 Nguyễn Văn Quá, P. Đông Hưng Thuận, Quận 12, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g81/801344/prof/s460x300/image-9c40a4fe-210113164540.jpeg',
+  },
+  {
+    id: 'da7ca5c4-658e-11ee-8c99-0242ac120002',
+    name: 'Anh Cường Bakery - Bánh Cua Phô Mai - Nguyễn Văn Lạc',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+    address: '32 Nguyễn Văn Lạc, P. 19, Bình Thạnh, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g79/781832/prof/s460x300/foody-upload-api-foody-mobile-banhkembap1-jpg-181002153458.jpg',
+  },
+  {
+    id: 'dfd61104-658e-11ee-8c99-0242ac120002',
+    name: 'Tâm Ký II - Cơm Chiên & Nui Xào - Đường 50',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+    address: '10 Đường số 50, P. 5, Quận 4, Quận 4, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g117/1163333/prof/s460x300/foody-upload-api-foody-mobile-ta-f8e92a47-230304194500.jpeg',
+  },
+  {
+    id: 'e53760ee-658e-11ee-8c99-0242ac120002',
+    name: 'Zangzang Food - Gà Tươi Ủ Muối Cầu Kỳ',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+    address: '226 Lê Đức Thọ, P. 6, Gò Vấp, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g117/1163373/prof/s460x300/foody-upload-api-foody-mobile-fi-365302c3-230320112903.jpeg',
+  },
+  {
+    id: 'ea8848ba-658e-11ee-8c99-0242ac120002',
+    name: 'Mì Trộn Park Kim Thang - Phạm Văn Đồng',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Chọn thêm',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Đồ uống',
+          foods: FOODS_DATA.slice(4),
+        },
+      ],
+    },
+    address: '259 Phạm Văn Đồng, P.1, Gò Vấp, TP. HCM',
+    image:
+      'https://images.foody.vn/res/g108/1076096/prof/s460x300/foody-upload-api-foody-mobile-36-e6f8587b-230729083030.jpeg',
+  },
+];
+
+const featureCategory = [
+  {
+    id: 1,
+    title: 'Quán mới khao đến 50%',
+    subtitle: 'Tổng hợp quán mới đang khao nóng dòn',
+    restaurants: popularRestaurant,
+  },
+  {
+    id: 2,
+    title: 'Deal đa tầng - khao nước xịn đến 90K',
+    restaurants: popularRestaurant,
+    subtitle: 'Áp dụng từ 2 voucher mỗi đơn',
+  },
+  {
+    id: 3,
+    title: 'Deal đa tầng - khao ăn ngon đến 90K',
+    restaurants: popularRestaurant,
+    subtitle: 'Áp dụng từ 2 voucher mỗi đơn',
+  },
+];
+
+const dummy_data = {
+  featureCategory,
   mostSrearched,
   myProfile,
-  menu,
   categories,
-  tags,
-  ratings,
-  delivery_time,
   onboarding_screens,
-  hamburger,
-  myCart,
-  myCard,
-  allCards,
+  popularRestaurant,
   carousel,
 };
 
-export default data;
+export default dummy_data;

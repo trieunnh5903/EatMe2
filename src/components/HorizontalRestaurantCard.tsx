@@ -10,19 +10,19 @@ import {
 import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {Image} from 'react-native';
-import {Shop} from '../types/types';
+import {Restaurant} from '../types/types';
 import FastImage, {ImageStyle} from 'react-native-fast-image';
 import Dot from './Dot';
 
-interface HorizontalShopCardProps {
+interface HorizontalRestaurantCardProps {
   containerStyle?: StyleProp<ViewStyle>;
-  item: Shop;
+  item: Restaurant;
   imageStyle?: StyleProp<ImageStyle>;
   textWrapperStyle?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 }
 
-const HorizontalShopCard: React.FC<HorizontalShopCardProps> = ({
+const HorizontalRestaurantCard: React.FC<HorizontalRestaurantCardProps> = ({
   containerStyle,
   item,
   imageStyle,
@@ -75,7 +75,7 @@ const HorizontalShopCard: React.FC<HorizontalShopCardProps> = ({
   );
 };
 
-export default HorizontalShopCard;
+export default HorizontalRestaurantCard;
 
 const styles = StyleSheet.create({
   price: {
