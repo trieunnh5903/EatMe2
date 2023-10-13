@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   rowWrapper: {flexDirection: 'row', gap: 3},
   starWrapper: {flexDirection: 'row', columnGap: 2},
-  iconStar: {width: 18, height: 18},
+  iconStar: {width: 20, height: 20},
   container: {
     alignItems: 'center',
     flexDirection: 'row',

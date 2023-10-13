@@ -44,7 +44,7 @@ const icons = {
   cart_weight400: require('../assets/icons/shopping_bag_FILL0_wght400_GRAD0_opsz48.png'),
   cart_fill: require('../assets/icons/shopping_bag_FILL1_wght600_GRAD0_opsz48.png'),
   calories: require('../assets/icons/calories.png'),
-  star: require('../assets/icons/icons8-star-94.png'),
+  star: require('../assets/icons/icons8-star-48.png'),
   cancel_circle: require('../assets/icons/cancel_circle.png'),
   check_circle: require('../assets/icons/check_circle.png'),
   eye: require('../assets/icons/eye.png'),

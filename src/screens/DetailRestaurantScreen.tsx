@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   FlatList,
   Image,
@@ -8,11 +9,9 @@ import {
   TouchableOpacity,
   View,
   ImageBackground,
-  GestureResponderEvent,
-  ColorValue,
   ViewToken,
 } from 'react-native';
-import React, {useRef, useCallback, useState} from 'react';
+import React, {useRef, useCallback} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
 import {Shadow} from 'react-native-shadow-2';
 import convertToVND from '../utils/convertToVND';
@@ -28,7 +27,7 @@ import {Food} from '../types/types';
 import {DetailRestaurantNavigationProps} from '../types/navigation.type';
 import LinearGradient from 'react-native-linear-gradient';
 import Feather from 'react-native-vector-icons/Feather';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 interface MenuFood {
   label: string;
   foods: {
@@ -45,14 +44,7 @@ interface MenuFoodItemProp {
   onFoodItemPress: (item: Food) => void;
 }
 
-interface ButtonMenuProp {
-  onPress: (event: GestureResponderEvent) => void;
-  backgroundColor: ColorValue;
-  textColor: ColorValue;
-  label: string;
-}
-
-const HEADERHEIGHT = 116;
+const HEADERHEIGHT = SIZES.height * 0.15;
 const DetailRestaurantScreen = ({
   navigation,
   route,
@@ -79,9 +71,15 @@ const DetailRestaurantScreen = ({
   console.log('DetailRestaurantScreen');
   const menuListRef = useRef<FlatList>(null);
   const scrollY = useSharedValue(0);
-  const [currentMenuItem, setCurrentMenuItem] = useState(menuFoods[0].label);
+  // const [currentMenuItem, setCurrentMenuItem] = useState(menuFoods[0].label);
   const detailMenuRef = useRef<Animated.FlatList<any> & FlatList>(null);
+  const buttonRefs = Array.from({length: menuFoods.length}, () =>
+    useRef<TouchableOpacity>(null),
+  );
 
+  const textRefs = Array.from({length: menuFoods.length}, () =>
+    useRef<Text>(null),
+  );
   const onListScroll = useAnimatedScrollHandler({
     onScroll: event => {
       scrollY.value = event.contentOffset.y;
@@ -108,17 +106,38 @@ const DetailRestaurantScreen = ({
     };
   });
 
-  const onMenuListPress = useCallback((index: number) => {
-    detailMenuRef.current?.scrollToIndex({
-      index: index,
-      animated: true,
-    });
+  const onMenuListPress = useCallback(
+    (index: number) => {
+      detailMenuRef.current?.scrollToIndex({
+        index: index,
+        animated: true,
+      });
 
-    menuListRef.current?.scrollToIndex({
-      index: index,
-      animated: true,
-    });
-  }, []);
+      menuListRef.current?.scrollToIndex({
+        index: index,
+        animated: true,
+      });
+
+      for (let i = 0; i < buttonRefs.length; i++) {
+        buttonRefs[i].current?.setNativeProps({
+          style: {backgroundColor: COLORS.white},
+        });
+
+        textRefs[i].current?.setNativeProps({
+          style: {color: COLORS.black},
+        });
+      }
+
+      textRefs[index].current?.setNativeProps({
+        style: {color: COLORS.white},
+      });
+
+      buttonRefs[index].current?.setNativeProps({
+        style: {backgroundColor: COLORS.primary},
+      });
+    },
+    [buttonRefs, textRefs],
+  );
 
   const onBackPress = () => navigation.goBack();
   const onFoodItemPress = (item: Food) => {
@@ -130,21 +149,43 @@ const DetailRestaurantScreen = ({
 
   const onViewableItemsChanged = useRef(
     ({viewableItems}: {viewableItems: ViewToken[]}) => {
-      const firstItem = viewableItems[0];
-      if (firstItem?.index || firstItem?.index === 0) {
-        menuListRef.current?.scrollToIndex({
-          index: firstItem.index,
-          animated: true,
-        });
-        setCurrentMenuItem(firstItem.item.label);
+      if (viewableItems.length > 0) {
+        // Lấy index của item đang hiển thị đầu tiên trong danh sách hiển thị
+        const index = viewableItems[0].index;
+        console.log(index);
+        if (index !== null) {
+          menuListRef.current?.scrollToIndex({
+            index: index,
+            animated: true,
+          });
+
+          for (let i = 0; i < buttonRefs.length; i++) {
+            buttonRefs[i].current?.setNativeProps({
+              style: {backgroundColor: COLORS.white},
+            });
+
+            textRefs[i].current?.setNativeProps({
+              style: {color: COLORS.black},
+            });
+          }
+
+          textRefs[index].current?.setNativeProps({
+            style: {color: COLORS.white},
+          });
+
+          buttonRefs[index].current?.setNativeProps({
+            style: {backgroundColor: COLORS.primary},
+          });
+        }
       }
     },
   );
+
   return (
     <SafeAreaView style={styles.container}>
       {/* header sau khi cuon */}
       <Animated.View style={[styles.headerWrapper, headerStyle]}>
-        <Shadow>
+        <Shadow distance={5}>
           <View style={styles.headerContainer}>
             <TouchableOpacity
               style={styles.buttonBackWrapper}
@@ -172,6 +213,7 @@ const DetailRestaurantScreen = ({
             </TouchableOpacity>
           </View>
           <FlatList
+            style={{height: '50%'}}
             ref={menuListRef}
             horizontal
             contentContainerStyle={styles.menuListContentContainer}
@@ -179,22 +221,22 @@ const DetailRestaurantScreen = ({
             keyExtractor={item => item.label}
             data={menuFoods}
             renderItem={({item, index}) => {
-              const textColor =
-                currentMenuItem === item.label
-                  ? COLORS.white
-                  : COLORS.blackText;
-
               const backgroundColor =
-                currentMenuItem === item.label ? COLORS.primary : COLORS.white;
+                index === 0 ? COLORS.primary : COLORS.white;
+              const color = index === 0 ? COLORS.white : COLORS.black;
               return (
-                <ButtonMenu
-                  backgroundColor={backgroundColor}
-                  label={item.label}
+                <TouchableOpacity
+                  ref={buttonRefs[index]}
                   onPress={() => {
                     onMenuListPress(index);
                   }}
-                  textColor={textColor}
-                />
+                  style={[styles.menuItem, {backgroundColor}]}>
+                  <Text
+                    ref={textRefs[index]}
+                    style={[{color}, FONTS.label_large]}>
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
               );
             }}
           />
@@ -207,7 +249,7 @@ const DetailRestaurantScreen = ({
           <View>
             {/* header ban dau */}
             <ImageBackground
-              style={{height: SIZES.height * 0.4}}
+              style={{height: SIZES.height * 0.35}}
               source={{uri: restaurant.image}}>
               <LinearGradient
                 colors={['rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0)']}
@@ -252,36 +294,61 @@ const DetailRestaurantScreen = ({
             {/* thong tin quan an */}
             <View style={{margin: 2 * SIZES.spacing}}>
               {/* thông tin chính */}
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={icons.verified}
-                  style={{width: 20, height: 20}}
-                  resizeMode="contain"
-                />
+              <View style={styles.mainInformation}>
+                <TouchableOpacity style={styles.btnInfo}>
+                  <Ionicons
+                    name="information-circle-outline"
+                    size={24}
+                    color={COLORS.black}
+                  />
+                </TouchableOpacity>
+                <View style={styles.partnerWrapper}>
+                  <Image
+                    source={icons.verified}
+                    style={{width: 20, height: 20}}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={[
+                      {color: COLORS.primary, marginLeft: SIZES.base},
+                      FONTS.label_large,
+                    ]}>
+                    ĐỐI TÁC CỦA EATME
+                  </Text>
+                </View>
+                <Text style={[FONTS.title_large, styles.foodName]}>
+                  {restaurant.name}
+                </Text>
                 <Text
-                  style={[
-                    {color: COLORS.blackText, marginLeft: SIZES.base},
-                    FONTS.label_large,
-                  ]}>
-                  Đã xác thực
+                  numberOfLines={1}
+                  style={{
+                    color: COLORS.darkGray,
+                    marginBottom: SIZES.base,
+                    ...FONTS.title_medium,
+                  }}>
+                  0.3km •{' '}
+                  <Text style={FONTS.body_large}>{restaurant.address}</Text>
                 </Text>
               </View>
-              <Text style={[FONTS.title_large, styles.foodName]}>
-                {restaurant.name}
-              </Text>
-              <Text style={{color: COLORS.blackText, ...FONTS.body_large}}>
-                0.3km - {restaurant.address}
-              </Text>
               {/* thông tin phụ */}
               <View style={styles.subInfo}>
-                <View>
-                  <Text
-                    style={{color: COLORS.blackText, ...FONTS.title_medium}}>
-                    Giao hàng tiêu chuẩn
-                  </Text>
-                  <Text style={{color: COLORS.blackText, ...FONTS.body_large}}>
-                    Dự kiến giao hàng lúc 18:30
-                  </Text>
+                <View style={styles.timeDeliveryWrapper}>
+                  <Feather
+                    name="clock"
+                    size={24}
+                    color={COLORS.black}
+                    style={{marginRight: 10}}
+                  />
+                  <View>
+                    <Text
+                      style={{color: COLORS.blackText, ...FONTS.title_medium}}>
+                      Giao hàng tiêu chuẩn
+                    </Text>
+                    <Text
+                      style={{color: COLORS.blackText, ...FONTS.body_large}}>
+                      Dự kiến giao hàng lúc 18:30
+                    </Text>
+                  </View>
                 </View>
                 <TouchableOpacity>
                   <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
@@ -290,17 +357,45 @@ const DetailRestaurantScreen = ({
                 </TouchableOpacity>
               </View>
               <View style={styles.voucher}>
-                <Text style={{color: COLORS.blackText, ...FONTS.body_medium}}>
-                  Nhập "BANMOI" giảm 40k trên giá món
-                </Text>
+                <View style={styles.voucherWrapper}>
+                  <Feather
+                    name="gift"
+                    size={24}
+                    color={COLORS.black}
+                    style={{marginRight: 10}}
+                  />
+                  <Text numberOfLines={1} style={styles.textVoucher}>
+                    Nhập "BANMOI" giảm 40k trên giá món
+                  </Text>
+                </View>
                 <TouchableOpacity>
                   <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
-                    Thay đổi
+                    Xem thêm
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.voucher}>
+                <View style={styles.invoiceGroup}>
+                  <Feather
+                    name="users"
+                    size={24}
+                    color={COLORS.black}
+                    style={{marginRight: 10}}
+                  />
+                  <Text style={{color: COLORS.blackText, ...FONTS.label_large}}>
+                    Đơn nhóm
+                  </Text>
+                </View>
+
+                <TouchableOpacity>
+                  <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
+                    Tạo đơn
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
 
+            <Break />
             {/* list best seller */}
             <RenderListHighLight
               highLightList={bestSeller}
@@ -312,11 +407,11 @@ const DetailRestaurantScreen = ({
         ref={detailMenuRef}
         data={menuFoods}
         viewabilityConfig={{
-          minimumViewTime: 100,
-          itemVisiblePercentThreshold: 50,
+          minimumViewTime: 300,
+          itemVisiblePercentThreshold: 30,
+          waitForInteraction: true,
         }}
         onViewableItemsChanged={onViewableItemsChanged.current}
-        onEndReachedThreshold={0.2}
         renderItem={({item}) => (
           <MenuFoodItem foodItem={item} onFoodItemPress={onFoodItemPress} />
         )}
@@ -381,19 +476,6 @@ const RenderListHighLight = ({
   );
 };
 
-const ButtonMenu: React.FC<ButtonMenuProp> = ({
-  onPress,
-  backgroundColor,
-  textColor,
-  label,
-}) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={[styles.menuItem, {backgroundColor: backgroundColor}]}>
-    <Text style={[{color: textColor}, FONTS.label_large]}>{label}</Text>
-  </TouchableOpacity>
-);
-
 const MenuFoodItem: React.FC<MenuFoodItemProp> = ({
   foodItem,
   onFoodItemPress,
@@ -447,6 +529,71 @@ const MenuFoodItem: React.FC<MenuFoodItemProp> = ({
 export default DetailRestaurantScreen;
 
 const styles = StyleSheet.create({
+  invoiceGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16,
+    flex: 1,
+  },
+
+  voucherWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16,
+    flex: 1,
+  },
+
+  timeDeliveryWrapper: {
+    flexDirection: 'row',
+    marginRight: 16,
+    flex: 1,
+    alignItems: 'center',
+  },
+  textVoucher: {
+    color: COLORS.blackText,
+    ...FONTS.label_large,
+  },
+
+  btnInfo: {
+    position: 'absolute',
+    right: 10,
+    top: -16,
+    backgroundColor: COLORS.white,
+    padding: 5,
+    borderRadius: 50,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
+  },
+  partnerWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: SIZES.base,
+  },
+  mainInformation: {
+    backgroundColor: COLORS.white,
+    alignItems: 'center',
+    marginTop: -60,
+    paddingVertical: SIZES.spacing,
+    paddingHorizontal: SIZES.spacing * 2,
+    borderRadius: SIZES.radius,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+
+    elevation: 1,
+  },
+
   baseHeader: {
     paddingHorizontal: SIZES.padding,
     position: 'absolute',
@@ -492,7 +639,7 @@ const styles = StyleSheet.create({
   voucher: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: SIZES.spacing,
+    marginVertical: SIZES.spacing,
   },
 
   buttonNavWrapper: {
@@ -506,9 +653,9 @@ const styles = StyleSheet.create({
   },
   menuListContentContainer: {
     paddingLeft: SIZES.spacing,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: 10,
-    marginVertical: SIZES.radius,
+    backgroundColor: COLORS.white,
   },
   menuItem: {
     borderRadius: 20,
@@ -547,13 +694,15 @@ const styles = StyleSheet.create({
     color: COLORS.blackText,
     fontWeight: 'bold',
     marginTop: SIZES.base,
+    textAlign: 'center',
+    marginBottom: SIZES.base,
   },
   headerContainer: {
+    height: '50%',
     width: SIZES.width,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: SIZES.radius,
     backgroundColor: COLORS.white,
   },
 
@@ -684,10 +833,10 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     resizeMode: 'contain',
-    tintColor: COLORS.primary,
+    tintColor: COLORS.black,
   },
 
   iconSearch: {
