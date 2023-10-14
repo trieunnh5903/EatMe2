@@ -1,20 +1,20 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {COLORS, SIZES, FONTS} from '../../config';
 import convertToVND from '../../utils/convertToVND';
-import {ShopOption, ShopOptionGroup} from '../../types/types';
+import {RestaurantOption, RestaurantOptionGroup} from '../../types/types';
 
 interface RadioGroupProp {
-  selectedOption: ShopOption[];
-  setSelectedOption: React.Dispatch<React.SetStateAction<ShopOption[]>>;
-  data: ShopOptionGroup;
+  selectedOption: RestaurantOption[];
+  setSelectedOption: React.Dispatch<React.SetStateAction<RestaurantOption[]>>;
+  data: RestaurantOptionGroup;
 }
 const RadioButtonGroup: React.FC<RadioGroupProp> = ({
   data,
   selectedOption,
   setSelectedOption,
 }) => {
-  const handleOptionSelect = (item: ShopOption) => {
+  const handleOptionSelect = (item: RestaurantOption) => {
     if (
       selectedOption.some(selectedItem => selectedItem.title === item.title)
     ) {
@@ -74,7 +74,7 @@ const RadioButtonGroup: React.FC<RadioGroupProp> = ({
   );
 };
 
-export default RadioButtonGroup;
+export default memo(RadioButtonGroup);
 
 const styles = StyleSheet.create({
   label: {

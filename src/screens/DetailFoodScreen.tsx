@@ -6,41 +6,161 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import React from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {ButtonIcon, QuantityInput, RadioButtonGroup} from '../components';
 import {DetailFoodNavigationProps} from '../types/navigation.type';
 import convertToVND from '../utils/convertToVND';
-import Animated from 'react-native-reanimated';
-import useDetailFoodController from '../view-controllers/useDetailFoodController';
+import Animated, {
+  interpolate,
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
+import {RestaurantOption, RestaurantTopping} from '../types/types';
 
 const HEADER_HEIGHT = 50;
-const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
-  const {foodItem, shopInfo} = route.params;
-  const {
-    onAddToCartPress,
-    options,
-    toppingData,
-    bgColorIconClose,
-    onAddPress,
-    quantity,
-    onBackPress,
-    onRemovePress,
-    headerAnimatedStyle,
-    totalPrice,
-    topping,
-    canAddToCart,
-    selectedOption,
-    onIncreasePress,
-    onDecreasePress,
-    onScroll,
-    tintColorIconClose,
-    quantityTopping,
-    setSelectedOption,
-  } = useDetailFoodController(foodItem, shopInfo);
-  const AnimatedTouchableOpacity =
-    Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity);
+const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
+  console.log('DetalFoodScreen');
+  const {foodItem} = route.params;
+  const {toppings, options} = foodItem;
+  const onBackPress = () => navigation.goBack();
+  const [foodQuantity, setFoodQuantity] = useState<number>(1);
+  const scrollY = useSharedValue(0);
+  const [selectedOption, setSelectedOption] = useState<RestaurantOption[]>([]);
+  const [selectedTopping, setSelectedTopping] = useState<RestaurantTopping[]>(
+    [],
+  );
+
+  const bgColorIconClose = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      scrollY.value,
+      [0, SIZES.height * 0.3 - HEADER_HEIGHT],
+      [COLORS.black06, COLORS.white],
+    );
+    return {
+      backgroundColor,
+    };
+  });
+
+  const tintColorIconClose = useAnimatedStyle(() => {
+    const tintColor = interpolateColor(
+      scrollY.value,
+      [0, SIZES.height * 0.3 - HEADER_HEIGHT],
+      [COLORS.white, COLORS.black],
+    );
+    return {
+      tintColor,
+    };
+  });
+
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      scrollY.value,
+      [0, SIZES.height * 0.3 - HEADER_HEIGHT],
+      [0, 1],
+    );
+    return {
+      opacity,
+    };
+  });
+
+  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    scrollY.value = event.nativeEvent.contentOffset.y;
+  };
+
+  const onIncreaseToppingPress = useCallback(
+    (name: string, price: number) => {
+      const currentItem = selectedTopping.find(item => item.name === name);
+      if (currentItem) {
+        const updatedToppings = selectedTopping.map(item => {
+          if (item.name === currentItem.name) {
+            return {...item, quantity: currentItem.quantity + 1};
+          } else {
+            return item;
+          }
+        });
+        setSelectedTopping(updatedToppings);
+      } else {
+        setSelectedTopping([
+          ...selectedTopping,
+          {name: name, price: price, quantity: 1},
+        ]);
+      }
+    },
+    [selectedTopping],
+  );
+
+  const onDecreaseToppingPress = useCallback(
+    (name: string) => {
+      const currentItem = selectedTopping.find(item => item.name === name);
+      if (!currentItem) {
+        return;
+      }
+      if (currentItem) {
+        const updatedToppings = selectedTopping.map(item => {
+          if (item.name === currentItem.name && item.quantity >= 1) {
+            return {...item, quantity: item.quantity - 1};
+          }
+          return item;
+        });
+        const filteredTopping = updatedToppings.filter(
+          item => item.quantity > 0,
+        ) as RestaurantTopping[];
+        setSelectedTopping(filteredTopping);
+      }
+    },
+    [selectedTopping, setSelectedTopping],
+  );
+
+  const quantityTopping = useMemo(() => {
+    return selectedTopping.reduce((pre, curr) => {
+      if (curr.quantity) {
+        return pre + curr.quantity;
+      }
+      return 0;
+    }, 0);
+  }, [selectedTopping]);
+
+  const onIncreaseFoodPress = () => setFoodQuantity(value => value + 1);
+  const onDecreaseFoodPress = useCallback(() => {
+    if (foodQuantity > 1) {
+      setFoodQuantity(foodQuantity - 1);
+    }
+  }, [foodQuantity]);
+
+  const canAddToCart = useMemo(() => {
+    return (
+      selectedOption?.length === (options?.length || selectedOption?.length)
+    );
+  }, [selectedOption, options]);
+
+  const totalPriceOptions = useMemo(() => {
+    return selectedOption.reduce((pre, curr) => {
+      return pre + curr.price;
+    }, 0);
+  }, [selectedOption]);
+
+  const totalPriceTopping = useMemo(() => {
+    return selectedTopping.reduce((pre, curr) => {
+      return pre + curr.price * (curr.quantity || 1);
+    }, 0);
+  }, [selectedTopping]);
+
+  const totalPrice = () => {
+    if (!canAddToCart) {
+      return 0;
+    }
+
+    return (
+      (totalPriceOptions + totalPriceTopping + foodItem.price) * foodQuantity
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       {/* navigation*/}
@@ -120,24 +240,24 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
           </View>
         )}
         ListFooterComponent={
-          toppingData && (
+          toppings && (
             <View style={{paddingBottom: SIZES.height * 0.1}}>
               <View style={styles.toppingHeader}>
-                <Text style={styles.labelText}>{toppingData.title}</Text>
+                <Text style={styles.labelText}>{toppings.title}</Text>
                 <Text
                   style={[
                     styles.subLabelText,
                     {color: COLORS.gray, marginVertical: SIZES.base},
                   ]}>
-                  {'Chọn tối đa ' + toppingData.maximum}
+                  {'Chọn tối đa ' + toppings.maximum}
                 </Text>
               </View>
 
-              {toppingData.data.map((item: {name: string; price: number}) => {
-                const currentItem = topping?.find(
+              {toppings.data.map((item: {name: string; price: number}) => {
+                const currentItem = selectedTopping?.find(
                   toppingItem => toppingItem.name === item.name,
                 );
-                const maximum = toppingData.maximum;
+                const maximum = toppings.maximum;
                 const isMaximum = quantityTopping >= maximum;
                 const textColor =
                   isMaximum && (currentItem?.quantity || 0) > 0 === false
@@ -151,7 +271,9 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
                     currentItem?.quantity === 0 ? (
                       <ButtonIcon
                         disabled={isMaximum}
-                        onPress={() => onIncreasePress(item.name, item.price)}
+                        onPress={() =>
+                          onIncreaseToppingPress(item.name, item.price)
+                        }
                         containerStyle={[
                           styles.iconQuantityInputContainer,
                           {
@@ -175,7 +297,7 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
                         iconLeft={icons.remove_wght700}
                         iconRight={icons.add_wght700}
                         onAddPress={() =>
-                          onIncreasePress(item.name, item.price)
+                          onIncreaseToppingPress(item.name, item.price)
                         }
                         disableRight={isMaximum}
                         iconRightStyle={{
@@ -183,7 +305,7 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
                             ? COLORS.lightGray1
                             : COLORS.primary,
                         }}
-                        onRemovePress={() => onDecreasePress(item.name)}
+                        onRemovePress={() => onDecreaseToppingPress(item.name)}
                         labelStyle={[styles.labelQuantityInput]}
                         iconContainerStyle={styles.iconQuantityInputContainer}
                         quantity={currentItem.quantity}
@@ -216,19 +338,18 @@ const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
         <QuantityInput
           minimumQuantity={1}
           maximumQuantity={15}
-          disableRight={quantity === 15}
+          disableRight={foodQuantity === 15}
           iconLeft={icons.remove_wght700}
           iconRight={icons.add_wght700}
-          onAddPress={onAddPress}
-          onRemovePress={onRemovePress}
+          onAddPress={onIncreaseFoodPress}
+          onRemovePress={onDecreaseFoodPress}
           labelStyle={styles.labelQuantityInput}
           iconContainerStyle={styles.iconQuantityInputContainer}
-          quantity={quantity}
+          quantity={foodQuantity}
           iconStyle={styles.iconQuantityInput}
         />
         <TouchableOpacity
           disabled={!canAddToCart}
-          onPress={() => onAddToCartPress()}
           style={[
             {
               backgroundColor: canAddToCart ? COLORS.primary : COLORS.gray3,
