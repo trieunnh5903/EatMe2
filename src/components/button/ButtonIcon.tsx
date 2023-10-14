@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   TouchableOpacity,
   Image,
   StyleProp,
@@ -8,7 +7,7 @@ import {
   ImageSourcePropType,
   ImageStyle,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 
 interface ButtonIconProps {
   onPress?: (event: GestureResponderEvent) => void;
@@ -34,6 +33,4 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   );
 };
 
-export default ButtonIcon;
-
-const styles = StyleSheet.create({});
+export default memo(ButtonIcon);

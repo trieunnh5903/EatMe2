@@ -9,7 +9,7 @@ import {
   GestureResponderEvent,
   ImageSourcePropType,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import ButtonIcon from './button/ButtonIcon';
 import {COLORS} from '../config';
 
@@ -98,7 +98,7 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
   );
 };
 
-export default QuantityInput;
+export default memo(QuantityInput);
 
 const styles = StyleSheet.create({
   container: {
