@@ -8,7 +8,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  ImageBackground,
   ViewToken,
 } from 'react-native';
 import React, {useRef, useCallback} from 'react';
@@ -71,7 +70,6 @@ const DetailRestaurantScreen = ({
   console.log('DetailRestaurantScreen');
   const menuListRef = useRef<FlatList>(null);
   const scrollY = useSharedValue(0);
-  // const [currentMenuItem, setCurrentMenuItem] = useState(menuFoods[0].label);
   const detailMenuRef = useRef<Animated.FlatList<any> & FlatList>(null);
   const buttonRefs = Array.from({length: menuFoods.length}, () =>
     useRef<TouchableOpacity>(null),
@@ -84,26 +82,6 @@ const DetailRestaurantScreen = ({
     onScroll: event => {
       scrollY.value = event.contentOffset.y;
     },
-  });
-
-  const headerStyle = useAnimatedStyle(() => {
-    const marginTop = interpolate(
-      scrollY.value,
-      [0, SIZES.height * 0.5],
-      [-HEADERHEIGHT, 0],
-      Extrapolate.CLAMP,
-    );
-    const opacity = interpolate(
-      scrollY.value,
-      [0, SIZES.height * 0.5],
-      [0, 1],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      opacity,
-      marginTop,
-    };
   });
 
   const onMenuListPress = useCallback(
@@ -152,7 +130,6 @@ const DetailRestaurantScreen = ({
       if (viewableItems.length > 0) {
         // Lấy index của item đang hiển thị đầu tiên trong danh sách hiển thị
         const index = viewableItems[0].index;
-        console.log(index);
         if (index !== null) {
           menuListRef.current?.scrollToIndex({
             index: index,
@@ -181,10 +158,50 @@ const DetailRestaurantScreen = ({
     },
   );
 
+  const headerWrapperz = useAnimatedStyle(() => {
+    const zIndex = interpolate(
+      scrollY.value,
+      [0, SIZES.height * 0.3],
+      [0, 2],
+      Extrapolate.CLAMP,
+    );
+    const opacity = interpolate(
+      scrollY.value,
+      [0, SIZES.height * 0.3],
+      [0, 1],
+      Extrapolate.CLAMP,
+    );
+
+    return {
+      opacity,
+      zIndex,
+    };
+  });
+
+  const baseHeaderz = useAnimatedStyle(() => {
+    const zIndex = interpolate(
+      scrollY.value,
+      [0, SIZES.height * 0.3],
+      [1, 0],
+      Extrapolate.CLAMP,
+    );
+    const opacity = interpolate(
+      scrollY.value,
+      [0, SIZES.height * 0.3],
+      [1, 0],
+      Extrapolate.CLAMP,
+    );
+
+    return {
+      opacity,
+      zIndex,
+    };
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       {/* header sau khi cuon */}
-      <Animated.View style={[styles.headerWrapper, headerStyle]}>
+      <Animated.View style={[styles.headerWrapper, headerWrapperz]}>
         <Shadow distance={5}>
           <View style={styles.headerContainer}>
             <TouchableOpacity
@@ -203,7 +220,7 @@ const DetailRestaurantScreen = ({
                 placeholder={`Tìm món tại ${restaurant.name}`}
               />
             </TouchableOpacity>
-            {/* icon yeu thich */}
+            {/* btn yeu thich */}
             <TouchableOpacity
               style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
               <Image
@@ -212,6 +229,7 @@ const DetailRestaurantScreen = ({
               />
             </TouchableOpacity>
           </View>
+          {/* menu */}
           <FlatList
             style={{height: '50%'}}
             ref={menuListRef}
@@ -242,55 +260,63 @@ const DetailRestaurantScreen = ({
           />
         </Shadow>
       </Animated.View>
+      {/* header ban dau */}
+      <Animated.View
+        style={[
+          {position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1},
+          baseHeaderz,
+        ]}>
+        <HeaderCustom
+          containerStyle={styles.baseHeader}
+          leftComponent={
+            <TouchableOpacity
+              style={styles.buttonNavWrapper}
+              onPress={onBackPress}>
+              <Image
+                source={icons.arrow_back}
+                style={[styles.icon, {tintColor: COLORS.white}]}
+              />
+            </TouchableOpacity>
+          }
+          rightComponent={
+            <View style={{flexDirection: 'row', gap: 10}}>
+              <TouchableOpacity
+                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
+                <Feather name="search" size={20} color={COLORS.white} />
+              </TouchableOpacity>
 
+              <TouchableOpacity
+                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
+                <Image
+                  source={icons.favourite}
+                  style={[styles.icon, {tintColor: COLORS.white}]}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
+                <Feather name="share-2" size={20} color={COLORS.white} />
+              </TouchableOpacity>
+            </View>
+          }
+        />
+      </Animated.View>
+      <View style={{position: 'absolute', top: 0, left: 0, right: 0}}>
+        <Image
+          style={{height: SIZES.height * 0.35}}
+          source={{uri: restaurant.image}}
+        />
+
+        <LinearGradient
+          colors={['rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0)']}
+          style={{height: 40, position: 'absolute', top: 0, left: 0, right: 0}}
+        />
+      </View>
       {/* list detail menu */}
       <Animated.FlatList
+        contentContainerStyle={{paddingTop: SIZES.height * 0.35}}
         ListHeaderComponent={
-          <View>
-            {/* header ban dau */}
-            <ImageBackground
-              style={{height: SIZES.height * 0.35}}
-              source={{uri: restaurant.image}}>
-              <LinearGradient
-                colors={['rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0)']}
-                style={{height: 40}}
-              />
-              <HeaderCustom
-                containerStyle={styles.baseHeader}
-                leftComponent={
-                  <TouchableOpacity
-                    style={styles.buttonNavWrapper}
-                    onPress={onBackPress}>
-                    <Image
-                      source={icons.arrow_back}
-                      style={[styles.icon, {tintColor: COLORS.white}]}
-                    />
-                  </TouchableOpacity>
-                }
-                rightComponent={
-                  <View style={{flexDirection: 'row', gap: 10}}>
-                    <TouchableOpacity
-                      style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                      <Feather name="search" size={20} color={COLORS.white} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                      <Image
-                        source={icons.favourite}
-                        style={[styles.icon, {tintColor: COLORS.white}]}
-                      />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                      <Feather name="share-2" size={20} color={COLORS.white} />
-                    </TouchableOpacity>
-                  </View>
-                }
-              />
-            </ImageBackground>
-
+          <View style={{backgroundColor: COLORS.white}}>
             {/* thong tin quan an */}
             <View style={{margin: 2 * SIZES.spacing}}>
               {/* thông tin chính */}
@@ -486,6 +512,7 @@ const MenuFoodItem: React.FC<MenuFoodItemProp> = ({
       style={{
         width: SIZES.width,
         paddingVertical: SIZES.spacing,
+        backgroundColor: COLORS.white,
       }}>
       <Text style={styles.categoryWrapper}>{foodItem.label}</Text>
       <View>
@@ -596,10 +623,6 @@ const styles = StyleSheet.create({
 
   baseHeader: {
     paddingHorizontal: SIZES.padding,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
   },
 
   iconCart: {width: 32, height: 32, tintColor: COLORS.primary},
@@ -635,6 +658,11 @@ const styles = StyleSheet.create({
   headerWrapper: {
     backgroundColor: COLORS.white,
     height: HEADERHEIGHT,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    // zIndex: 2,
   },
   voucher: {
     flexDirection: 'row',
