@@ -11,16 +11,20 @@ import {Break, ButtonIcon, Dot, HeaderCustom} from '../components';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {RestaurantInformation} from '../types/types';
 import FastImage from 'react-native-fast-image';
-import {useAppSelector} from '../redux/store';
-import {useSelectAllCart} from '../redux/hooks';
+import {store, useAppSelector} from '../redux/store';
+import {
+  getTotalFoodCount,
+  useSelectAllCart,
+  useSelectTotalPriceSelector,
+} from '../redux/hooks';
 import {useNavigation} from '@react-navigation/native';
 import {ListCartScreenProp} from '../types/navigation.type';
+import convertToVND from '../utils/convertToVND';
 
 const ListCart = () => {
   // const {onBackPress, listInvoices} = useListCartController();
   const navigation = useNavigation<ListCartScreenProp['navigation']>();
   const listCart = useAppSelector(useSelectAllCart);
-  console.log('listCart', listCart);
   const onBackPress = () => navigation.goBack();
   return (
     <View style={styles.container}>
@@ -57,7 +61,8 @@ const ListCart = () => {
 const FoodItem: React.FC<ListRenderItemInfo<RestaurantInformation>> = ({
   item,
 }) => {
-  console.log(item);
+  const totalFood = getTotalFoodCount(store.getState(), item.id);
+  const totalPrice = useSelectTotalPriceSelector(store.getState(), item.id);
   return (
     <TouchableOpacity style={[styles.horizontalCard]}>
       <FastImage
@@ -82,9 +87,9 @@ const FoodItem: React.FC<ListRenderItemInfo<RestaurantInformation>> = ({
         <View style={{flex: 1, justifyContent: 'flex-end'}}>
           {/* giá */}
           <View style={styles.rowWrapper}>
-            <Text style={styles.textBlackBold}>0</Text>
+            <Text style={styles.textBlackBold}>{convertToVND(totalPrice)}</Text>
             <Dot />
-            <Text style={styles.textBlackBold}>0 món</Text>
+            <Text style={styles.textBlackBold}>{totalFood} món</Text>
           </View>
         </View>
       </View>

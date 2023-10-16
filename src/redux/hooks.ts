@@ -30,3 +30,13 @@ export const useSelectAllCart = createSelector(
   (state: RootState) => state.restaurant,
   cartsState => cartsState.allIds.map(cartId => cartsState.byId[cartId]),
 );
+
+export const useSelectTotalPriceSelector = createSelector(
+  (state: RootState, restaurantId: string) => state.cart.byId[restaurantId],
+  cart => {
+    if (!cart) {
+      return 0;
+    }
+    return cart.reduce((total, item) => total + item.price, 0);
+  },
+);
