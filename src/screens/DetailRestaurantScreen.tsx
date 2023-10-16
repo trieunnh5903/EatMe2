@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   FlatList,
+  GestureResponderEvent,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -8,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ColorValue,
   ViewToken,
 } from 'react-native';
 import React, {useRef, useEffect, useCallback, memo} from 'react';
@@ -51,6 +53,20 @@ interface MenuFood {
 interface MenuFoodItemProp {
   foodItem: MenuFood;
   onFoodItemPress: (item: Food) => void;
+}
+
+interface ButtonMenuProp {
+  buttonRef: React.LegacyRef<TouchableOpacity> | undefined;
+  textRef: React.LegacyRef<Text>;
+  onPress: ((event: GestureResponderEvent) => void) | undefined;
+  backgroundColor: ColorValue | undefined;
+  color?: ColorValue | undefined;
+  label: string;
+}
+
+interface CheckoutFooterProp {
+  onCartPress: ((event: GestureResponderEvent) => void) | undefined;
+  totalFood: number;
 }
 
 const HEADERHEIGHT = SIZES.height * 0.15;
@@ -254,18 +270,16 @@ const DetailRestaurantScreen = ({
                 index === 0 ? COLORS.primary : COLORS.white;
               const color = index === 0 ? COLORS.white : COLORS.black;
               return (
-                <TouchableOpacity
-                  ref={buttonRefs[index]}
+                <ButtonMenu
+                  backgroundColor={backgroundColor}
+                  buttonRef={buttonRefs[index]}
+                  label={item.label}
                   onPress={() => {
                     onMenuListPress(index);
                   }}
-                  style={[styles.menuItem, {backgroundColor}]}>
-                  <Text
-                    ref={textRefs[index]}
-                    style={[{color}, FONTS.label_large]}>
-                    {item.label}
-                  </Text>
-                </TouchableOpacity>
+                  textRef={textRefs[index]}
+                  color={color}
+                />
               );
             }}
           />
@@ -455,23 +469,48 @@ const DetailRestaurantScreen = ({
         )}
       />
       {cart?.length > 0 && (
-        <View style={styles.checkout}>
-          <ButtonTextIcon
-            onPress={onCartPress}
-            icon={icons.cart_fill}
-            label={totalFood.toString()}
-            containerStyle={styles.btnCart}
-            iconStyle={styles.iconCart}
-            labelStyle={{color: COLORS.primary}}
-          />
-          <ButtonText
-            labelStyle={{color: COLORS.white}}
-            containerStyle={styles.btnCheckout}
-            label={'Trang thanh toán'}
-          />
-        </View>
+        <CheckoutFooter onCartPress={onCartPress} totalFood={totalFood} />
       )}
     </SafeAreaView>
+  );
+};
+
+const ButtonMenu: React.FC<ButtonMenuProp> = memo(
+  ({backgroundColor, buttonRef, label, textRef, onPress, color}) => {
+    return (
+      <TouchableOpacity
+        ref={buttonRef}
+        onPress={onPress}
+        style={[styles.menuItem, {backgroundColor}]}>
+        <Text ref={textRef} style={[{color}, FONTS.label_large]}>
+          {label}
+        </Text>
+      </TouchableOpacity>
+    );
+  },
+);
+
+const CheckoutFooter: React.FC<CheckoutFooterProp> = ({
+  onCartPress,
+  totalFood,
+}) => {
+  console.log('checkout');
+  return (
+    <View style={styles.checkout}>
+      <ButtonTextIcon
+        onPress={onCartPress}
+        icon={icons.cart_fill}
+        label={totalFood.toString()}
+        containerStyle={styles.btnCart}
+        iconStyle={styles.iconCart}
+        labelStyle={{color: COLORS.primary}}
+      />
+      <ButtonText
+        labelStyle={{color: COLORS.white}}
+        containerStyle={styles.btnCheckout}
+        label={'Trang thanh toán'}
+      />
+    </View>
   );
 };
 
