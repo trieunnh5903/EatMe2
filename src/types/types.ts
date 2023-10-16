@@ -66,22 +66,15 @@ export interface FoodReduxType {
   // totalPrice: number;
 }
 
-// export interface Invoice extends Restaurant {
-//   listFood: {
-//     id: string;
-//     name: string;
-//     description?: string;
-//     price: number;
-//     image: string;
-//     quantity: number;
-//     options?: RestaurantOption[];
-//     toppings?: RestaurantTopping[];
-//     totalPrice: number;
-//   }[];
-// }
-
 export interface Invoice extends Restaurant {
   totalPrice: number;
   numOfFood: number;
   listFood: FoodReduxType[];
+}
+
+export interface RestaurantInformation {
+  address: string;
+  id: string;
+  image: string;
+  name: string;
 }

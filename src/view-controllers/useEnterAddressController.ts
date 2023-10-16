@@ -4,13 +4,13 @@ import {useNavigation} from '@react-navigation/native';
 import {EnterAddressScreenProps} from '../types/navigation.type';
 import {Region} from 'react-native-maps';
 import {ToastAndroid} from 'react-native';
-import {useAppSelector} from '../redux/store';
+// import {useAppSelector} from '../redux/store';
 
 const useEnterAddressController = (enableGoogleMap: boolean) => {
   const navigation = useNavigation<EnterAddressScreenProps['navigation']>();
   const [showGoogleMap, setShowGoogleMap] = useState(enableGoogleMap);
   const [keyAddress, setKeyAddress] = useState('');
-  const {address} = useAppSelector(state => state.user);
+  // const {address} = useAppSelector(state => state.user);
   const animationRef = useRef<LottieView>(null);
   const [region, setRegion] = useState({
     latitude: 10.8356522,
@@ -39,7 +39,6 @@ const useEnterAddressController = (enableGoogleMap: boolean) => {
     onDeleteKeywordPress,
     onToggleGoogleMapPress,
     onBackPress,
-    address,
     keyAddress,
   };
 };

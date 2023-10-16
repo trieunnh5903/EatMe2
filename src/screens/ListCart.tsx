@@ -9,13 +9,19 @@ import {
 import React from 'react';
 import {Break, ButtonIcon, Dot, HeaderCustom} from '../components';
 import {COLORS, FONTS, SIZES, icons} from '../config';
-import useListCartController from '../view-controllers/useListCartController';
-import {Invoice} from '../types/types';
+import {RestaurantInformation} from '../types/types';
 import FastImage from 'react-native-fast-image';
-import convertToVND from '../utils/convertToVND';
+import {useAppSelector} from '../redux/store';
+import {useSelectAllCart} from '../redux/hooks';
+import {useNavigation} from '@react-navigation/native';
+import {ListCartScreenProp} from '../types/navigation.type';
 
 const ListCart = () => {
-  const {onBackPress, listInvoices} = useListCartController();
+  // const {onBackPress, listInvoices} = useListCartController();
+  const navigation = useNavigation<ListCartScreenProp['navigation']>();
+  const listCart = useAppSelector(useSelectAllCart);
+  console.log('listCart', listCart);
+  const onBackPress = () => navigation.goBack();
   return (
     <View style={styles.container}>
       <HeaderCustom
@@ -41,14 +47,17 @@ const ListCart = () => {
             </TouchableOpacity>
           </View>
         }
-        data={listInvoices}
+        data={listCart}
         renderItem={props => <FoodItem {...props} />}
       />
     </View>
   );
 };
 
-const FoodItem: React.FC<ListRenderItemInfo<Invoice>> = ({item}) => {
+const FoodItem: React.FC<ListRenderItemInfo<RestaurantInformation>> = ({
+  item,
+}) => {
+  console.log(item);
   return (
     <TouchableOpacity style={[styles.horizontalCard]}>
       <FastImage
@@ -66,18 +75,16 @@ const FoodItem: React.FC<ListRenderItemInfo<Invoice>> = ({item}) => {
         {/* address */}
         <Text
           numberOfLines={1}
-          style={[FONTS.body_small, {color: COLORS.darkGray2}]}>
+          style={[FONTS.body_small, {color: COLORS.darkGray}]}>
           {item.address}
         </Text>
 
         <View style={{flex: 1, justifyContent: 'flex-end'}}>
           {/* giá */}
           <View style={styles.rowWrapper}>
-            <Text style={styles.textBlackBold}>
-              {convertToVND(item.totalPrice)}
-            </Text>
+            <Text style={styles.textBlackBold}>0</Text>
             <Dot />
-            <Text style={styles.textBlackBold}>{item.numOfFood} món</Text>
+            <Text style={styles.textBlackBold}>0 món</Text>
           </View>
         </View>
       </View>

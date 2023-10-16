@@ -18,11 +18,12 @@ import {
 } from '../screens';
 import {RootStackParamList} from '../types/navigation.type';
 import SplashScreen from 'react-native-splash-screen';
-import useUserViewModel from '../view-models/useUserViewModel';
+// import useUserViewModel from '../view-models/useUserViewModel';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const MainNavigator = () => {
-  const {logged} = useUserViewModel().userState;
+  // const {logged} = useUserViewModel().userState;
+  const logged = true;
   React.useEffect(() => {
     SplashScreen.hide();
   }, []);

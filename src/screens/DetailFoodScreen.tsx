@@ -20,7 +20,15 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {RestaurantOption, RestaurantTopping} from '../types/types';
+import {
+  FoodReduxType,
+  RestaurantOption,
+  RestaurantTopping,
+} from '../types/types';
+import {useAppDispatch, useAppSelector} from '../redux/store';
+import {addFood, createInvoice} from '../redux/slice/cart.slice';
+import {nanoid} from '@reduxjs/toolkit';
+import {addRestaurant} from '../redux/slice/restaurant.slice';
 
 const HEADER_HEIGHT = 50;
 const AnimatedTouchableOpacity =
@@ -36,7 +44,9 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
   const [selectedTopping, setSelectedTopping] = useState<RestaurantTopping[]>(
     [],
   );
-
+  const restaurant = useAppSelector(
+    state => state.restaurant.currentRestaurant,
+  );
   const bgColorIconClose = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       scrollY.value,
@@ -160,6 +170,24 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
     return (
       (totalPriceOptions + totalPriceTopping + foodItem.price) * foodQuantity
     );
+  };
+
+  const dispatch = useAppDispatch();
+  const onAddToCartPress = () => {
+    const food: FoodReduxType = {
+      id: nanoid(),
+      image: foodItem.image,
+      name: foodItem.name,
+      price: totalPrice(),
+      quantity: foodQuantity,
+      description: foodItem.description,
+      options: selectedOption,
+      toppings: selectedTopping,
+    };
+    dispatch(createInvoice(restaurant));
+    dispatch(addFood({food, restaurantId: restaurant.id}));
+    dispatch(addRestaurant(restaurant));
+    navigation.goBack();
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -349,6 +377,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
           iconStyle={styles.iconQuantityInput}
         />
         <TouchableOpacity
+          onPress={onAddToCartPress}
           disabled={!canAddToCart}
           style={[
             {

@@ -60,7 +60,7 @@ const EnterAddressScreen = ({route}: EnterAddressScreenProps) => {
             </TouchableOpacity>
           </View>
           <FlashList
-            data={address}
+            data={[]}
             keyExtractor={item => item.name}
             estimatedItemSize={70}
             ListEmptyComponent={<View />}

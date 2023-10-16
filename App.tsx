@@ -3,10 +3,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import MainNavigator from './src/navigation/MainNavigator';
 import {Provider} from 'react-redux';
-import {persistor, store} from './src/redux/store';
+import {store} from './src/redux/store';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import setUpMirage from './miragejs/mirage.server';
-import {PersistGate} from 'redux-persist/integration/react';
 import {enableLatestRenderer} from 'react-native-maps';
 
 if (__DEV__) {
@@ -22,13 +21,11 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <GestureHandlerRootView style={{flex: 1}}>
-            <NavigationContainer>
-              <MainNavigator />
-            </NavigationContainer>
-          </GestureHandlerRootView>
-        </PersistGate>
+        <GestureHandlerRootView style={{flex: 1}}>
+          <NavigationContainer>
+            <MainNavigator />
+          </NavigationContainer>
+        </GestureHandlerRootView>
       </Provider>
     </QueryClientProvider>
   );

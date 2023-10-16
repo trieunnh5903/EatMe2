@@ -28,6 +28,8 @@ import {Restaurant} from '../types/types';
 import dummy_data from '../data';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenProp} from '../types/navigation.type';
+import {useSelectTotalCart} from '../redux/hooks';
+import {useAppSelector} from '../redux/store';
 
 interface SectionProps {
   title: string;
@@ -43,6 +45,7 @@ const HomeScreen = () => {
   const carouselRef = useRef<FlatList>(null);
   let carouselIndex = useRef(0);
   const totalIndex = dummy_data.carousel.length - 1;
+  const totalCart = useAppSelector(useSelectTotalCart);
 
   useEffect(() => {
     let timer = setInterval(() => {
@@ -95,33 +98,7 @@ const HomeScreen = () => {
   const onEnterAddressPress = () =>
     navigation.navigate('EnterAddressScreen', {enableGoogleMap: false});
 
-  // const {
-  //   // onListCartPress,
-  //   carouselRef,
-  //   // listInvoices,
-  //   getItemLayoutCarousel,
-  //   onCarouselScroll,
-  //   onShopItemPress,
-  //   // shopNearYou,
-  //   // isLoading,
-  //   onEnterAddressPress,
-  // } = useHomeController();
-  // footer flashlist
-  // const renderFooter = () => {
-  //   if (isLoading) {
-  //     return;
-  //   }
-  //   if (shopNearYou?.pages && shopNearYou.pages.flat().length < 90) {
-  //     return (
-  //       <ActivityIndicator
-  //         style={styles.indicator}
-  //         size="small"
-  //         color={COLORS.primary}
-  //       />
-  //     );
-  //   }
-  // };
-
+  const onListCartPress = () => navigation.navigate('ListCart');
   return (
     <SafeAreaView style={[styles.container]}>
       <FlashList
@@ -278,16 +255,16 @@ const HomeScreen = () => {
         // ListFooterComponent={renderFooter}
         onEndReachedThreshold={0.3}
       />
-      {/* {listInvoices?.length > 0 && (
+      {totalCart > 0 && (
         <BadgeButton
           onPress={onListCartPress}
-          badgeText={listInvoices.length.toString()}
+          badgeText={totalCart.toString()}
           icon={icons.cart_fill}
           iconStyle={styles.iconCart}
           containerStyle={styles.btnCart}
           badgeContainerStyle={{width: '38%', height: '38%'}}
         />
-      )} */}
+      )}
     </SafeAreaView>
   );
 };

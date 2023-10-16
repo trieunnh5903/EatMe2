@@ -10,11 +10,17 @@ import {
   View,
   ViewToken,
 } from 'react-native';
-import React, {useRef, useCallback} from 'react';
+import React, {useRef, useEffect, useCallback} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
 import {Shadow} from 'react-native-shadow-2';
 import convertToVND from '../utils/convertToVND';
-import {Break, HeaderCustom, VerticalFoodCard} from '../components';
+import {
+  Break,
+  ButtonText,
+  ButtonTextIcon,
+  HeaderCustom,
+  VerticalFoodCard,
+} from '../components';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -27,6 +33,10 @@ import {DetailRestaurantNavigationProps} from '../types/navigation.type';
 import LinearGradient from 'react-native-linear-gradient';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {store, useAppDispatch} from '../redux/store';
+import {setRestaurant} from '../redux/slice/restaurant.slice';
+import {getTotalFoodCount, useSelectCartById} from '../redux/hooks';
+
 interface MenuFood {
   label: string;
   foods: {
@@ -50,23 +60,6 @@ const DetailRestaurantScreen = ({
 }: DetailRestaurantNavigationProps) => {
   const {restaurant} = route.params;
   const {bestSeller, menuFoods} = restaurant.allFoods;
-  // const {
-  //   invoiceData,
-  //   onCartPress,
-  //   onFoodItemPress,
-  //   headerStyle,
-  //   onBackPress,
-  //   menuListRef,
-  //   allFood,
-  //   detailMenuRef,
-  //   onListScroll,
-  //   onViewableItemsChanged,
-  //   onMenuListPress,
-  //   hightLightFood,
-  //   currentMenuItem,
-  //   isFavorite,
-  //   handleToggleFavorite,
-  // } = useDetailShopController(shopInfo);
   console.log('DetailRestaurantScreen');
   const menuListRef = useRef<FlatList>(null);
   const scrollY = useSharedValue(0);
@@ -78,6 +71,21 @@ const DetailRestaurantScreen = ({
   const textRefs = Array.from({length: menuFoods.length}, () =>
     useRef<Text>(null),
   );
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (restaurant) {
+      dispatch(
+        setRestaurant({
+          id: restaurant.id,
+          address: restaurant.address,
+          image: restaurant.image,
+          name: restaurant.name,
+        }),
+      );
+    }
+  }, [dispatch, restaurant]);
+
   const onListScroll = useAnimatedScrollHandler({
     onScroll: event => {
       scrollY.value = event.contentOffset.y;
@@ -181,7 +189,7 @@ const DetailRestaurantScreen = ({
   const baseHeaderz = useAnimatedStyle(() => {
     const zIndex = interpolate(
       scrollY.value,
-      [0, SIZES.height * 0.3],
+      [0, SIZES.height * 0.2],
       [1, 0],
       Extrapolate.CLAMP,
     );
@@ -198,6 +206,8 @@ const DetailRestaurantScreen = ({
     };
   });
 
+  const totalFood = getTotalFoodCount(store.getState(), restaurant.id);
+  const cart = useSelectCartById(restaurant.id);
   return (
     <SafeAreaView style={styles.container}>
       {/* header sau khi cuon */}
@@ -442,12 +452,12 @@ const DetailRestaurantScreen = ({
           <MenuFoodItem foodItem={item} onFoodItemPress={onFoodItemPress} />
         )}
       />
-      {/* {invoiceData?.numOfFood > 0 && (
+      {cart?.length > 0 && (
         <View style={styles.checkout}>
           <ButtonTextIcon
-            onPress={onCartPress}
+            // onPress={onCartPress}
             icon={icons.cart_fill}
-            label={invoiceData.numOfFood.toString()}
+            label={totalFood.toString()}
             containerStyle={styles.btnCart}
             iconStyle={styles.iconCart}
             labelStyle={{color: COLORS.primary}}
@@ -458,7 +468,7 @@ const DetailRestaurantScreen = ({
             label={'Trang thanh toán'}
           />
         </View>
-      )} */}
+      )}
     </SafeAreaView>
   );
 };
@@ -577,6 +587,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textVoucher: {
+    flex: 1,
     color: COLORS.blackText,
     ...FONTS.label_large,
   },

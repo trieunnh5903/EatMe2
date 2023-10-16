@@ -1,44 +1,20 @@
-import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import cartSlice from './slice/cart.slice';
-import userSlice from './slice/user.slice';
-import {
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-  persistReducer,
-  persistStore,
-} from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {configureStore} from '@reduxjs/toolkit';
+
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
-import invoicesSlice from './slice/invoices.slice';
-
-const persistConfig = {
-  key: 'root',
-  storage: AsyncStorage,
-  whitelist: ['user', 'cart', 'invoice'],
-};
-
-const rootReducer = combineReducers({
-  user: userSlice,
-  cart: cartSlice,
-  invoice: invoicesSlice,
-});
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+import restaurantSlice from './slice/restaurant.slice';
+import cartSlice from './slice/cart.slice';
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    restaurant: restaurantSlice,
+    cart: cartSlice,
+  },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+      immutableCheck: {warnAfter: 128},
+      serializableCheck: {warnAfter: 128},
     }),
 });
-export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;

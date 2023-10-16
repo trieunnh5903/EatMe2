@@ -18,7 +18,7 @@ export type RootStackParamList = {
     enableGoogleMap: boolean;
   };
   CartScreen: {
-    idInvoices: string;
+    restaurantId: string;
   };
   HomeScreen: undefined;
   SearchScreen: undefined;

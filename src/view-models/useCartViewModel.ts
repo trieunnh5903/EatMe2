@@ -4,8 +4,8 @@ import {FoodReduxType} from '../types/types';
 
 const useCartViewModel = () => {
   console.log('useCartViewModel');
-  const {allIds, byId} = useAppSelector(state => state.cart);
-  const dispatch = useAppDispatch();
+  // const {allIds, byId} = useAppSelector(state => state.cart);
+  // const dispatch = useAppDispatch();
   // const clearFoodCart = () => dispatch(clearCart());
 
   // const updateFoodItemQuantity = (item: Shop, newQuantity: number) => {
@@ -20,8 +20,8 @@ const useCartViewModel = () => {
   //   dispatch(addInvoice(item));
   // };
 
-  const addFoodToCart = (food: FoodReduxType) => {
-    dispatch(addFood(food));
+  // const addFoodToCart = (food: FoodReduxType) => {
+  //   dispatch(addFood(food));
   };
 
   // const updateQuantityFood = (food: FoodReduxType) => {

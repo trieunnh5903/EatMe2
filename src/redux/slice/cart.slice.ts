@@ -3,7 +3,7 @@ import {FoodReduxType} from '../../types/types';
 
 interface CartState {
   byId: {
-    [id: string]: FoodReduxType;
+    [id: string]: FoodReduxType[];
   };
   allIds: string[];
 }
@@ -17,26 +17,46 @@ const cartSlice = createSlice({
   initialState,
   name: 'cart',
   reducers: {
-    addFood(state, action: PayloadAction<FoodReduxType>) {
+    createInvoice: (
+      state,
+      action: PayloadAction<{
+        address: string;
+        id: string;
+        image: string;
+        name: string;
+      }>,
+    ) => {
       const {id} = action.payload;
-      state.byId[id] = action.payload;
-      const isEsixtingId = state.allIds.find(item => item === id);
-      if (isEsixtingId === undefined) {
+      if (state.byId[id] === undefined) {
+        state.byId[id] = [];
+      }
+
+      if (!state.allIds.includes(id)) {
         state.allIds.push(id);
       }
     },
-    // updateFoodQuantity(state, action: PayloadAction<FoodReduxType>) {
-    //   const {quantity} = action.payload;
-    //   const newCartList = state.foods.map(item => {
-    //     if (JSON.stringify(item) === JSON.stringify(action.payload)) {
-    //       return {...item, quantity: item.quantity + quantity};
-    //     }
-    //     return item;
-    //   });
-    //   state.foods = newCartList;
-    // },
+    addFood(
+      state,
+      action: PayloadAction<{food: FoodReduxType; restaurantId: string}>,
+    ) {
+      const {food, restaurantId} = action.payload;
+      const restaurant = state.byId[restaurantId];
+      const existingFood = restaurant.find(item => {
+        return (
+          item.name === food.name &&
+          JSON.stringify(item.options) === JSON.stringify(food.options) &&
+          JSON.stringify(item.toppings) === JSON.stringify(food.toppings)
+        );
+      });
+
+      if (existingFood === undefined) {
+        restaurant.push(food);
+      } else {
+        existingFood.quantity += food.quantity;
+      }
+    },
   },
 });
 
 export default cartSlice.reducer;
-export const {addFood} = cartSlice.actions;
+export const {addFood, createInvoice} = cartSlice.actions;
