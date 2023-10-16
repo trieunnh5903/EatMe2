@@ -26,7 +26,7 @@ import {
   RestaurantTopping,
 } from '../types/types';
 import {useAppDispatch, useAppSelector} from '../redux/store';
-import {addFood, createInvoice} from '../redux/slice/cart.slice';
+import {addFood, createCart} from '../redux/slice/cart.slice';
 import {nanoid} from '@reduxjs/toolkit';
 import {addRestaurant} from '../redux/slice/restaurant.slice';
 
@@ -184,7 +184,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
       options: selectedOption,
       toppings: selectedTopping,
     };
-    dispatch(createInvoice(restaurant));
+    dispatch(createCart(restaurant));
     dispatch(addFood({food, restaurantId: restaurant.id}));
     dispatch(addRestaurant(restaurant));
     navigation.goBack();
@@ -202,7 +202,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
       </AnimatedTouchableOpacity>
 
       <Animated.View style={[styles.headerContainer, headerAnimatedStyle]}>
-        <Text style={{color: COLORS.blackText, ...FONTS.label_large}}>
+        <Text style={{color: COLORS.blackText, ...FONTS.title_medium}}>
           {foodItem.name}
         </Text>
       </Animated.View>

@@ -67,12 +67,13 @@ const DetailRestaurantScreen = ({
   const buttonRefs = Array.from({length: menuFoods.length}, () =>
     useRef<TouchableOpacity>(null),
   );
-
   const textRefs = Array.from({length: menuFoods.length}, () =>
     useRef<Text>(null),
   );
-
+  const totalFood = getTotalFoodCount(store.getState(), restaurant.id);
+  const cart = useSelectCartById(restaurant.id);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     if (restaurant) {
       dispatch(
@@ -206,8 +207,8 @@ const DetailRestaurantScreen = ({
     };
   });
 
-  const totalFood = getTotalFoodCount(store.getState(), restaurant.id);
-  const cart = useSelectCartById(restaurant.id);
+  const onCartPress = () =>
+    navigation.navigate('CartScreen', {restaurantId: restaurant.id});
   return (
     <SafeAreaView style={styles.container}>
       {/* header sau khi cuon */}
@@ -455,7 +456,7 @@ const DetailRestaurantScreen = ({
       {cart?.length > 0 && (
         <View style={styles.checkout}>
           <ButtonTextIcon
-            // onPress={onCartPress}
+            onPress={onCartPress}
             icon={icons.cart_fill}
             label={totalFood.toString()}
             containerStyle={styles.btnCart}

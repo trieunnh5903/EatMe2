@@ -45,7 +45,11 @@ const MainNavigator = () => {
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
           <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-          <Stack.Screen name="ListCart" component={ListCart} />
+          <Stack.Screen
+            name="ListCart"
+            options={{presentation: 'fullScreenModal'}}
+            component={ListCart}
+          />
         </>
       ) : (
         <>

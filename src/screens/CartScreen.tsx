@@ -6,85 +6,64 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useMemo} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {HeaderCustom, QuantityInput} from '../components';
 import convertToVND from '../utils/convertToVND';
 import {FoodReduxType} from '../types/types';
-import useCartController from '../view-controllers/useCartController';
 import {CartScreenProp} from '../types/navigation.type';
+import {useSelectCartById} from '../redux/hooks';
+import {useAppDispatch} from '../redux/store';
+import {updateCart} from '../redux/slice/cart.slice';
 
-const FoodItem = ({
-  data,
-  onDecreaseFoodFress,
-  onIncreaseFoodFress,
-}: {
-  data: FoodReduxType;
-  onIncreaseFoodFress: (id: string) => void;
-  onDecreaseFoodFress: (id: string, quantity: number) => void;
-}) => {
-  return (
-    <View style={styles.itemContainer}>
-      {/* content */}
-      <View style={{flex: 1}}>
-        <View style={{flex: 1}}>
-          <Text style={styles.itemName}>{data.name}</Text>
-          <Text style={{color: COLORS.gray, ...FONTS.body_small}}>
-            {data.options?.map((item, index) => {
-              const lastIndex = data.options?.length;
-              if (lastIndex) {
-                if (index === lastIndex - 1) {
-                  return item.option;
-                }
-              }
-              return item.option + ', ';
-            })}
-            {data.toppings?.map((item, index) => {
-              const lastIndex = data.toppings?.length;
-              if (lastIndex) {
-                if (index === lastIndex - 1) {
-                  return item.name;
-                }
-              }
-              return item.name + ', ';
-            })}
-          </Text>
-        </View>
-        <View style={styles.quantityWrapper}>
-          <Text style={styles.totalPrice}>
-            {convertToVND(data.price * data.quantity)}
-          </Text>
-          <View style={styles.paymentWrapper}>
-            {/* quantity input */}
-            <QuantityInput
-              onAddPress={() => onIncreaseFoodFress(data.id)}
-              onRemovePress={() => onDecreaseFoodFress(data.id, data.quantity)}
-              iconLeft={icons.remove_wght700}
-              iconRight={icons.add_wght700}
-              labelStyle={styles.labelQuantityInput}
-              iconContainerStyle={styles.iconQuantityInputContainer}
-              quantity={data.quantity || 0}
-              iconStyle={styles.iconQuantityInput}
-            />
-          </View>
-        </View>
-      </View>
-    </View>
-  );
-};
+const CartScreen = ({route, navigation}: CartScreenProp) => {
+  console.log('CartScreen');
+  const restaurantId = route.params.restaurantId;
+  const dispatch = useAppDispatch();
+  const cartList = useSelectCartById(restaurantId);
+  const [listFood, setListFood] = useState(cartList);
 
-const CartScreen = ({route}: CartScreenProp) => {
-  const {
-    cartList = [],
-    numOfFood,
-    totalPrice,
-    onBackPress,
-    onDecreaseFoodFress,
-    onIncreaseFoodFress,
-    onClearCartPress,
-  } = useCartController(route.params.idInvoices);
+  const onBackPress = () => {
+    dispatch(updateCart({listFood, restaurantId}));
+    navigation.goBack();
+  };
 
+  const onIncreaseFoodFress = (foodId: string) => {
+    const updatedListFood = listFood.map(item => {
+      if (item.id === foodId) {
+        return {...item, quantity: item.quantity + 1};
+      }
+      return item;
+    });
+    setListFood(updatedListFood);
+  };
+
+  const onDecreaseFoodFress = (foodId: string) => {
+    const updatedListFood = listFood.map(item => {
+      if (item.id === foodId) {
+        return {...item, quantity: item.quantity - 1};
+      }
+      return item;
+    });
+
+    const filteredFood = updatedListFood.filter(item => item.quantity > 0);
+    setListFood(filteredFood);
+  };
+
+  console.log(listFood);
+
+  const totalFood = listFood.reduce((acc, item) => {
+    return acc + item.quantity;
+  }, 0);
+
+  const totalPrice = listFood.reduce((acc, item) => {
+    return acc + item.price * item.quantity;
+  }, 0);
+
+  const onClearCartPress = () => {
+    setListFood([]);
+  };
   return (
     <SafeAreaView style={styles.container}>
       {/* header navigation */}
@@ -95,19 +74,17 @@ const CartScreen = ({route}: CartScreenProp) => {
           </TouchableOpacity>
         }
         rightComponent={
-          cartList.length > 0 ? (
-            // có sản phẩm
+          listFood.length > 0 ? (
             <TouchableOpacity onPress={onClearCartPress}>
               <Text
                 style={{
                   color: COLORS.red,
-                  ...FONTS.title_small,
+                  ...FONTS.title_medium,
                 }}>
                 Xóa tất cả
               </Text>
             </TouchableOpacity>
           ) : (
-            // không có sản phẩm
             <View style={styles.transparent} />
           )
         }
@@ -117,12 +94,12 @@ const CartScreen = ({route}: CartScreenProp) => {
         }}
       />
 
-      {cartList.length > 0 ? (
+      {listFood.length > 0 ? (
         <>
           {/* có sản phẩm trong giỏ hàng */}
           {/* list */}
           <FlatList
-            data={cartList}
+            data={listFood}
             keyExtractor={item => {
               return item.id;
             }}
@@ -137,7 +114,7 @@ const CartScreen = ({route}: CartScreenProp) => {
           {/* nút thanh toán */}
           <View>
             <TouchableOpacity style={styles.checkoutButton}>
-              <Text style={styles.textTitle}>{numOfFood} sản phẩm</Text>
+              <Text style={styles.textTitle}>{totalFood} sản phẩm</Text>
               <Text style={styles.textTitle}>Thanh toán</Text>
               <Text style={styles.textTitle}>{convertToVND(totalPrice)}</Text>
             </TouchableOpacity>
@@ -165,6 +142,70 @@ const CartScreen = ({route}: CartScreenProp) => {
   );
 };
 
+interface FoodItemProp {
+  data: FoodReduxType;
+  onIncreaseFoodFress: (id: string) => void;
+  onDecreaseFoodFress: (id: string) => void;
+}
+const FoodItem: React.FC<FoodItemProp> = ({
+  data,
+  onIncreaseFoodFress,
+  onDecreaseFoodFress,
+}) => {
+  const toppingLength = useMemo(
+    () => data.toppings?.length || 0,
+    [data.toppings?.length],
+  );
+  return (
+    <View style={styles.itemContainer}>
+      {/* content */}
+      <View style={{flex: 1}}>
+        <View style={{flex: 1}}>
+          <Text style={styles.itemName}>{data.name}</Text>
+          <Text style={{color: COLORS.darkGray, ...FONTS.body_medium}}>
+            {data.options?.map((item, index) => {
+              const lastIndex = data.options?.length;
+              if (lastIndex) {
+                if (index === lastIndex - 1) {
+                  return item.option;
+                }
+              }
+              return item.option + ', ';
+            })}
+            {toppingLength > 0 && ', '}
+            {data.toppings?.map((item, index) => {
+              const lastIndex = data.toppings?.length;
+              if (lastIndex) {
+                if (index === lastIndex - 1) {
+                  return item.name;
+                }
+              }
+              return item.name + ', ';
+            })}
+          </Text>
+        </View>
+        <View style={styles.quantityWrapper}>
+          <Text style={styles.totalPrice}>
+            {convertToVND(data.price * data.quantity)}
+          </Text>
+          <View style={styles.paymentWrapper}>
+            {/* quantity input */}
+            <QuantityInput
+              onAddPress={() => onIncreaseFoodFress(data.id)}
+              onRemovePress={() => onDecreaseFoodFress(data.id)}
+              iconLeft={icons.remove_wght700}
+              iconRight={icons.add_wght700}
+              labelStyle={styles.labelQuantityInput}
+              iconContainerStyle={styles.iconQuantityInputContainer}
+              quantity={data.quantity || 0}
+              iconStyle={styles.iconQuantityInput}
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
 export default CartScreen;
 
 const styles = StyleSheet.create({
@@ -280,7 +321,7 @@ const styles = StyleSheet.create({
 
   itemName: {
     color: COLORS.blackText,
-    ...FONTS.label_large,
+    ...FONTS.title_medium,
   },
 
   itemImage: {

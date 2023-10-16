@@ -34,11 +34,12 @@ const ListCart = () => {
         leftComponent={
           <ButtonIcon
             onPress={onBackPress}
-            icon={icons.arrow_back}
+            icon={icons.close}
             containerStyle={styles.btnBack}
             iconStyle={styles.icon}
           />
         }
+        rightComponent={<View style={styles.btnBack} />}
       />
 
       <FlatList
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   btnBack: {
-    paddingLeft: SIZES.base,
+    paddingLeft: SIZES.spacing,
     paddingRight: SIZES.spacing,
     height: '100%',
   },

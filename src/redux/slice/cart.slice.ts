@@ -17,7 +17,7 @@ const cartSlice = createSlice({
   initialState,
   name: 'cart',
   reducers: {
-    createInvoice: (
+    createCart: (
       state,
       action: PayloadAction<{
         address: string;
@@ -35,6 +35,20 @@ const cartSlice = createSlice({
         state.allIds.push(id);
       }
     },
+
+    updateCart: (
+      state,
+      action: PayloadAction<{listFood: FoodReduxType[]; restaurantId: string}>,
+    ) => {
+      console.log('updateCart');
+      const {restaurantId, listFood} = action.payload;
+      if (state.byId[restaurantId] === undefined) {
+        console.log('updateCart undefined');
+        return;
+      }
+      state.byId[restaurantId] = listFood;
+    },
+
     addFood(
       state,
       action: PayloadAction<{food: FoodReduxType; restaurantId: string}>,
@@ -59,4 +73,4 @@ const cartSlice = createSlice({
 });
 
 export default cartSlice.reducer;
-export const {addFood, createInvoice} = cartSlice.actions;
+export const {addFood, createCart, updateCart} = cartSlice.actions;
