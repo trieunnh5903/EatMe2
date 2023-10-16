@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, ViewStyle} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {COLORS, FONTS} from '../config';
 
 interface HeaderCustomProps {
@@ -26,7 +26,7 @@ const HeaderCustom: React.FC<HeaderCustomProps> = ({
   );
 };
 
-export default HeaderCustom;
+export default memo(HeaderCustom);
 
 const styles = StyleSheet.create({
   container: {

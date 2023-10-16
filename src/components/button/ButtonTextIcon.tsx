@@ -51,7 +51,7 @@ const ButtonTextIcon: React.FC<ButtonTextIconProp> = ({
   );
 };
 
-export default ButtonTextIcon;
+export default React.memo(ButtonTextIcon);
 
 const styles = StyleSheet.create({
   wrapper: {

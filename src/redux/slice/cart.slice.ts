@@ -40,10 +40,8 @@ const cartSlice = createSlice({
       state,
       action: PayloadAction<{listFood: FoodReduxType[]; restaurantId: string}>,
     ) => {
-      console.log('updateCart');
       const {restaurantId, listFood} = action.payload;
       if (state.byId[restaurantId] === undefined) {
-        console.log('updateCart undefined');
         return;
       }
       state.byId[restaurantId] = listFood;

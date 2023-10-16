@@ -1,15 +1,13 @@
 import {
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
   TextStyle,
   ViewStyle,
   StyleProp,
-  TouchableOpacityProps,
   GestureResponderEvent,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {FONTS} from '../../config';
 
 interface ButtonTextProps {
@@ -36,7 +34,7 @@ const ButtonText: React.FC<ButtonTextProps> = ({
   );
 };
 
-export default ButtonText;
+export default memo(ButtonText);
 
 const styles = StyleSheet.create({
   container: {

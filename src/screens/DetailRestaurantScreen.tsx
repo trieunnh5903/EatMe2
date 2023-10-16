@@ -10,7 +10,7 @@ import {
   View,
   ViewToken,
 } from 'react-native';
-import React, {useRef, useEffect, useCallback} from 'react';
+import React, {useRef, useEffect, useCallback, memo} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
 import {Shadow} from 'react-native-shadow-2';
 import convertToVND from '../utils/convertToVND';
@@ -312,6 +312,7 @@ const DetailRestaurantScreen = ({
           }
         />
       </Animated.View>
+
       <View style={{position: 'absolute', top: 0, left: 0, right: 0}}>
         <Image
           style={{height: SIZES.height * 0.35}}
@@ -513,57 +514,57 @@ const RenderListHighLight = ({
   );
 };
 
-const MenuFoodItem: React.FC<MenuFoodItemProp> = ({
-  foodItem,
-  onFoodItemPress,
-}) => {
-  const lastIndex = foodItem.foods.length - 1;
-  return (
-    <View
-      style={{
-        width: SIZES.width,
-        paddingVertical: SIZES.spacing,
-        backgroundColor: COLORS.white,
-      }}>
-      <Text style={styles.categoryWrapper}>{foodItem.label}</Text>
-      <View>
-        {foodItem.foods.map((item, index) => (
-          <TouchableOpacity
-            onPress={() => {
-              onFoodItemPress(item);
-            }}
-            key={item.id}
-            style={{width: '100%'}}>
-            <View style={styles.foodItemWrapper}>
-              <View style={{flex: 1, justifyContent: 'space-between'}}>
-                <Text
-                  numberOfLines={2}
-                  style={[{color: COLORS.blackText}, FONTS.body_large]}>
-                  {item.name}
-                </Text>
-                <Text style={[{color: COLORS.gray, ...FONTS.body_medium}]}>
-                  {item.description}
-                </Text>
-                <Text style={[{color: COLORS.blackText, ...FONTS.body_medium}]}>
-                  {convertToVND(item.price)}
-                </Text>
+const MenuFoodItem: React.FC<MenuFoodItemProp> = memo(
+  ({foodItem, onFoodItemPress}) => {
+    const lastIndex = foodItem.foods.length - 1;
+    return (
+      <View
+        style={{
+          width: SIZES.width,
+          paddingVertical: SIZES.spacing,
+          backgroundColor: COLORS.white,
+        }}>
+        <Text style={styles.categoryWrapper}>{foodItem.label}</Text>
+        <View>
+          {foodItem.foods.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => {
+                onFoodItemPress(item);
+              }}
+              key={item.id}
+              style={{width: '100%'}}>
+              <View style={styles.foodItemWrapper}>
+                <View style={{flex: 1, justifyContent: 'space-between'}}>
+                  <Text
+                    numberOfLines={2}
+                    style={[{color: COLORS.blackText}, FONTS.body_large]}>
+                    {item.name}
+                  </Text>
+                  <Text style={[{color: COLORS.gray, ...FONTS.body_medium}]}>
+                    {item.description}
+                  </Text>
+                  <Text
+                    style={[{color: COLORS.blackText, ...FONTS.body_medium}]}>
+                    {convertToVND(item.price)}
+                  </Text>
+                </View>
+                <Image
+                  source={{uri: item.image}}
+                  style={{
+                    width: SIZES.width * 0.2,
+                    height: SIZES.width * 0.2,
+                    borderRadius: SIZES.radius,
+                  }}
+                />
               </View>
-              <Image
-                source={{uri: item.image}}
-                style={{
-                  width: SIZES.width * 0.2,
-                  height: SIZES.width * 0.2,
-                  borderRadius: SIZES.radius,
-                }}
-              />
-            </View>
-            {index !== lastIndex && <Break height={1} />}
-          </TouchableOpacity>
-        ))}
+              {index !== lastIndex && <Break height={1} />}
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  },
+);
 export default DetailRestaurantScreen;
 
 const styles = StyleSheet.create({

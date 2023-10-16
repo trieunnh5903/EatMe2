@@ -1,12 +1,12 @@
 import {StyleSheet, View, ViewStyle} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {SIZES} from '../config';
 
 const Break = (style: ViewStyle) => {
   return <View style={[styles.line, style]} />;
 };
 
-export default Break;
+export default memo(Break);
 
 const styles = StyleSheet.create({
   line: {

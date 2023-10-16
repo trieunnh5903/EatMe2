@@ -51,8 +51,6 @@ const CartScreen = ({route, navigation}: CartScreenProp) => {
     setListFood(filteredFood);
   };
 
-  console.log(listFood);
-
   const totalFood = listFood.reduce((acc, item) => {
     return acc + item.quantity;
   }, 0);
