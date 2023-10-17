@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {SIZES} from '../../config';
 import Skeleton from './Skeleton';
 
@@ -17,7 +17,7 @@ const HorizontalCardSkeleton = () => {
   );
 };
 
-export default HorizontalCardSkeleton;
+export default memo(HorizontalCardSkeleton);
 
 const styles = StyleSheet.create({
   wrapper: {

@@ -380,7 +380,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 1',
     id: '2db8c6e4-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,
@@ -438,7 +438,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 2',
     id: '34eb8474-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,
@@ -496,7 +496,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 3',
     id: '3b47a1ea-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,
@@ -554,7 +554,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 4',
     id: '4139fbac-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,
@@ -612,7 +612,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 5',
     id: '45a92334-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,
@@ -670,7 +670,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 6',
     id: '81362aaa-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,
@@ -728,7 +728,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 7',
     id: '86cd3918-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,
@@ -786,7 +786,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 8',
     id: '8bb25012-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,
@@ -844,7 +844,7 @@ const FOODS_DATA = [
     },
   },
   {
-    name: 'Bún bò - chả',
+    name: 'Bún bò - chả 9',
     id: '904ddfa6-6591-11ee-8c99-0242ac120002',
     description: 'Bao gồm: hộp, muỗng, đũa mang về',
     price: 31000,

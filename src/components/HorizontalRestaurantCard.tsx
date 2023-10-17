@@ -7,7 +7,7 @@ import {
   GestureResponderEvent,
   StyleProp,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {Image} from 'react-native';
 import {Restaurant} from '../types/types';
@@ -40,7 +40,9 @@ const HorizontalRestaurantCard: React.FC<HorizontalRestaurantCardProps> = ({
       />
       {/* tên */}
       <View style={[{flex: 1, marginLeft: SIZES.spacing}, textWrapperStyle]}>
-        <Text style={[FONTS.body_large, {color: COLORS.blackText}]}>
+        <Text
+          numberOfLines={2}
+          style={[FONTS.body_large, {color: COLORS.blackText}]}>
           <Image
             source={icons.verified}
             style={{width: 20, height: 20}}
@@ -75,7 +77,7 @@ const HorizontalRestaurantCard: React.FC<HorizontalRestaurantCardProps> = ({
   );
 };
 
-export default HorizontalRestaurantCard;
+export default memo(HorizontalRestaurantCard);
 
 const styles = StyleSheet.create({
   price: {

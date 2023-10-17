@@ -30,7 +30,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {Food} from '../types/types';
+import {Food, FoodReduxType} from '../types/types';
 import {DetailRestaurantNavigationProps} from '../types/navigation.type';
 import LinearGradient from 'react-native-linear-gradient';
 import Feather from 'react-native-vector-icons/Feather';
@@ -53,6 +53,12 @@ interface MenuFood {
 interface MenuFoodItemProp {
   foodItem: MenuFood;
   onFoodItemPress: (item: Food) => void;
+  cart: FoodReduxType[] | undefined;
+}
+interface HightLightProp {
+  highLightList: Food[];
+  onFoodItemPress: (item: Food) => void;
+  cart: FoodReduxType[] | undefined;
 }
 
 interface ButtonMenuProp {
@@ -452,6 +458,7 @@ const DetailRestaurantScreen = ({
             <RenderListHighLight
               highLightList={bestSeller}
               onFoodItemPress={onFoodItemPress}
+              cart={cart}
             />
           </View>
         }
@@ -464,9 +471,15 @@ const DetailRestaurantScreen = ({
           waitForInteraction: true,
         }}
         onViewableItemsChanged={onViewableItemsChanged.current}
-        renderItem={({item}) => (
-          <MenuFoodItem foodItem={item} onFoodItemPress={onFoodItemPress} />
-        )}
+        renderItem={({item}) => {
+          return (
+            <MenuFoodItem
+              foodItem={item}
+              onFoodItemPress={onFoodItemPress}
+              cart={cart}
+            />
+          );
+        }}
       />
       {cart?.length > 0 && (
         <CheckoutFooter onCartPress={onCartPress} totalFood={totalFood} />
@@ -494,7 +507,6 @@ const CheckoutFooter: React.FC<CheckoutFooterProp> = ({
   onCartPress,
   totalFood,
 }) => {
-  console.log('checkout');
   return (
     <View style={styles.checkout}>
       <ButtonTextIcon
@@ -514,12 +526,10 @@ const CheckoutFooter: React.FC<CheckoutFooterProp> = ({
   );
 };
 
-const RenderListHighLight = ({
+const RenderListHighLight: React.FC<HightLightProp> = ({
   highLightList,
   onFoodItemPress,
-}: {
-  highLightList: Food[];
-  onFoodItemPress: (item: Food) => void;
+  cart,
 }) => {
   return (
     <FlatList
@@ -537,8 +547,10 @@ const RenderListHighLight = ({
       data={highLightList}
       keyExtractor={item => item.id}
       renderItem={({item}) => {
+        const foodChecked = cart?.find(food => food.name === item.name);
         return (
           <VerticalFoodCard
+            foodChecked={foodChecked}
             onPress={() => onFoodItemPress(item)}
             imageStyle={{
               height: (SIZES.width - 6 * SIZES.spacing) / 2,
@@ -553,8 +565,9 @@ const RenderListHighLight = ({
   );
 };
 
+// item food
 const MenuFoodItem: React.FC<MenuFoodItemProp> = memo(
-  ({foodItem, onFoodItemPress}) => {
+  ({foodItem, cart, onFoodItemPress}) => {
     const lastIndex = foodItem.foods.length - 1;
     return (
       <View
@@ -565,40 +578,60 @@ const MenuFoodItem: React.FC<MenuFoodItemProp> = memo(
         }}>
         <Text style={styles.categoryWrapper}>{foodItem.label}</Text>
         <View>
-          {foodItem.foods.map((item, index) => (
-            <TouchableOpacity
-              onPress={() => {
-                onFoodItemPress(item);
-              }}
-              key={item.id}
-              style={{width: '100%'}}>
-              <View style={styles.foodItemWrapper}>
-                <View style={{flex: 1, justifyContent: 'space-between'}}>
-                  <Text
-                    numberOfLines={2}
-                    style={[{color: COLORS.blackText}, FONTS.body_large]}>
-                    {item.name}
-                  </Text>
-                  <Text style={[{color: COLORS.gray, ...FONTS.body_medium}]}>
-                    {item.description}
-                  </Text>
-                  <Text
-                    style={[{color: COLORS.blackText, ...FONTS.body_medium}]}>
-                    {convertToVND(item.price)}
-                  </Text>
+          {foodItem.foods.map((item, index) => {
+            const foodChecked = cart?.find(food => food.name === item.name);
+            const backgroundColor = foodChecked ? COLORS.primary : COLORS.white;
+            const fontWeight = foodChecked ? 'bold' : 'normal';
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  onFoodItemPress(item);
+                }}
+                key={item.id}
+                style={{width: '100%'}}>
+                <View style={styles.foodItemWrapper}>
+                  <View
+                    style={[
+                      {backgroundColor: backgroundColor},
+                      styles.lineVertical,
+                    ]}
+                  />
+                  <View style={styles.foodInfoWrapper}>
+                    <Text
+                      numberOfLines={2}
+                      style={[
+                        FONTS.body_large,
+                        {color: COLORS.blackText, fontWeight},
+                      ]}>
+                      {foodChecked?.quantity && (
+                        <Text style={{color: COLORS.primary}}>
+                          {foodChecked?.quantity}x{' '}
+                        </Text>
+                      )}
+                      {item.name}
+                    </Text>
+                    <Text style={[{color: COLORS.gray, ...FONTS.body_medium}]}>
+                      {item.description}
+                    </Text>
+                    <Text
+                      style={[{color: COLORS.blackText, ...FONTS.body_medium}]}>
+                      {convertToVND(item.price)}
+                    </Text>
+                  </View>
+                  <Image
+                    source={{uri: item.image}}
+                    style={{
+                      width: SIZES.width * 0.2,
+                      height: SIZES.width * 0.2,
+                      borderRadius: SIZES.radius,
+                      marginVertical: SIZES.padding,
+                    }}
+                  />
                 </View>
-                <Image
-                  source={{uri: item.image}}
-                  style={{
-                    width: SIZES.width * 0.2,
-                    height: SIZES.width * 0.2,
-                    borderRadius: SIZES.radius,
-                  }}
-                />
-              </View>
-              {index !== lastIndex && <Break height={1} />}
-            </TouchableOpacity>
-          ))}
+                {index !== lastIndex && <Break height={1} />}
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
     );
@@ -607,6 +640,18 @@ const MenuFoodItem: React.FC<MenuFoodItemProp> = memo(
 export default DetailRestaurantScreen;
 
 const styles = StyleSheet.create({
+  lineVertical: {
+    height: '100%',
+    width: 6,
+  },
+
+  foodInfoWrapper: {
+    marginVertical: SIZES.padding,
+    flex: 1,
+    marginLeft: SIZES.padding - 6,
+    justifyContent: 'space-between',
+  },
+
   invoiceGroup: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -744,7 +789,11 @@ const styles = StyleSheet.create({
   menuList: {
     width: SIZES.width,
   },
-  foodItemWrapper: {flexDirection: 'row', padding: SIZES.padding},
+  foodItemWrapper: {
+    flexDirection: 'row',
+
+    paddingLeft: 0,
+  },
   categoryWrapper: {
     color: COLORS.blackText,
     padding: SIZES.padding,

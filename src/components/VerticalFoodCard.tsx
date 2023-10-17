@@ -12,20 +12,23 @@ import {
 import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES} from '../config';
 import convertToVND from '../utils/convertToVND';
-import {Food} from '../types/types';
+import {Food, FoodReduxType} from '../types/types';
 
 interface VerticalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;
   item: Food;
   imageStyle?: StyleProp<ImageStyle>;
   onPress?: (event: GestureResponderEvent) => any;
+  foodChecked?: FoodReduxType | undefined;
 }
 const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
   containerStyle,
   item,
   imageStyle,
+  foodChecked,
   onPress,
 }) => {
+  const fontWeight = foodChecked ? 'bold' : 'normal';
   return (
     <TouchableOpacity onPress={onPress} style={[containerStyle]}>
       {/* image */}
@@ -36,7 +39,14 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
       />
       {/* info */}
       <View style={styles.info}>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={[styles.name, {fontWeight}]}>
+          {foodChecked?.quantity && (
+            <Text style={{color: COLORS.primary}}>
+              {foodChecked?.quantity}x{' '}
+            </Text>
+          )}
+          {item.name}
+        </Text>
         <View style={{flex: 1, justifyContent: 'flex-end'}}>
           <Text style={[styles.price, {color: COLORS.blackText}]}>
             {convertToVND(item.price)}

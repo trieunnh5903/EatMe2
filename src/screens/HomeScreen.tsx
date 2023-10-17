@@ -12,7 +12,14 @@ import {
   NativeScrollEvent,
   Pressable,
 } from 'react-native';
-import React, {ReactNode, useRef, useEffect, memo} from 'react';
+import React, {
+  ReactNode,
+  useRef,
+  useEffect,
+  memo,
+  useMemo,
+  useCallback,
+} from 'react';
 import {icons, COLORS, SIZES, FONTS, images} from '../config';
 import {
   BadgeButton,
@@ -65,30 +72,36 @@ const HomeScreen = () => {
     return () => clearInterval(timer);
   }, [totalIndex]);
 
-  const getItemLayoutCarousel = (index: number) => {
-    let itemWidth;
-    if (index === 0) {
-      itemWidth = SIZES.width - 2 * SIZES.padding + SIZES.padding;
-    } else if (index === dummy_data.carousel.length - 1) {
-      itemWidth = SIZES.width - 2 * SIZES.padding + 20;
-    } else {
-      itemWidth = SIZES.width - 2 * SIZES.padding + 10;
-    }
-    return {
-      length: itemWidth,
-      offset: itemWidth * index,
-      index,
-    };
-  };
+  const getItemLayoutCarousel = useMemo(
+    () => (index: number) => {
+      let itemWidth;
+      if (index === 0) {
+        itemWidth = SIZES.width - 2 * SIZES.padding + SIZES.padding;
+      } else if (index === dummy_data.carousel.length - 1) {
+        itemWidth = SIZES.width - 2 * SIZES.padding + 20;
+      } else {
+        itemWidth = SIZES.width - 2 * SIZES.padding + 10;
+      }
+      return {
+        length: itemWidth,
+        offset: itemWidth * index,
+        index,
+      };
+    },
+    [],
+  );
 
-  const onCarouselScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const scrollOffset = event.nativeEvent.contentOffset.x;
-    const index = parseInt(
-      (scrollOffset / (SIZES.width - 2 * SIZES.padding)).toString(),
-      10,
-    );
-    carouselIndex.current = index;
-  };
+  const onCarouselScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const scrollOffset = event.nativeEvent.contentOffset.x;
+      const index = parseInt(
+        (scrollOffset / (SIZES.width - 2 * SIZES.padding)).toString(),
+        10,
+      );
+      carouselIndex.current = index;
+    },
+    [],
+  );
 
   const onRestaurantItemPress = (item: Restaurant) =>
     navigation.navigate('DetailRestaurant', {
@@ -269,29 +282,25 @@ const HomeScreen = () => {
   );
 };
 
-const Section: React.FC<SectionProps> = ({
-  title,
-  subtitle,
-  onPress,
-  children,
-  style,
-}) => {
-  return (
-    <Pressable onPress={onPress}>
-      <View style={[styles.section, style]}>
-        <View style={{flex: 1}}>
-          <Text style={styles.sectionHeadline}>{title}</Text>
-          <Text style={styles.sectionSubtitle}>{subtitle}</Text>
+const Section: React.FC<SectionProps> = memo(
+  ({title, subtitle, onPress, children, style}) => {
+    return (
+      <Pressable onPress={onPress}>
+        <View style={[styles.section, style]}>
+          <View style={{flex: 1}}>
+            <Text style={styles.sectionHeadline}>{title}</Text>
+            <Text style={styles.sectionSubtitle}>{subtitle}</Text>
+          </View>
+          <Image
+            source={icons.chevron_right}
+            style={[styles.icon, {marginLeft: SIZES.spacing}]}
+          />
         </View>
-        <Image
-          source={icons.chevron_right}
-          style={[styles.icon, {marginLeft: SIZES.spacing}]}
-        />
-      </View>
-      {children}
-    </Pressable>
-  );
-};
+        {children}
+      </Pressable>
+    );
+  },
+);
 
 const Categories = () => (
   <View style={styles.categoriesWrapper}>

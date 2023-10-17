@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {
   View,
   Text,
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BadgeButton;
+export default memo(BadgeButton);
