@@ -22,33 +22,37 @@ import {ListCartScreenProp} from '../types/navigation.type';
 import convertToVND from '../utils/convertToVND';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
+const initialCheckedId: Set<string> = new Set();
 const ListCart = () => {
   console.log('ListCart');
   const [isDelete, setIsDelete] = useState(false);
   const navigation = useNavigation<ListCartScreenProp['navigation']>();
   const listCart = useAppSelector(useSelectAllCart);
-  const [checkedId, setCheckedId] = useState<string[]>([]);
-  const checkedIdLenghth = checkedId.length;
+  const [checkedId, setCheckedId] = useState(initialCheckedId);
+  const checkedIdLenghth = checkedId.size;
   const canDelete = checkedIdLenghth > 0;
   const numberOfSelected = canDelete ? '(' + checkedIdLenghth + ')' : '';
   const isAllSelected = checkedIdLenghth === listCart.length;
 
   const onRestaurantPress = (restaurantId: string) => {
     if (isDelete) {
-      if (!checkedId.includes(restaurantId)) {
-        setCheckedId([...checkedId, restaurantId]);
+      const newCheckedId = new Set(checkedId);
+      if (!newCheckedId.has(restaurantId)) {
+        newCheckedId.add(restaurantId);
       } else {
-        setCheckedId(checkedId.filter(item => item !== restaurantId));
+        newCheckedId.delete(restaurantId);
       }
+      setCheckedId(newCheckedId);
     }
   };
 
   const onSelectAllPress = () => {
     if (isAllSelected) {
-      setCheckedId([]);
+      setCheckedId(initialCheckedId);
     } else {
-      const allId = listCart?.map(item => item.id);
-      setCheckedId(allId);
+      const newCheckedId = new Set<string>();
+      listCart?.map(item => newCheckedId.add(item.id));
+      setCheckedId(newCheckedId);
     }
   };
 
@@ -89,7 +93,7 @@ const ListCart = () => {
         }
         data={listCart}
         renderItem={props => {
-          const isChecked = checkedId.some(i => i === props.item.id);
+          const isChecked = checkedId.has(props.item.id);
           const backgroundColor = isChecked ? COLORS.primary : COLORS.white;
           const borderWidth = isChecked ? 0 : 1;
           return (
