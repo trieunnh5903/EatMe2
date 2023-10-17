@@ -8,7 +8,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import React, {memo} from 'react';
-import {FONTS} from '../../config';
+import {COLORS, FONTS} from '../../config';
 
 interface ButtonTextProps {
   label: string;
@@ -24,6 +24,20 @@ const ButtonText: React.FC<ButtonTextProps> = ({
   onPress,
   disabled,
 }) => {
+  if (disabled) {
+    return (
+      <TouchableOpacity
+        disabled={disabled}
+        onPress={onPress}
+        style={[
+          styles.container,
+          containerStyle,
+          {backgroundColor: COLORS.gray3},
+        ]}>
+        <Text style={[FONTS.title_medium, labelStyle]}>{label}</Text>
+      </TouchableOpacity>
+    );
+  }
   return (
     <TouchableOpacity
       disabled={disabled}
