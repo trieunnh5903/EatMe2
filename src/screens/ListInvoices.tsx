@@ -4,7 +4,6 @@ import {
   ListRenderItemInfo,
   StyleSheet,
   Text,
-  Image,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -25,6 +24,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {deleteFood} from '../redux/slice/cart.slice';
 import {deleteRestaurant} from '../redux/slice/restaurant.slice';
 import {ListInvoicesScreenProp} from '../types/navigation.type';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const initialCheckedId: Set<string> = new Set();
 const ListInvoices = () => {
@@ -39,7 +39,6 @@ const ListInvoices = () => {
   const numberOfSelected = canDelete ? '(' + checkedIdLenghth + ')' : '';
   const isAllSelected = checkedIdLenghth === listRestaurant.length;
   const dispatch = useAppDispatch();
-  console.log(listRestaurant);
   const onRestaurantPress = (restaurantId: string) => {
     if (isDelete) {
       const newCheckedId = new Set(checkedId);
@@ -70,6 +69,9 @@ const ListInvoices = () => {
     dispatch(deleteRestaurant([...checkedId]));
   };
 
+  const onShoppingPress = () => {
+    navigation.navigate('HomeScreen');
+  };
   return (
     <View style={styles.container}>
       {/* header navigation */}
@@ -175,7 +177,12 @@ const ListInvoices = () => {
         // sau khi xóa hóa đơn hiện danh sách rỗng
         <>
           <View style={styles.emptyWrapper}>
-            <Image style={styles.imageEmty} source={icons.cart_weight400} />
+            <MaterialCommunityIcons
+              name="ticket-confirmation-outline"
+              color={COLORS.primary}
+              size={70}
+            />
+            {/* <Image style={styles.imageEmty} source={icons.cart_weight400} /> */}
             <Text
               style={{
                 color: COLORS.black,
@@ -184,7 +191,9 @@ const ListInvoices = () => {
               Hóa đơn của bạn trống!
             </Text>
           </View>
-          <TouchableOpacity style={styles.buttonStartShopping}>
+          <TouchableOpacity
+            onPress={onShoppingPress}
+            style={styles.buttonStartShopping}>
             <Text style={styles.textTitle}>Mua sắm ngay</Text>
           </TouchableOpacity>
         </>
