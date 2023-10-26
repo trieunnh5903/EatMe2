@@ -1,8 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   FlatList,
   ListRenderItemInfo,
   StyleSheet,
   Text,
+  Image,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -11,29 +13,33 @@ import {Break, ButtonIcon, ButtonText, Dot, HeaderCustom} from '../components';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {RestaurantInformation} from '../types/types';
 import FastImage from 'react-native-fast-image';
-import {store, useAppSelector} from '../redux/store';
+import {store, useAppDispatch, useAppSelector} from '../redux/store';
 import {
   getTotalFoodCount,
-  useSelectAllCart,
+  useSelectAllRestaurant,
   useSelectTotalPriceSelector,
 } from '../redux/hooks';
 import {useNavigation} from '@react-navigation/native';
-import {ListCartScreenProp} from '../types/navigation.type';
 import convertToVND from '../utils/convertToVND';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import {deleteFood} from '../redux/slice/cart.slice';
+import {deleteRestaurant} from '../redux/slice/restaurant.slice';
+import {ListInvoicesScreenProp} from '../types/navigation.type';
 
 const initialCheckedId: Set<string> = new Set();
-const ListCart = () => {
-  console.log('ListCart');
+const ListInvoices = () => {
+  console.log('ListInvoices');
   const [isDelete, setIsDelete] = useState(false);
-  const navigation = useNavigation<ListCartScreenProp['navigation']>();
-  const listCart = useAppSelector(useSelectAllCart);
+  const navigation = useNavigation<ListInvoicesScreenProp['navigation']>();
+  const listRestaurant = useAppSelector(useSelectAllRestaurant);
+
   const [checkedId, setCheckedId] = useState(initialCheckedId);
   const checkedIdLenghth = checkedId.size;
   const canDelete = checkedIdLenghth > 0;
   const numberOfSelected = canDelete ? '(' + checkedIdLenghth + ')' : '';
-  const isAllSelected = checkedIdLenghth === listCart.length;
-
+  const isAllSelected = checkedIdLenghth === listRestaurant.length;
+  const dispatch = useAppDispatch();
+  console.log(listRestaurant);
   const onRestaurantPress = (restaurantId: string) => {
     if (isDelete) {
       const newCheckedId = new Set(checkedId);
@@ -51,19 +57,25 @@ const ListCart = () => {
       setCheckedId(initialCheckedId);
     } else {
       const newCheckedId = new Set<string>();
-      listCart?.map(item => newCheckedId.add(item.id));
+      listRestaurant?.map(item => newCheckedId.add(item.id));
       setCheckedId(newCheckedId);
     }
   };
 
   const onBackPress = () => navigation.goBack();
-  const onDeletePress = () => setIsDelete(!isDelete);
+  const onToggleDeletePress = () => setIsDelete(!isDelete);
+  const onDeletePress = () => {
+    console.log('onDeletePress');
+    dispatch(deleteFood([...checkedId]));
+    dispatch(deleteRestaurant([...checkedId]));
+  };
 
   return (
     <View style={styles.container}>
+      {/* header navigation */}
       <HeaderCustom
         containerStyle={styles.headerWrapperContainer}
-        title="Danh sách giỏ hàng"
+        title="Danh sách hóa đơn"
         leftComponent={
           <ButtonIcon
             onPress={onBackPress}
@@ -75,84 +87,107 @@ const ListCart = () => {
         rightComponent={<View style={styles.btnBack} />}
       />
 
-      <FlatList
-        ItemSeparatorComponent={() => <Break height={2} />}
-        ListHeaderComponent={
-          <View style={styles.headerWrapper}>
-            <Text style={styles.textBlackBold}>Đơn lẻ</Text>
-            <TouchableOpacity onPress={onDeletePress}>
-              <Text
-                style={[
-                  styles.textRed,
-                  {color: isDelete ? COLORS.primary : COLORS.red},
-                ]}>
-                {isDelete ? 'Hủy' : 'Xóa'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        }
-        data={listCart}
-        renderItem={props => {
-          const isChecked = checkedId.has(props.item.id);
-          const backgroundColor = isChecked ? COLORS.primary : COLORS.white;
-          const borderWidth = isChecked ? 0 : 1;
-          return (
-            <TouchableOpacity
-              onPress={() => onRestaurantPress(props.item.id)}
-              style={{flex: 1, flexDirection: 'row'}}>
-              {isDelete && (
-                <View style={styles.checkSquareWrapper}>
-                  <View
+      {/* có hóa đơn */}
+      {listRestaurant.length > 0 ? (
+        <>
+          <FlatList
+            ItemSeparatorComponent={() => <Break height={2} />}
+            ListHeaderComponent={
+              <View style={styles.headerWrapper}>
+                <Text style={styles.textBlackBold}>Đơn lẻ</Text>
+                <TouchableOpacity onPress={onToggleDeletePress}>
+                  <Text
                     style={[
-                      {
-                        borderWidth,
-                        backgroundColor,
-                      },
-                      styles.btnCheck,
+                      styles.textRed,
+                      {color: isDelete ? COLORS.primary : COLORS.red},
                     ]}>
-                    {isChecked && (
-                      <FontAwesome6
-                        name="check"
-                        color={COLORS.white}
-                        size={18}
-                      />
-                    )}
-                  </View>
-                </View>
-              )}
-              <FoodItem {...props} />
-            </TouchableOpacity>
-          );
-        }}
-      />
-      {isDelete && (
-        <View style={styles.deleteWrapper}>
-          <TouchableOpacity
-            onPress={onSelectAllPress}
-            style={styles.btnSelectAll}>
-            <View
-              style={[
-                {
-                  backgroundColor: isAllSelected
-                    ? COLORS.primary
-                    : COLORS.white,
-                  borderWidth: isAllSelected ? 0 : 1,
-                },
-                styles.btnCheck,
-              ]}>
-              {isAllSelected && (
-                <FontAwesome6 name="check" color={COLORS.white} size={18} />
-              )}
-            </View>
-            <Text style={styles.textGrayBold}>Chọn tất cả</Text>
-          </TouchableOpacity>
-          <ButtonText
-            disabled={!canDelete}
-            labelStyle={{color: COLORS.white}}
-            containerStyle={styles.btnCheckout}
-            label={`Xóa ${numberOfSelected}`}
+                    {isDelete ? 'Hủy' : 'Xóa'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            }
+            data={listRestaurant}
+            renderItem={props => {
+              const isChecked = checkedId.has(props.item.id);
+              const backgroundColor = isChecked ? COLORS.primary : COLORS.white;
+              const borderWidth = isChecked ? 0 : 1;
+              return (
+                <TouchableOpacity
+                  onPress={() => onRestaurantPress(props.item.id)}
+                  style={{flex: 1, flexDirection: 'row'}}>
+                  {isDelete && (
+                    <View style={styles.checkSquareWrapper}>
+                      <View
+                        style={[
+                          {
+                            borderWidth,
+                            backgroundColor,
+                          },
+                          styles.btnCheck,
+                        ]}>
+                        {isChecked && (
+                          <FontAwesome6
+                            name="check"
+                            color={COLORS.white}
+                            size={18}
+                          />
+                        )}
+                      </View>
+                    </View>
+                  )}
+                  <FoodItem {...props} />
+                </TouchableOpacity>
+              );
+            }}
           />
-        </View>
+          {isDelete && (
+            <View style={styles.deleteWrapper}>
+              <TouchableOpacity
+                onPress={onSelectAllPress}
+                style={styles.btnSelectAll}>
+                <View
+                  style={[
+                    {
+                      backgroundColor: isAllSelected
+                        ? COLORS.primary
+                        : COLORS.white,
+                      borderWidth: isAllSelected ? 0 : 1,
+                    },
+                    styles.btnCheck,
+                  ]}>
+                  {isAllSelected && (
+                    <FontAwesome6 name="check" color={COLORS.white} size={18} />
+                  )}
+                </View>
+                <Text style={styles.textGrayBold}>Chọn tất cả</Text>
+              </TouchableOpacity>
+              <ButtonText
+                onPress={onDeletePress}
+                disabled={!canDelete}
+                labelStyle={{color: COLORS.white}}
+                containerStyle={styles.btnCheckout}
+                label={`Xóa ${numberOfSelected}`}
+              />
+            </View>
+          )}
+        </>
+      ) : (
+        // sau khi xóa hóa đơn hiện danh sách rỗng
+        <>
+          <View style={styles.emptyWrapper}>
+            <Image style={styles.imageEmty} source={icons.cart_weight400} />
+            <Text
+              style={{
+                color: COLORS.black,
+                ...FONTS.title_large,
+              }}>
+              Hóa đơn của bạn trống!
+            </Text>
+          </View>
+          <TouchableOpacity style={styles.buttonStartShopping}>
+            <Text style={styles.textTitle}>Mua sắm ngay</Text>
+          </TouchableOpacity>
+        </>
       )}
     </View>
   );
@@ -197,9 +232,24 @@ const FoodItem: React.FC<ListRenderItemInfo<RestaurantInformation>> = ({
   );
 };
 
-export default ListCart;
+export default ListInvoices;
 
 const styles = StyleSheet.create({
+  buttonStartShopping: {
+    margin: SIZES.radius,
+    flexDirection: 'row',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: SIZES.radius,
+    backgroundColor: COLORS.primary,
+  },
+
+  emptyWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btnSelectAll: {
     flex: 1,
     flexDirection: 'row',
@@ -230,6 +280,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  imageEmty: {
+    tintColor: COLORS.primary,
+    width: 70,
+    height: 70,
+  },
+
+  textTitle: {
+    color: COLORS.white2,
+    ...FONTS.title_medium,
+    fontWeight: 'bold',
   },
 
   checkSquareWrapper: {

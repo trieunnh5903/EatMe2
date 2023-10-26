@@ -1,6 +1,7 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import {FoodReduxType} from '../../types/types';
 
+// lưu danh sách món ăn
 interface CartState {
   byId: {
     [id: string]: FoodReduxType[];
@@ -44,7 +45,24 @@ const cartSlice = createSlice({
       if (state.byId[restaurantId] === undefined) {
         return;
       }
+      if (listFood.length === 0) {
+        state.allIds = state.allIds.filter(id => id !== restaurantId);
+        delete state.byId[restaurantId];
+      }
       state.byId[restaurantId] = listFood;
+    },
+
+    deleteFood: (state, action: PayloadAction<string[]>) => {
+      const restaurantIdsToDelete = action.payload;
+      restaurantIdsToDelete.forEach(restaurantId => {
+        // Kiểm tra xem nhà hàng có tồn tại
+        if (state.byId[restaurantId]) {
+          // Xóa ID nhà hàng khỏi mảng allIds
+          state.allIds = state.allIds.filter(id => id !== restaurantId);
+          // Xóa nhà hàng khỏi trạng thái
+          delete state.byId[restaurantId];
+        }
+      });
     },
 
     addFood(
@@ -71,4 +89,4 @@ const cartSlice = createSlice({
 });
 
 export default cartSlice.reducer;
-export const {addFood, createCart, updateCart} = cartSlice.actions;
+export const {addFood, createCart, updateCart, deleteFood} = cartSlice.actions;

@@ -25,6 +25,7 @@ import {
   BadgeButton,
   Break,
   ButtonIcon,
+  CountDown,
   HeaderCustom,
   HorizontalCardSkeleton,
   HorizontalRestaurantCard,
@@ -111,7 +112,7 @@ const HomeScreen = () => {
   const onEnterAddressPress = () =>
     navigation.navigate('EnterAddressScreen', {enableGoogleMap: false});
 
-  const onListCartPress = () => navigation.navigate('ListCart');
+  const onListInvoicesPress = () => navigation.navigate('ListInvoices');
   return (
     <SafeAreaView style={[styles.container]}>
       <FlashList
@@ -180,6 +181,11 @@ const HomeScreen = () => {
               return (
                 <View key={feature.id}>
                   <Break marginVertical={30} />
+                  {feature.title === 'Quán mới khao đến 50%' && (
+                    <View style={{marginBottom: 5, marginLeft: 20}}>
+                      <CountDown time={7200} />
+                    </View>
+                  )}
                   <Section
                     subtitle={feature.subtitle}
                     onPress={() => console.log(feature.title + 'pressed')}
@@ -264,13 +270,11 @@ const HomeScreen = () => {
             renderItem={() => <HorizontalCardSkeleton />}
           />
         }
-        // onEndReached={onEndReached}
-        // ListFooterComponent={renderFooter}
         onEndReachedThreshold={0.3}
       />
       {totalCart > 0 && (
         <BadgeButton
-          onPress={onListCartPress}
+          onPress={onListInvoicesPress}
           badgeText={totalCart.toString()}
           icon={icons.cart_fill}
           iconStyle={styles.iconCart}

@@ -11,9 +11,9 @@ import DetailRestaurantScreen from './DetailRestaurantScreen';
 import FavoriteScreen from './FavoriteScreen';
 import EnterAddressScreen from './EnterAddressScreen';
 import DetailFoodScreen from './DetailFoodScreen';
-import ListCart from './ListCart';
+import ListInvoices from './ListInvoices';
 export {
-  ListCart,
+  ListInvoices,
   DetailFoodScreen,
   EnterAddressScreen,
   SearchScreen,

@@ -1,6 +1,7 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import {RestaurantInformation} from '../../types/types';
 
+// lưu thông tin cửa hàng
 interface RestaurantState {
   currentRestaurant: RestaurantInformation;
   byId: {
@@ -22,7 +23,7 @@ const initialState: RestaurantState = {
 
 const restaurantSlice = createSlice({
   initialState,
-  name: 'cart',
+  name: 'restaurant',
   reducers: {
     setRestaurant(state, action: PayloadAction<RestaurantInformation>) {
       const restaurant = action.payload;
@@ -36,8 +37,22 @@ const restaurantSlice = createSlice({
         state.allIds.push(restaurant.id);
       }
     },
+
+    deleteRestaurant(state, action: PayloadAction<string[]>) {
+      const restaurantIdsToDelete = action.payload;
+      restaurantIdsToDelete.forEach(restaurantId => {
+        // Kiểm tra xem nhà hàng có tồn tại
+        if (state.byId[restaurantId]) {
+          // Xóa ID nhà hàng khỏi mảng allIds
+          state.allIds = state.allIds.filter(id => id !== restaurantId);
+          // Xóa nhà hàng khỏi trạng thái
+          delete state.byId[restaurantId];
+        }
+      });
+    },
   },
 });
 
 export default restaurantSlice.reducer;
-export const {setRestaurant, addRestaurant} = restaurantSlice.actions;
+export const {setRestaurant, addRestaurant, deleteRestaurant} =
+  restaurantSlice.actions;

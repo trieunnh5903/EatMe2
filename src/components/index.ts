@@ -15,7 +15,9 @@ import Dot from './Dot';
 import ButtonTextIcon from './button/ButtonTextIcon';
 import HorizontalRestaurantCard from './HorizontalRestaurantCard';
 import VerticalRestaurantCard from './VerticalRestaurantCard';
+import CountDown from './CountDown';
 export {
+  CountDown,
   ButtonTextIcon,
   Dot,
   HorizontalRestaurantCard,

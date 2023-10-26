@@ -9,13 +9,12 @@ export const useSelectCartById = (id: string) => {
 
 const makeTotalFoodCountSelector = () =>
   createSelector(
-    (state: RootState, restaurantId: string) => state.cart.byId[restaurantId], // Lấy thông tin hóa đơn từ state
+    (state: RootState, restaurantId: string) => state.cart.byId[restaurantId],
     cart => {
       if (!cart) {
         return 0;
-      } // Kiểm tra nếu không tìm thấy hóa đơn
-      // Thực hiện tính toán tổng số lượng món ăn ở đây
-      return cart.reduce((total, item) => total + item.quantity, 0); // Ví dụ: Đây giả sử món ăn được lưu trong mảng foodItems
+      }
+      return cart.reduce((total, item) => total + item.quantity, 0);
     },
   );
 
@@ -26,9 +25,12 @@ export const useSelectTotalCart = createSelector(
   cartsState => cartsState.allIds.map(cartId => cartsState.byId[cartId]).length,
 );
 
-export const useSelectAllCart = createSelector(
+export const useSelectAllRestaurant = createSelector(
   (state: RootState) => state.restaurant,
-  cartsState => cartsState.allIds.map(cartId => cartsState.byId[cartId]),
+  restaurantState =>
+    restaurantState.allIds.map(
+      restaurantId => restaurantState.byId[restaurantId],
+    ),
 );
 
 export const useSelectTotalPriceSelector = createSelector(

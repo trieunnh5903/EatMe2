@@ -24,16 +24,16 @@ export type RootStackParamList = {
   SearchScreen: undefined;
   FavoriteScreen: undefined;
   ProfileScreen: undefined;
-  ListCart: undefined;
+  ListInvoices: undefined;
 };
 
 export type HomeScreenProp = NativeStackScreenProps<
   RootStackParamList,
   'HomeScreen'
 >;
-export type ListCartScreenProp = NativeStackScreenProps<
+export type ListInvoicesScreenProp = NativeStackScreenProps<
   RootStackParamList,
-  'ListCart'
+  'ListInvoices'
 >;
 export type ProfileScreenProp = NativeStackScreenProps<
   RootStackParamList,

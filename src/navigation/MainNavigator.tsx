@@ -9,7 +9,7 @@ import {
   FavoriteScreen,
   ForgotPasswordScreen,
   HomeScreen,
-  ListCart,
+  ListInvoices,
   LoginScreen,
   OnBoardingScreen,
   ProfileScreen,
@@ -46,9 +46,9 @@ const MainNavigator = () => {
           <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen
-            name="ListCart"
+            name="ListInvoices"
             options={{presentation: 'fullScreenModal'}}
-            component={ListCart}
+            component={ListInvoices}
           />
         </>
       ) : (
