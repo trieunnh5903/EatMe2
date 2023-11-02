@@ -96,6 +96,7 @@ const DetailRestaurantScreen = ({
     if (restaurant) {
       dispatch(
         setRestaurant({
+          bestSeller: restaurant.allFoods.bestSeller,
           id: restaurant.id,
           address: restaurant.address,
           image: restaurant.image,
@@ -228,6 +229,9 @@ const DetailRestaurantScreen = ({
 
   const onCartPress = () =>
     navigation.navigate('CartScreen', {restaurantId: restaurant.id});
+
+  const onCheckoutPress = () =>
+    navigation.navigate('CheckoutScreen', {restaurantId: restaurant.id});
   return (
     <SafeAreaView style={styles.container}>
       {loading ? (
@@ -511,12 +515,6 @@ const DetailRestaurantScreen = ({
                     );
                   }}
                 />
-
-                {/* <RenderListHighLight
-              highLightList={bestSeller}
-              onFoodItemPress={onFoodItemPress}
-              cart={cart}
-            /> */}
               </View>
             }
             onScroll={onListScroll}
@@ -550,6 +548,7 @@ const DetailRestaurantScreen = ({
                 labelStyle={{color: COLORS.primary}}
               />
               <ButtonText
+                onPress={onCheckoutPress}
                 labelStyle={{color: COLORS.white}}
                 containerStyle={styles.btnCheckout}
                 label={'Trang thanh toán'}

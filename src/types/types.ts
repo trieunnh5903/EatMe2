@@ -77,4 +77,5 @@ export interface RestaurantInformation {
   id: string;
   image: string;
   name: string;
+  bestSeller: Food[];
 }

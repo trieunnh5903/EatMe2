@@ -12,8 +12,10 @@ import FavoriteScreen from './FavoriteScreen';
 import EnterAddressScreen from './EnterAddressScreen';
 import DetailFoodScreen from './DetailFoodScreen';
 import ListInvoices from './ListInvoices';
+import CheckoutScreen from './CheckoutScreen';
 export {
   ListInvoices,
+  CheckoutScreen,
   DetailFoodScreen,
   EnterAddressScreen,
   SearchScreen,

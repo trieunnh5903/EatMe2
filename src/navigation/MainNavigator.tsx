@@ -2,6 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   CartScreen,
+  CheckoutScreen,
   ConfirmOtpScreen,
   DetailFoodScreen,
   DetailRestaurantScreen,
@@ -45,6 +46,7 @@ const MainNavigator = () => {
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
           <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
           <Stack.Screen
             name="ListInvoices"
             options={{presentation: 'fullScreenModal'}}

@@ -28,7 +28,6 @@ const useEnterAddressController = (enableGoogleMap: boolean) => {
   const onRegionChangeComplete = (newRegion: Region) => {
     setRegion(newRegion);
     animationRef.current?.play();
-    ToastAndroid.show(region.latitude + '', 5000);
   };
   return {
     showGoogleMap,

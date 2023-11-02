@@ -64,7 +64,6 @@ const ListInvoices = () => {
   const onBackPress = () => navigation.goBack();
   const onToggleDeletePress = () => setIsDelete(!isDelete);
   const onDeletePress = () => {
-    console.log('onDeletePress');
     dispatch(deleteFood([...checkedId]));
     dispatch(deleteRestaurant([...checkedId]));
   };

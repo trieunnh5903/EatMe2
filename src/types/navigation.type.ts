@@ -25,7 +25,15 @@ export type RootStackParamList = {
   FavoriteScreen: undefined;
   ProfileScreen: undefined;
   ListInvoices: undefined;
+  CheckoutScreen: {
+    restaurantId: string;
+  };
 };
+
+export type CheckoutScreenProp = NativeStackScreenProps<
+  RootStackParamList,
+  'CheckoutScreen'
+>;
 
 export type HomeScreenProp = NativeStackScreenProps<
   RootStackParamList,

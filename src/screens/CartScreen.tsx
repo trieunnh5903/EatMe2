@@ -62,6 +62,7 @@ const CartScreen = ({route, navigation}: CartScreenProp) => {
   const onClearCartPress = () => {
     setListFood([]);
   };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* header navigation */}

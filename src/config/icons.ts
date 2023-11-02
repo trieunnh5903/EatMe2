@@ -2,7 +2,7 @@ const icons = {
   close: require('../assets/icons/close.png'),
   verified: require('../assets/icons/verified.png'),
   card: require('../assets/icons/card.png'),
-  zalo_pay: require('../assets/icons/zalo.png'),
+  zalo_pay: require('../assets/icons/ZaloPay-text.png'),
   apple_pay: require('../assets/icons/icons8-apple-pay-50.png'),
   credit_card: require('../assets/icons/icons8-credit-card-48.png'),
   master_card: require('../assets/icons/icons8-mastercard-48.png'),
@@ -69,6 +69,11 @@ const icons = {
   noodles: require('../assets/icons/icons8-noodles-94.png'),
   rice: require('../assets/icons/icons8-rice-bowl-94.png'),
   pizza: require('../assets/icons/icons8-salami-pizza-94.png'),
+  cafe: require('../assets/icons/icons8-cafe-48.png'),
+  hot_dot: require('../assets/icons/icons8-hot-dog-48.png'),
+  bottle_plastic: require('../assets/icons/icons8-plastic-48.png'),
+  soda: require('../assets/icons/icons8-soda-48.png'),
+  coin: require('../assets/icons/icons8-coin-64.png'),
 };
 
 export default icons;

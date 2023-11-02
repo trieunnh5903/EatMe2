@@ -14,6 +14,7 @@ const initialState: RestaurantState = {
   byId: {},
   allIds: [],
   currentRestaurant: {
+    bestSeller: [],
     address: '',
     id: '',
     image: '',
