@@ -40,6 +40,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
   const onBackPress = () => navigation.goBack();
   const [foodQuantity, setFoodQuantity] = useState<number>(1);
   const scrollY = useSharedValue(0);
+  const dispatch = useAppDispatch();
   const [selectedOption, setSelectedOption] = useState<RestaurantOption[]>([]);
   const [selectedTopping, setSelectedTopping] = useState<RestaurantTopping[]>(
     [],
@@ -82,6 +83,43 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
 
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     scrollY.value = event.nativeEvent.contentOffset.y;
+  };
+
+  const quantityTopping = useMemo(() => {
+    return selectedTopping.reduce((pre, curr) => {
+      if (curr.quantity) {
+        return pre + curr.quantity;
+      }
+      return 0;
+    }, 0);
+  }, [selectedTopping]);
+
+  const canAddToCart = useMemo(() => {
+    return (
+      selectedOption?.length === (options?.length || selectedOption?.length)
+    );
+  }, [selectedOption, options]);
+
+  const totalPriceOptions = useMemo(() => {
+    return selectedOption.reduce((pre, curr) => {
+      return pre + curr.price;
+    }, 0);
+  }, [selectedOption]);
+
+  const totalPriceTopping = useMemo(() => {
+    return selectedTopping.reduce((pre, curr) => {
+      return pre + curr.price * (curr.quantity || 1);
+    }, 0);
+  }, [selectedTopping]);
+
+  const totalPrice = () => {
+    if (!canAddToCart) {
+      return 0;
+    }
+
+    return (
+      (totalPriceOptions + totalPriceTopping + foodItem.price) * foodQuantity
+    );
   };
 
   const onIncreaseToppingPress = useCallback(
@@ -128,15 +166,6 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
     [selectedTopping, setSelectedTopping],
   );
 
-  const quantityTopping = useMemo(() => {
-    return selectedTopping.reduce((pre, curr) => {
-      if (curr.quantity) {
-        return pre + curr.quantity;
-      }
-      return 0;
-    }, 0);
-  }, [selectedTopping]);
-
   const onIncreaseFoodPress = () => setFoodQuantity(value => value + 1);
   const onDecreaseFoodPress = useCallback(() => {
     if (foodQuantity > 1) {
@@ -144,35 +173,6 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
     }
   }, [foodQuantity]);
 
-  const canAddToCart = useMemo(() => {
-    return (
-      selectedOption?.length === (options?.length || selectedOption?.length)
-    );
-  }, [selectedOption, options]);
-
-  const totalPriceOptions = useMemo(() => {
-    return selectedOption.reduce((pre, curr) => {
-      return pre + curr.price;
-    }, 0);
-  }, [selectedOption]);
-
-  const totalPriceTopping = useMemo(() => {
-    return selectedTopping.reduce((pre, curr) => {
-      return pre + curr.price * (curr.quantity || 1);
-    }, 0);
-  }, [selectedTopping]);
-
-  const totalPrice = () => {
-    if (!canAddToCart) {
-      return 0;
-    }
-
-    return (
-      (totalPriceOptions + totalPriceTopping + foodItem.price) * foodQuantity
-    );
-  };
-
-  const dispatch = useAppDispatch();
   const onAddToCartPress = () => {
     const food: FoodReduxType = {
       id: nanoid(),

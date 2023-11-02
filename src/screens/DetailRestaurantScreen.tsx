@@ -78,7 +78,7 @@ const DetailRestaurantScreen = ({
   console.log('DetailRestaurantScreen');
   const menuListRef = useRef<FlatList>(null);
   const scrollY = useSharedValue(0);
-  const detailMenuRef = useRef<Animated.FlatList<any> & FlatList>(null);
+  const detailMenuRef = useRef<any>();
   const buttonRefs = Array.from({length: menuFoods.length}, () =>
     useRef<TouchableOpacity>(null),
   );
@@ -492,6 +492,7 @@ const DetailRestaurantScreen = ({
                     marginHorizontal: 2 * SIZES.spacing,
                     gap: 2 * SIZES.spacing,
                   }}
+                  // eslint-disable-next-line react/no-unstable-nested-components
                   ItemSeparatorComponent={() => (
                     <View style={{height: 2 * SIZES.spacing}} />
                   )}

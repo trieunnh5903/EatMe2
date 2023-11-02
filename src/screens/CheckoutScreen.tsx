@@ -6,6 +6,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
@@ -43,6 +44,13 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
     }, 0);
   }, []);
 
+  const onAddFoodPress = () => {
+    // navigation.navigate('DetailRestaurant', {restaurant});
+  };
+
+  const onFoodPress = (_food: any) => {
+    // navigation.navigate('DetailFood', {foodItem: food});
+  };
   return (
     <SafeAreaView
       style={{
@@ -109,11 +117,6 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                   <Text style={[FONTS.body_large, {color: COLORS.blackText}]}>
                     Giao bởi tài xế
                   </Text>
-                  <TouchableOpacity>
-                    <Text style={[FONTS.label_large, {color: COLORS.primary}]}>
-                      Thay đổi
-                    </Text>
-                  </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity
@@ -174,7 +177,10 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
               <View>
                 {cartList.map(food => {
                   return (
-                    <View key={food.id} style={styles.itemContainer}>
+                    <TouchableOpacity
+                      onPress={() => onFoodPress(food)}
+                      key={food.id}
+                      style={styles.itemContainer}>
                       {/* content */}
                       <View style={{flex: 1, flexDirection: 'row'}}>
                         <View
@@ -229,7 +235,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                           </TouchableOpacity>
                         </View>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                   );
                 })}
               </View>
@@ -239,7 +245,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                   paddingHorizontal: SIZES.padding,
                   marginTop: SIZES.padding,
                 }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onAddFoodPress}>
                   <Text style={[FONTS.label_large, {color: COLORS.primary}]}>
                     + Thêm món
                   </Text>
@@ -272,7 +278,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                 data={restaurant.bestSeller}
                 renderItem={({item}) => {
                   return (
-                    <View
+                    <Pressable
                       style={{
                         elevation: 1,
                         borderRadius: SIZES.radius,
@@ -333,7 +339,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                           </TouchableOpacity>
                         </View>
                       </View>
-                    </View>
+                    </Pressable>
                   );
                 }}
               />

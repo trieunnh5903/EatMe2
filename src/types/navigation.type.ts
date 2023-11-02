@@ -9,7 +9,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   DetailFood: {
     foodItem: Food;
-    restaurant: Restaurant;
+    // restaurant: Restaurant;
   };
   DetailRestaurant: {
     restaurant: Restaurant;
