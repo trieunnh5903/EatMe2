@@ -3,7 +3,7 @@ import {
   fetchAllShops,
   fetchPolpularShop,
   fetchSearchResults,
-} from '../services/shop.service';
+} from '../services/restaurant.service';
 import {FOOD_DATA} from './useFoodModel';
 
 export const useShopModel = () => {

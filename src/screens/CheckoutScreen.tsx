@@ -44,8 +44,8 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
     }, 0);
   }, []);
 
-  const onAddFoodPress = () => {
-    // navigation.navigate('DetailRestaurant', {restaurant});
+  const onAddMoreFoodPress = () => {
+    navigation.push('DetailRestaurant', {restaurantId: idRestaurant});
   };
 
   const onFoodPress = (_food: any) => {
@@ -245,7 +245,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                   paddingHorizontal: SIZES.padding,
                   marginTop: SIZES.padding,
                 }}>
-                <TouchableOpacity onPress={onAddFoodPress}>
+                <TouchableOpacity onPress={onAddMoreFoodPress}>
                   <Text style={[FONTS.label_large, {color: COLORS.primary}]}>
                     + Thêm món
                   </Text>

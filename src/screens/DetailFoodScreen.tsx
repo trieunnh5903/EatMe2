@@ -29,6 +29,8 @@ import {useAppDispatch, useAppSelector} from '../redux/store';
 import {addFood, createCart} from '../redux/slice/cart.slice';
 import {nanoid} from '@reduxjs/toolkit';
 import {addRestaurant} from '../redux/slice/restaurant.slice';
+import {useQuery} from '@tanstack/react-query';
+import {fetchRestaurantById} from '../services/restaurant.service';
 
 const HEADER_HEIGHT = 50;
 const AnimatedTouchableOpacity =
@@ -36,6 +38,13 @@ const AnimatedTouchableOpacity =
 const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
   console.log('DetalFoodScreen');
   const {foodItem} = route.params;
+  const restaurantId = foodItem.id;
+  const {data: restaurantData} = useQuery({
+    queryKey: ['restaurant', restaurantId],
+    queryFn: () => fetchRestaurantById(restaurantId),
+  });
+
+  console.log(restaurantData);
   const {toppings, options} = foodItem;
   const onBackPress = () => navigation.goBack();
   const [foodQuantity, setFoodQuantity] = useState<number>(1);

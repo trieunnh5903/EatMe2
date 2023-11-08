@@ -32,14 +32,20 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {Food, FoodReduxType} from '../types/types';
-import {DetailRestaurantNavigationProps} from '../types/navigation.type';
+import {Food, FoodReduxType, Restaurant} from '../types/types';
+import {
+  CartScreenProp,
+  DetailRestaurantNavigationProps,
+} from '../types/navigation.type';
 import LinearGradient from 'react-native-linear-gradient';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {store, useAppDispatch} from '../redux/store';
 import {setRestaurant} from '../redux/slice/restaurant.slice';
 import {getTotalFoodCount, useSelectCartById} from '../redux/hooks';
+import {useQuery} from '@tanstack/react-query';
+import {fetchRestaurantById} from '../services/restaurant.service';
+import {useNavigation} from '@react-navigation/native';
 
 interface MenuFood {
   label: string;
@@ -67,15 +73,43 @@ interface ButtonMenuProp {
   label: string;
 }
 
+interface MyDetailRestaurantProps {
+  restaurant: Restaurant;
+}
+
 const HEADERHEIGHT = SIZES.height * 0.15;
-const DetailRestaurantScreen = ({
-  navigation,
-  route,
-}: DetailRestaurantNavigationProps) => {
-  const [loading, setLoading] = useState(true);
-  const {restaurant} = route.params;
-  const {bestSeller, menuFoods} = restaurant.allFoods;
+const DetailRestaurantScreen = ({route}: DetailRestaurantNavigationProps) => {
+  const {restaurantId} = route.params;
   console.log('DetailRestaurantScreen');
+  const [loading, setLoading] = useState(true);
+  const {data} = useQuery({
+    queryKey: ['restaurant', restaurantId],
+    queryFn: () => fetchRestaurantById(restaurantId),
+  });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 0);
+  }, []);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {data === undefined || loading === true ? (
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+        </View>
+      ) : (
+        <MyDetailRestaurant restaurant={data} />
+      )}
+    </SafeAreaView>
+  );
+};
+
+const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
+  restaurant,
+}) => {
+  const {bestSeller, menuFoods} = restaurant.allFoods;
   const menuListRef = useRef<FlatList>(null);
   const scrollY = useSharedValue(0);
   const detailMenuRef = useRef<any>();
@@ -88,24 +122,24 @@ const DetailRestaurantScreen = ({
   const totalFood = getTotalFoodCount(store.getState(), restaurant.id);
   const cart = useSelectCartById(restaurant.id);
   const dispatch = useAppDispatch();
-
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false); // Khi hoàn thành, ẩn Activity Indicator
-    }, 0);
-    if (restaurant) {
-      dispatch(
-        setRestaurant({
-          bestSeller: restaurant.allFoods.bestSeller,
-          id: restaurant.id,
-          address: restaurant.address,
-          image: restaurant.image,
-          name: restaurant.name,
-        }),
-      );
-    }
-  }, [dispatch, restaurant]);
-
+    dispatch(
+      setRestaurant({
+        bestSeller: restaurant.allFoods.bestSeller,
+        id: restaurant.id,
+        address: restaurant.address,
+        image: restaurant.image,
+        name: restaurant.name,
+      }),
+    );
+  }, [
+    dispatch,
+    restaurant.address,
+    restaurant.allFoods.bestSeller,
+    restaurant.id,
+    restaurant.image,
+    restaurant.name,
+  ]);
   const onListScroll = useAnimatedScrollHandler({
     onScroll: event => {
       scrollY.value = event.contentOffset.y;
@@ -150,7 +184,6 @@ const DetailRestaurantScreen = ({
   const onFoodItemPress = (item: Food) => {
     navigation.navigate('DetailFood', {
       foodItem: {...item},
-      restaurant,
     });
   };
 
@@ -226,339 +259,322 @@ const DetailRestaurantScreen = ({
       zIndex,
     };
   });
-
+  const navigation = useNavigation<CartScreenProp['navigation']>();
   const onCartPress = () =>
     navigation.navigate('CartScreen', {restaurantId: restaurant.id});
 
   const onCheckoutPress = () =>
     navigation.navigate('CheckoutScreen', {restaurantId: restaurant.id});
   return (
-    <SafeAreaView style={styles.container}>
-      {loading ? (
-        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
-        </View>
-      ) : (
-        <>
-          {/* header sau khi cuon */}
-          <Animated.View style={[styles.headerWrapper, headerWrapperz]}>
-            <Shadow distance={5}>
-              <View style={styles.headerContainer}>
-                <TouchableOpacity
-                  style={styles.buttonBackWrapper}
-                  onPress={() => navigation.goBack()}>
-                  <Image source={icons.arrow_back} style={styles.icon} />
-                </TouchableOpacity>
-                {/* tim kiem */}
-                <TouchableOpacity style={styles.searchContainer}>
-                  <Image source={icons.search} style={styles.iconSearch} />
-                  <TextInput
-                    style={{width: '85%', color: COLORS.blackText}}
-                    placeholderTextColor={COLORS.gray}
-                    cursorColor={COLORS.gray}
-                    numberOfLines={1}
-                    placeholder={`Tìm món tại ${restaurant.name}`}
-                  />
-                </TouchableOpacity>
-                {/* btn yeu thich */}
-                <TouchableOpacity
-                  style={[
-                    styles.buttonFavoriteWrapper,
-                    {alignItems: 'center'},
-                  ]}>
-                  <Image
-                    source={icons.favourite}
-                    style={[styles.icon, {tintColor: COLORS.black}]}
-                  />
-                </TouchableOpacity>
-              </View>
-              {/* menu */}
-              <FlatList
-                style={{height: '50%'}}
-                ref={menuListRef}
-                horizontal
-                contentContainerStyle={styles.menuListContentContainer}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={item => item.label}
-                data={menuFoods}
-                renderItem={({item, index}) => {
-                  const backgroundColor =
-                    index === 0 ? COLORS.primary : COLORS.white;
-                  const color = index === 0 ? COLORS.white : COLORS.black;
-                  return (
-                    <ButtonMenu
-                      backgroundColor={backgroundColor}
-                      buttonRef={buttonRefs[index]}
-                      label={item.label}
-                      onPress={() => {
-                        onMenuListPress(index);
-                      }}
-                      textRef={textRefs[index]}
-                      color={color}
-                    />
-                  );
-                }}
+    <>
+      {/* header sau khi cuon */}
+      <Animated.View style={[styles.headerWrapper, headerWrapperz]}>
+        <Shadow distance={5}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity
+              style={styles.buttonBackWrapper}
+              onPress={() => navigation.goBack()}>
+              <Image source={icons.arrow_back} style={styles.icon} />
+            </TouchableOpacity>
+            {/* tim kiem */}
+            <TouchableOpacity style={styles.searchContainer}>
+              <Image source={icons.search} style={styles.iconSearch} />
+              <TextInput
+                style={{width: '85%', color: COLORS.blackText}}
+                placeholderTextColor={COLORS.gray}
+                cursorColor={COLORS.gray}
+                numberOfLines={1}
+                placeholder={`Tìm món tại ${restaurant.name}`}
               />
-            </Shadow>
-          </Animated.View>
-          {/* header ban dau */}
-          <Animated.View
-            style={[
-              {position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1},
-              baseHeaderz,
-            ]}>
-            <HeaderCustom
-              containerStyle={styles.baseHeader}
-              leftComponent={
-                <TouchableOpacity
-                  style={styles.buttonNavWrapper}
-                  onPress={onBackPress}>
-                  <Image
-                    source={icons.arrow_back}
-                    style={[styles.icon, {tintColor: COLORS.white}]}
-                  />
-                </TouchableOpacity>
-              }
-              rightComponent={
-                <View style={{flexDirection: 'row', gap: 10}}>
-                  <TouchableOpacity
-                    style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                    <Feather name="search" size={20} color={COLORS.white} />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                    <Image
-                      source={icons.favourite}
-                      style={[styles.icon, {tintColor: COLORS.white}]}
-                    />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                    <Feather name="share-2" size={20} color={COLORS.white} />
-                  </TouchableOpacity>
-                </View>
-              }
-            />
-          </Animated.View>
-
-          <View style={{position: 'absolute', top: 0, left: 0, right: 0}}>
-            <Image
-              style={{height: SIZES.height * 0.35}}
-              source={{uri: restaurant.image}}
-            />
-
-            <LinearGradient
-              colors={['rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0)']}
-              style={{
-                height: 40,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-              }}
-            />
+            </TouchableOpacity>
+            {/* btn yeu thich */}
+            <TouchableOpacity
+              style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
+              <Image
+                source={icons.favourite}
+                style={[styles.icon, {tintColor: COLORS.black}]}
+              />
+            </TouchableOpacity>
           </View>
-          {/* list detail menu */}
-          <Animated.FlatList
-            contentContainerStyle={{paddingTop: SIZES.height * 0.35}}
-            ListHeaderComponent={
-              <View style={{backgroundColor: COLORS.white}}>
-                {/* thong tin quan an */}
-                <View style={{margin: 2 * SIZES.spacing}}>
-                  {/* thông tin chính */}
-                  <View style={styles.mainInformation}>
-                    <TouchableOpacity style={styles.btnInfo}>
-                      <Ionicons
-                        name="information-circle-outline"
-                        size={24}
-                        color={COLORS.black}
-                      />
-                    </TouchableOpacity>
-                    <View style={styles.partnerWrapper}>
-                      <Image
-                        source={icons.verified}
-                        style={{width: 20, height: 20}}
-                        resizeMode="contain"
-                      />
-                      <Text
-                        style={[
-                          {color: COLORS.primary, marginLeft: SIZES.base},
-                          FONTS.label_large,
-                        ]}>
-                        ĐỐI TÁC CỦA EATME
-                      </Text>
-                    </View>
-                    <Text style={[FONTS.title_large, styles.foodName]}>
-                      {restaurant.name}
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        color: COLORS.darkGray,
-                        marginBottom: SIZES.base,
-                        ...FONTS.title_medium,
-                      }}>
-                      0.3km •{' '}
-                      <Text style={FONTS.body_large}>{restaurant.address}</Text>
-                    </Text>
-                  </View>
-
-                  {/* thông tin phụ */}
-                  <View style={styles.subInfo}>
-                    <View style={styles.timeDeliveryWrapper}>
-                      <Feather
-                        name="clock"
-                        size={24}
-                        color={COLORS.black}
-                        style={{marginRight: 10}}
-                      />
-                      <View>
-                        <Text
-                          style={{
-                            color: COLORS.blackText,
-                            ...FONTS.title_medium,
-                          }}>
-                          Giao hàng tiêu chuẩn
-                        </Text>
-                        <Text
-                          style={{
-                            color: COLORS.blackText,
-                            ...FONTS.body_large,
-                          }}>
-                          Dự kiến giao hàng lúc 18:30
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity>
-                      <Text
-                        style={{color: COLORS.primary, ...FONTS.label_large}}>
-                        Thay đổi
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.voucher}>
-                    <View style={styles.voucherWrapper}>
-                      <Feather
-                        name="gift"
-                        size={24}
-                        color={COLORS.black}
-                        style={{marginRight: 10}}
-                      />
-                      <Text numberOfLines={1} style={styles.textVoucher}>
-                        Nhập "BANMOI" giảm 40k trên giá món
-                      </Text>
-                    </View>
-                    <TouchableOpacity>
-                      <Text
-                        style={{color: COLORS.primary, ...FONTS.label_large}}>
-                        Xem thêm
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.voucher}>
-                    <View style={styles.invoiceGroup}>
-                      <Feather
-                        name="users"
-                        size={24}
-                        color={COLORS.black}
-                        style={{marginRight: 10}}
-                      />
-                      <Text
-                        style={{color: COLORS.blackText, ...FONTS.label_large}}>
-                        Đơn nhóm
-                      </Text>
-                    </View>
-
-                    <TouchableOpacity>
-                      <Text
-                        style={{color: COLORS.primary, ...FONTS.label_large}}>
-                        Tạo đơn
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-
-                <Break />
-
-                {/* list best seller */}
-                <FlatList
-                  ListHeaderComponent={
-                    <Text style={styles.categoryWrapper}>Không thể bỏ qua</Text>
-                  }
-                  numColumns={2}
-                  columnWrapperStyle={{
-                    marginHorizontal: 2 * SIZES.spacing,
-                    gap: 2 * SIZES.spacing,
-                  }}
-                  // eslint-disable-next-line react/no-unstable-nested-components
-                  ItemSeparatorComponent={() => (
-                    <View style={{height: 2 * SIZES.spacing}} />
-                  )}
-                  data={bestSeller}
-                  keyExtractor={item => item.id}
-                  renderItem={({item}) => {
-                    const foodChecked = cart?.find(
-                      food => food.name === item.name,
-                    );
-                    return (
-                      <VerticalFoodCard
-                        foodChecked={foodChecked}
-                        onPress={() => onFoodItemPress(item)}
-                        imageStyle={{
-                          height: (SIZES.width - 6 * SIZES.spacing) / 2,
-                          width: (SIZES.width - 6 * SIZES.spacing) / 2,
-                        }}
-                        containerStyle={{flex: 1}}
-                        item={item}
-                      />
-                    );
-                  }}
-                />
-              </View>
-            }
-            onScroll={onListScroll}
-            ref={detailMenuRef}
+          {/* menu */}
+          <FlatList
+            style={{height: '50%'}}
+            ref={menuListRef}
+            horizontal
+            contentContainerStyle={styles.menuListContentContainer}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={item => item.label}
             data={menuFoods}
-            viewabilityConfig={{
-              minimumViewTime: 300,
-              itemVisiblePercentThreshold: 30,
-              waitForInteraction: true,
-            }}
-            onViewableItemsChanged={onViewableItemsChanged.current}
-            renderItem={({item}) => {
+            renderItem={({item, index}) => {
+              const backgroundColor =
+                index === 0 ? COLORS.primary : COLORS.white;
+              const color = index === 0 ? COLORS.white : COLORS.black;
               return (
-                <MenuFoodItem
-                  foodItem={item}
-                  onFoodItemPress={onFoodItemPress}
-                  cart={cart}
+                <ButtonMenu
+                  backgroundColor={backgroundColor}
+                  buttonRef={buttonRefs[index]}
+                  label={item.label}
+                  onPress={() => {
+                    onMenuListPress(index);
+                  }}
+                  textRef={textRefs[index]}
+                  color={color}
                 />
               );
             }}
           />
-          {cart?.length > 0 && (
-            // <CheckoutFooter onCartPress={onCartPress} totalFood={totalFood} />
-            <View style={styles.checkout}>
-              <ButtonTextIcon
-                onPress={onCartPress}
-                icon={icons.cart_fill}
-                label={totalFood.toString()}
-                containerStyle={styles.btnCart}
-                iconStyle={styles.iconCart}
-                labelStyle={{color: COLORS.primary}}
+        </Shadow>
+      </Animated.View>
+      {/* header ban dau */}
+      <Animated.View
+        style={[
+          {position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1},
+          baseHeaderz,
+        ]}>
+        <HeaderCustom
+          containerStyle={styles.baseHeader}
+          leftComponent={
+            <TouchableOpacity
+              style={styles.buttonNavWrapper}
+              onPress={onBackPress}>
+              <Image
+                source={icons.arrow_back}
+                style={[styles.icon, {tintColor: COLORS.white}]}
               />
-              <ButtonText
-                onPress={onCheckoutPress}
-                labelStyle={{color: COLORS.white}}
-                containerStyle={styles.btnCheckout}
-                label={'Trang thanh toán'}
-              />
+            </TouchableOpacity>
+          }
+          rightComponent={
+            <View style={{flexDirection: 'row', gap: 10}}>
+              <TouchableOpacity
+                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
+                <Feather name="search" size={20} color={COLORS.white} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
+                <Image
+                  source={icons.favourite}
+                  style={[styles.icon, {tintColor: COLORS.white}]}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
+                <Feather name="share-2" size={20} color={COLORS.white} />
+              </TouchableOpacity>
             </View>
-          )}
-        </>
+          }
+        />
+      </Animated.View>
+
+      <View style={{position: 'absolute', top: 0, left: 0, right: 0}}>
+        <Image
+          style={{height: SIZES.height * 0.35}}
+          source={{uri: restaurant.image}}
+        />
+
+        <LinearGradient
+          colors={['rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0)']}
+          style={{
+            height: 40,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+          }}
+        />
+      </View>
+      {/* list detail menu */}
+      <Animated.FlatList
+        contentContainerStyle={{paddingTop: SIZES.height * 0.35}}
+        ListHeaderComponent={
+          <View style={{backgroundColor: COLORS.white}}>
+            {/* thong tin quan an */}
+            <View style={{margin: 2 * SIZES.spacing}}>
+              {/* thông tin chính */}
+              <View style={styles.mainInformation}>
+                <TouchableOpacity style={styles.btnInfo}>
+                  <Ionicons
+                    name="information-circle-outline"
+                    size={24}
+                    color={COLORS.black}
+                  />
+                </TouchableOpacity>
+                <View style={styles.partnerWrapper}>
+                  <Image
+                    source={icons.verified}
+                    style={{width: 20, height: 20}}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={[
+                      {color: COLORS.primary, marginLeft: SIZES.base},
+                      FONTS.label_large,
+                    ]}>
+                    ĐỐI TÁC CỦA EATME
+                  </Text>
+                </View>
+                <Text style={[FONTS.title_large, styles.foodName]}>
+                  {restaurant.name}
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: COLORS.darkGray,
+                    marginBottom: SIZES.base,
+                    ...FONTS.title_medium,
+                  }}>
+                  0.3km •
+                  <Text style={FONTS.body_large}>{restaurant.address}</Text>
+                </Text>
+              </View>
+
+              {/* thông tin phụ */}
+              <View style={styles.subInfo}>
+                <View style={styles.timeDeliveryWrapper}>
+                  <Feather
+                    name="clock"
+                    size={24}
+                    color={COLORS.black}
+                    style={{marginRight: 10}}
+                  />
+                  <View>
+                    <Text
+                      style={{
+                        color: COLORS.blackText,
+                        ...FONTS.title_medium,
+                      }}>
+                      Giao hàng tiêu chuẩn
+                    </Text>
+                    <Text
+                      style={{
+                        color: COLORS.blackText,
+                        ...FONTS.body_large,
+                      }}>
+                      Dự kiến giao hàng lúc 18:30
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity>
+                  <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
+                    Thay đổi
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.voucher}>
+                <View style={styles.voucherWrapper}>
+                  <Feather
+                    name="gift"
+                    size={24}
+                    color={COLORS.black}
+                    style={{marginRight: 10}}
+                  />
+                  <Text numberOfLines={1} style={styles.textVoucher}>
+                    Nhập "BANMOI" giảm 40k trên giá món
+                  </Text>
+                </View>
+                <TouchableOpacity>
+                  <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
+                    Xem thêm
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.voucher}>
+                <View style={styles.invoiceGroup}>
+                  <Feather
+                    name="users"
+                    size={24}
+                    color={COLORS.black}
+                    style={{marginRight: 10}}
+                  />
+                  <Text style={{color: COLORS.blackText, ...FONTS.label_large}}>
+                    Đơn nhóm
+                  </Text>
+                </View>
+
+                <TouchableOpacity>
+                  <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
+                    Tạo đơn
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <Break />
+
+            {/* list best seller */}
+            <FlatList
+              ListHeaderComponent={
+                <Text style={styles.categoryWrapper}>Không thể bỏ qua</Text>
+              }
+              numColumns={2}
+              columnWrapperStyle={{
+                marginHorizontal: 2 * SIZES.spacing,
+                gap: 2 * SIZES.spacing,
+              }}
+              // eslint-disable-next-line react/no-unstable-nested-components
+              ItemSeparatorComponent={() => (
+                <View style={{height: 2 * SIZES.spacing}} />
+              )}
+              data={bestSeller}
+              keyExtractor={item => item.id}
+              renderItem={({item}) => {
+                const foodChecked = cart?.find(food => food.name === item.name);
+                return (
+                  <VerticalFoodCard
+                    foodChecked={foodChecked}
+                    onPress={() => onFoodItemPress(item)}
+                    imageStyle={{
+                      height: (SIZES.width - 6 * SIZES.spacing) / 2,
+                      width: (SIZES.width - 6 * SIZES.spacing) / 2,
+                    }}
+                    containerStyle={{flex: 1}}
+                    item={item}
+                  />
+                );
+              }}
+            />
+          </View>
+        }
+        onScroll={onListScroll}
+        ref={detailMenuRef}
+        data={menuFoods}
+        viewabilityConfig={{
+          minimumViewTime: 300,
+          itemVisiblePercentThreshold: 30,
+          waitForInteraction: true,
+        }}
+        onViewableItemsChanged={onViewableItemsChanged.current}
+        renderItem={({item}) => {
+          return (
+            <MenuFoodItem
+              foodItem={item}
+              onFoodItemPress={onFoodItemPress}
+              cart={cart}
+            />
+          );
+        }}
+      />
+      {cart?.length > 0 && (
+        // <CheckoutFooter onCartPress={onCartPress} totalFood={totalFood} />
+        <View style={styles.checkout}>
+          <ButtonTextIcon
+            onPress={onCartPress}
+            icon={icons.cart_fill}
+            label={totalFood.toString()}
+            containerStyle={styles.btnCart}
+            iconStyle={styles.iconCart}
+            labelStyle={{color: COLORS.primary}}
+          />
+          <ButtonText
+            onPress={onCheckoutPress}
+            labelStyle={{color: COLORS.white}}
+            containerStyle={styles.btnCheckout}
+            label={'Trang thanh toán'}
+          />
+        </View>
       )}
-    </SafeAreaView>
+    </>
   );
 };
 

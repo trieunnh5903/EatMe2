@@ -47,7 +47,7 @@ const HorizontalRestaurantCard: React.FC<HorizontalRestaurantCardProps> = ({
             source={icons.verified}
             style={{width: 20, height: 20}}
             resizeMode="contain"
-          />{' '}
+          />
           {item.name}
         </Text>
         {/* address */}

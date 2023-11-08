@@ -9,10 +9,9 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   DetailFood: {
     foodItem: Food;
-    // restaurant: Restaurant;
   };
   DetailRestaurant: {
-    restaurant: Restaurant;
+    restaurantId: string;
   };
   EnterAddressScreen: {
     enableGoogleMap: boolean;

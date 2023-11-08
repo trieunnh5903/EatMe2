@@ -38,6 +38,9 @@ import {useNavigation} from '@react-navigation/native';
 import {HomeScreenProp} from '../types/navigation.type';
 import {useSelectTotalCart} from '../redux/hooks';
 import {useAppSelector} from '../redux/store';
+import {useInfiniteQuery} from '@tanstack/react-query';
+import {fetchAllRestaurant} from '../services/restaurant.service';
+import {ActivityIndicator} from 'react-native';
 
 interface SectionProps {
   title: string;
@@ -48,12 +51,24 @@ interface SectionProps {
 }
 
 const HomeScreen = () => {
-  console.log('HomeScreen');
+  // console.log('HomeScreen');
   const navigation = useNavigation<HomeScreenProp['navigation']>();
   const carouselRef = useRef<FlatList>(null);
   let carouselIndex = useRef(0);
   const totalIndex = dummy_data.carousel.length - 1;
   const totalCart = useAppSelector(useSelectTotalCart);
+
+  const {
+    data: allFoods,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['getAllRestaurants'],
+    queryFn: fetchAllRestaurant,
+    getNextPageParam: (_lastPage, allPage) => {
+      return allPage.length + 1;
+    },
+  });
 
   useEffect(() => {
     let timer = setInterval(() => {
@@ -104,9 +119,21 @@ const HomeScreen = () => {
     [],
   );
 
+  const renderFooter = () => {
+    return (
+      isFetchingNextPage && (
+        <ActivityIndicator
+          style={styles.indicator}
+          size="small"
+          color={COLORS.primary}
+        />
+      )
+    );
+  };
+
   const onRestaurantItemPress = (item: Restaurant) =>
     navigation.navigate('DetailRestaurant', {
-      restaurant: item,
+      restaurantId: item.id,
     });
 
   const onEnterAddressPress = () =>
@@ -241,7 +268,8 @@ const HomeScreen = () => {
           </View>
         }
         estimatedItemSize={150}
-        data={dummy_data.popularRestaurant}
+        keyExtractor={item => item.id}
+        data={allFoods?.pages.flat()}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <Break height={1} />}
         renderItem={({item}: {item: Restaurant}) => {
@@ -250,13 +278,8 @@ const HomeScreen = () => {
               onPress={() => onRestaurantItemPress(item)}
               item={item}
               containerStyle={styles.horizontalFoodCard}
-              imageStyle={{
-                width: SIZES.width * 0.25,
-                height: SIZES.width * 0.25,
-              }}
-              textWrapperStyle={{
-                height: SIZES.width * 0.25,
-              }}
+              imageStyle={styles.imageRestaurant}
+              textWrapperStyle={styles.textRestaurantWrapper}
             />
           );
         }}
@@ -270,8 +293,29 @@ const HomeScreen = () => {
             renderItem={() => <HorizontalCardSkeleton />}
           />
         }
-        onEndReachedThreshold={0.3}
+        onEndReached={() => {
+          console.log('onEndReached');
+          if (
+            allFoods &&
+            allFoods?.pages.length > 0 &&
+            allFoods.pageParams.length < 4
+          ) {
+            fetchNextPage();
+          }
+        }}
+        ListFooterComponent={
+          <View
+            style={{
+              height: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            {renderFooter()}
+          </View>
+        }
+        onEndReachedThreshold={0.5}
       />
+
       {totalCart > 0 && (
         <BadgeButton
           onPress={onListInvoicesPress}
@@ -364,6 +408,13 @@ const CarouselItem = memo(
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  textRestaurantWrapper: {
+    height: SIZES.width * 0.25,
+  },
+  imageRestaurant: {
+    width: SIZES.width * 0.25,
+    height: SIZES.width * 0.25,
+  },
   btnCart: {
     width: 70,
     height: 70,
