@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
 import {Break, ButtonIcon, ButtonText} from '../components';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
@@ -31,13 +31,12 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
     state => state.restaurant.byId[idRestaurant],
   );
   const cartList = useSelectCartById(idRestaurant);
-  console.log(cartList);
   const onBackPress = () => navigation.goBack();
   const onChangeAddressPress = () =>
     navigation.navigate('EnterAddressScreen', {enableGoogleMap: true});
   const triangleWidth = 10; // Độ rộng tam giác
   const trianglesCount = Math.floor(SIZES.width / triangleWidth);
-
+  const [selectedTip, setSelectedTip] = useState(0);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false); // Khi hoàn thành, ẩn Activity Indicator
@@ -51,6 +50,17 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
   const onFoodPress = (_food: any) => {
     // navigation.navigate('DetailFood', {foodItem: food});
   };
+
+  const totalFoodPrice = useMemo(
+    () => cartList.reduce((total, food) => total + food.price, 0),
+    [cartList],
+  );
+
+  const onTipPress = (tip: number) => {
+    setSelectedTip(tip);
+  };
+
+  const totalPrice = totalFoodPrice + selectedTip + 23000;
   return (
     <SafeAreaView
       style={{
@@ -401,10 +411,10 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={[FONTS.body_large, {color: COLORS.blackText}]}>
-                  Tạm tính (1 món)
+                  Tạm tính ({cartList.length} món)
                 </Text>
                 <Text style={[FONTS.body_large, {color: COLORS.blackText}]}>
-                  {convertToVND(30000)}
+                  {convertToVND(totalFoodPrice)}
                 </Text>
               </View>
 
@@ -658,11 +668,15 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                           borderRadius: SIZES.padding,
                           alignSelf: 'flex-start',
                           borderColor: COLORS.gray3,
+                          backgroundColor:
+                            selectedTip === tip.value
+                              ? COLORS.primary2(0.1)
+                              : undefined,
                         }}
-                        onPress={() => console.log('first')}
+                        onPress={() => onTipPress(Number(tip.value))}
                         avatar={<Image source={tip.icon} />}
                         mode="outlined">
-                        <Text>{tip.value}</Text>
+                        <Text>{convertToVND(tip.value)}</Text>
                       </Chip>
                     );
                   })}
@@ -755,7 +769,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                         FONTS.headline_small,
                         {color: COLORS.blackText, fontWeight: 'bold'},
                       ]}>
-                      {convertToVND(53000)}
+                      {convertToVND(totalPrice)}
                     </Text>
                   </View>
 
@@ -783,19 +797,19 @@ export default CheckoutScreen;
 const tips = [
   {
     icon: icons.cafe,
-    value: '15.000',
+    value: 15000,
   },
   {
     icon: icons.bottle_plastic,
-    value: '5.000',
+    value: 5000,
   },
   {
     icon: icons.hot_dog,
-    value: '20.000',
+    value: 20000,
   },
   {
     icon: icons.soda,
-    value: '10.000',
+    value: 10000,
   },
 ];
 
