@@ -63,6 +63,11 @@ const CartScreen = ({route, navigation}: CartScreenProp) => {
     setListFood([]);
   };
 
+  const onCheckoutPress = () => {
+    dispatch(updateCart({listFood, restaurantId}));
+    navigation.navigate('CheckoutScreen', {restaurantId: restaurantId});
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* header navigation */}
@@ -112,7 +117,9 @@ const CartScreen = ({route, navigation}: CartScreenProp) => {
           />
           {/* nút thanh toán */}
           <View>
-            <TouchableOpacity style={styles.checkoutButton}>
+            <TouchableOpacity
+              onPress={onCheckoutPress}
+              style={styles.checkoutButton}>
               <Text style={styles.textTitle}>{totalFood} sản phẩm</Text>
               <Text style={styles.textTitle}>Thanh toán</Text>
               <Text style={styles.textTitle}>{convertToVND(totalPrice)}</Text>

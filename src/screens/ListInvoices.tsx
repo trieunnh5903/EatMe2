@@ -14,8 +14,8 @@ import {RestaurantInformation} from '../types/types';
 import {store, useAppDispatch, useAppSelector} from '../redux/store';
 import {
   getTotalFoodCount,
+  getTotalFoodPriceOneInvoice,
   useSelectAllRestaurant,
-  useSelectTotalPriceSelector,
 } from '../redux/hooks';
 import {useNavigation} from '@react-navigation/native';
 import convertToVND from '../utils/convertToVND';
@@ -48,6 +48,8 @@ const ListInvoices = () => {
         newCheckedId.delete(restaurantId);
       }
       setCheckedId(newCheckedId);
+    } else {
+      navigation.navigate('CheckoutScreen', {restaurantId: restaurantId});
     }
   };
 
@@ -205,7 +207,7 @@ const FoodItem: React.FC<ListRenderItemInfo<RestaurantInformation>> = ({
   item,
 }) => {
   const totalFood = getTotalFoodCount(store.getState(), item.id);
-  const totalPrice = useSelectTotalPriceSelector(store.getState(), item.id);
+  const totalPrice = getTotalFoodPriceOneInvoice(store.getState(), item.id);
   return (
     <View style={[styles.horizontalCard]}>
       <Image

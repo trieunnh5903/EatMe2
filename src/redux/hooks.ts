@@ -20,6 +20,19 @@ const makeTotalFoodCountSelector = () =>
 
 export const getTotalFoodCount = makeTotalFoodCountSelector();
 
+const makeTotalPriceSelector = () =>
+  createSelector(
+    (state: RootState, restaurantId: string) => state.cart.byId[restaurantId],
+    cart => {
+      if (!cart) {
+        return 0;
+      }
+      return cart.reduce((total, item) => total + item.price, 0);
+    },
+  );
+
+export const getTotalFoodPriceOneInvoice = makeTotalPriceSelector();
+
 export const useSelectTotalCart = createSelector(
   (state: RootState) => state.cart,
   cartsState => cartsState.allIds.map(cartId => cartsState.byId[cartId]).length,
@@ -31,14 +44,4 @@ export const useSelectAllRestaurant = createSelector(
     restaurantState.allIds.map(
       restaurantId => restaurantState.byId[restaurantId],
     ),
-);
-
-export const useSelectTotalPriceSelector = createSelector(
-  (state: RootState, restaurantId: string) => state.cart.byId[restaurantId],
-  cart => {
-    if (!cart) {
-      return 0;
-    }
-    return cart.reduce((total, item) => total + item.price, 0);
-  },
 );

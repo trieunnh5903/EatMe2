@@ -21,7 +21,6 @@ const EnterAddressScreen = ({route}: EnterAddressScreenProps) => {
     onBackPress,
     animationRef,
     region,
-    address,
     keyAddress,
   } = useEnterAddressController(enableGoogleMap);
 

@@ -3,7 +3,6 @@ import LottieView from 'lottie-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {EnterAddressScreenProps} from '../types/navigation.type';
 import {Region} from 'react-native-maps';
-import {ToastAndroid} from 'react-native';
 // import {useAppSelector} from '../redux/store';
 
 const useEnterAddressController = (enableGoogleMap: boolean) => {
