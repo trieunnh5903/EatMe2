@@ -11,7 +11,6 @@ import React, {useState} from 'react';
 import {Break, ButtonIcon, ButtonText, Dot, HeaderCustom} from '../components';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {RestaurantInformation} from '../types/types';
-import FastImage from 'react-native-fast-image';
 import {store, useAppDispatch, useAppSelector} from '../redux/store';
 import {
   getTotalFoodCount,
@@ -25,6 +24,7 @@ import {deleteFood} from '../redux/slice/cart.slice';
 import {deleteRestaurant} from '../redux/slice/restaurant.slice';
 import {ListInvoicesScreenProp} from '../types/navigation.type';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Image} from 'react-native';
 
 const initialCheckedId: Set<string> = new Set();
 const ListInvoices = () => {
@@ -208,10 +208,10 @@ const FoodItem: React.FC<ListRenderItemInfo<RestaurantInformation>> = ({
   const totalPrice = useSelectTotalPriceSelector(store.getState(), item.id);
   return (
     <View style={[styles.horizontalCard]}>
-      <FastImage
+      <Image
         style={[styles.imageFood]}
         source={{uri: item.image}}
-        resizeMode={FastImage.resizeMode.cover}
+        resizeMode={'cover'}
       />
       {/* tên */}
       <View style={styles.contentWrapper}>

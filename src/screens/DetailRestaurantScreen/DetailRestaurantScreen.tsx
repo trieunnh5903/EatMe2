@@ -11,13 +11,12 @@ import {
   ViewToken,
   ActivityIndicator,
 } from 'react-native';
-import React, {useRef, useEffect, useCallback, memo, useState} from 'react';
+import React, {useRef, useEffect, useCallback, useState} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../../config';
 import {
   Break,
   ButtonText,
   ButtonTextIcon,
-  HeaderCustom,
   VerticalFoodCard,
 } from '../../components';
 import Animated, {
@@ -27,7 +26,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {Food, FoodReduxType, Restaurant} from '../../types/types';
+import {Food, Restaurant} from '../../types/types';
 import {
   CartScreenProp,
   DetailRestaurantNavigationProps,
@@ -42,30 +41,13 @@ import {useQuery} from '@tanstack/react-query';
 import {fetchRestaurantById} from '../../services/restaurant.service';
 import {useNavigation} from '@react-navigation/native';
 import AnimatedHeader from './AnimatedHeader';
-import convertToVND from '../../utils/convertToVND';
-
-interface MenuFood {
-  label: string;
-  foods: {
-    name: string;
-    id: string;
-    description: string;
-    price: number;
-    image: string;
-  }[];
-}
-
-interface MenuFoodItemProp {
-  foodItem: MenuFood;
-  onFoodItemPress: (item: Food) => void;
-  cart: FoodReduxType[] | undefined;
-}
+import BaseHeader from './BaseHeader';
+import MenuFoodItemHorizontail from './MenuFoodItemHorizontal';
 
 interface MyDetailRestaurantProps {
   restaurant: Restaurant;
 }
 
-const HEADERHEIGHT = SIZES.height * 0.15;
 const DetailRestaurantScreen = ({route}: DetailRestaurantNavigationProps) => {
   const {restaurantId} = route.params;
   console.log('DetailRestaurantScreen');
@@ -97,9 +79,9 @@ const DetailRestaurantScreen = ({route}: DetailRestaurantNavigationProps) => {
 const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
   restaurant,
 }) => {
+  const scrollY = useSharedValue(0);
   const {bestSeller, menuFoods} = restaurant.allFoods;
   const menuListRef = useRef<FlatList>(null);
-  const scrollY = useSharedValue(0);
   const detailMenuRef = useRef<any>();
   const buttonRefs = Array.from({length: menuFoods.length}, () =>
     useRef<TouchableOpacity>(null),
@@ -178,7 +160,6 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
   const onViewableItemsChanged = useRef(
     ({viewableItems}: {viewableItems: ViewToken[]}) => {
       if (viewableItems.length > 0) {
-        // Lấy index của item đang hiển thị đầu tiên trong danh sách hiển thị
         const index = viewableItems[0].index;
         if (index !== null) {
           menuListRef.current?.scrollToIndex({
@@ -255,7 +236,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
     navigation.navigate('CheckoutScreen', {restaurantId: restaurant.id});
   return (
     <>
-      {/* header sau khi cuon */}
+      {/* Animated Header */}
       <AnimatedHeader
         animatedStyle={headerWrapperz}
         buttonMenuRefs={buttonRefs}
@@ -265,54 +246,18 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
         textMenuRefs={textRefs}
         flatlistButtonGroupRef={menuListRef}
       />
-      {/* header ban dau */}
-      <Animated.View
-        style={[
-          {position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1},
-          baseHeaderz,
-        ]}>
-        <HeaderCustom
-          containerStyle={styles.baseHeader}
-          leftComponent={
-            <TouchableOpacity
-              style={styles.buttonNavWrapper}
-              onPress={onBackPress}>
-              <Image
-                source={icons.arrow_back}
-                style={[styles.icon, {tintColor: COLORS.white}]}
-              />
-            </TouchableOpacity>
-          }
-          rightComponent={
-            <View style={{flexDirection: 'row', gap: 10}}>
-              <TouchableOpacity
-                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                <Feather name="search" size={20} color={COLORS.white} />
-              </TouchableOpacity>
 
-              <TouchableOpacity
-                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                <Image
-                  source={icons.favourite}
-                  style={[styles.icon, {tintColor: COLORS.white}]}
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.buttonNavWrapper, {alignItems: 'center'}]}>
-                <Feather name="share-2" size={20} color={COLORS.white} />
-              </TouchableOpacity>
-            </View>
-          }
-        />
-      </Animated.View>
+      {/* Base Header*/}
+      <BaseHeader animatedStyle={baseHeaderz} onBackPress={onBackPress} />
 
       <View style={{position: 'absolute', top: 0, left: 0, right: 0}}>
+        {/* image restaurant */}
         <Image
           style={{height: SIZES.height * 0.35}}
           source={{uri: restaurant.image}}
         />
 
+        {/* gradian black base header */}
         <LinearGradient
           colors={['rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0)']}
           style={{
@@ -330,9 +275,8 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
         contentContainerStyle={{paddingTop: SIZES.height * 0.35}}
         ListHeaderComponent={
           <View style={{backgroundColor: COLORS.white}}>
-            {/* thong tin quan an */}
+            {/* card information restaurant */}
             <View style={{margin: 2 * SIZES.spacing}}>
-              {/* thông tin chính */}
               <View style={styles.mainInformation}>
                 <TouchableOpacity style={styles.btnInfo}>
                   <Ionicons
@@ -370,7 +314,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
                 </Text>
               </View>
 
-              {/* thông tin phụ */}
+              {/* sub info */}
               <View style={styles.subInfo}>
                 <View style={styles.timeDeliveryWrapper}>
                   <Feather
@@ -443,7 +387,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
 
             <Break />
 
-            {/* list best seller */}
+            {/* list hight light */}
             <FlatList
               ListHeaderComponent={
                 <Text style={styles.categoryWrapper}>Không thể bỏ qua</Text>
@@ -488,7 +432,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
         onViewableItemsChanged={onViewableItemsChanged.current}
         renderItem={({item}) => {
           return (
-            <MenuFoodItem
+            <MenuFoodItemHorizontail
               foodItem={item}
               onFoodItemPress={onFoodItemPress}
               cart={cart}
@@ -497,7 +441,6 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
         }}
       />
       {cart?.length > 0 && (
-        // <CheckoutFooter onCartPress={onCartPress} totalFood={totalFood} />
         <View style={styles.checkout}>
           <ButtonTextIcon
             onPress={onCartPress}
@@ -519,79 +462,6 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
   );
 };
 
-// item food
-const MenuFoodItem: React.FC<MenuFoodItemProp> = memo(
-  ({foodItem, cart, onFoodItemPress}) => {
-    const lastIndex = foodItem.foods.length - 1;
-    return (
-      <View
-        style={{
-          width: SIZES.width,
-          paddingVertical: SIZES.spacing,
-          backgroundColor: COLORS.white,
-        }}>
-        <Text style={styles.categoryWrapper}>{foodItem.label}</Text>
-        <View>
-          {foodItem.foods.map((item, index) => {
-            const foodChecked = cart?.find(food => food.name === item.name);
-            const backgroundColor = foodChecked ? COLORS.primary : COLORS.white;
-            const fontWeight = foodChecked ? 'bold' : 'normal';
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  onFoodItemPress(item);
-                }}
-                key={item.id}
-                style={{width: '100%'}}>
-                <View style={styles.foodItemWrapper}>
-                  <View
-                    style={[
-                      {backgroundColor: backgroundColor},
-                      styles.lineVertical,
-                    ]}
-                  />
-                  <View style={styles.foodInfoWrapper}>
-                    <Text
-                      numberOfLines={2}
-                      style={[
-                        FONTS.body_large,
-                        {color: COLORS.blackText, fontWeight},
-                      ]}>
-                      {foodChecked?.quantity && (
-                        <Text style={{color: COLORS.primary}}>
-                          {foodChecked?.quantity}x{' '}
-                        </Text>
-                      )}
-                      {item.name}
-                    </Text>
-                    <Text style={[{color: COLORS.gray, ...FONTS.body_medium}]}>
-                      {item.description}
-                    </Text>
-                    <Text
-                      style={[{color: COLORS.blackText, ...FONTS.body_medium}]}>
-                      {convertToVND(item.price)}
-                    </Text>
-                  </View>
-                  <Image
-                    source={{uri: item.image}}
-                    style={{
-                      width: SIZES.width * 0.2,
-                      height: SIZES.width * 0.2,
-                      borderRadius: SIZES.radius,
-                      marginVertical: SIZES.padding,
-                      marginRight: SIZES.padding,
-                    }}
-                  />
-                </View>
-                {index !== lastIndex && <Break height={1} />}
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </View>
-    );
-  },
-);
 export default DetailRestaurantScreen;
 
 const styles = StyleSheet.create({
@@ -707,15 +577,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  headerWrapper: {
-    backgroundColor: COLORS.white,
-    height: HEADERHEIGHT,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    // zIndex: 2,
-  },
+
   voucher: {
     flexDirection: 'row',
     justifyContent: 'space-between',

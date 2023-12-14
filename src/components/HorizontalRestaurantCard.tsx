@@ -6,12 +6,12 @@ import {
   ViewStyle,
   GestureResponderEvent,
   StyleProp,
+  ImageStyle,
 } from 'react-native';
 import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {Image} from 'react-native';
 import {Restaurant} from '../types/types';
-import FastImage, {ImageStyle} from 'react-native-fast-image';
 import Dot from './Dot';
 
 interface HorizontalRestaurantCardProps {
@@ -33,10 +33,10 @@ const HorizontalRestaurantCard: React.FC<HorizontalRestaurantCardProps> = ({
     <TouchableOpacity
       onPress={onPress}
       style={[styles.container, containerStyle]}>
-      <FastImage
+      <Image
         style={[styles.image, imageStyle]}
         source={{uri: item.image}}
-        resizeMode={FastImage.resizeMode.cover}
+        resizeMode={'cover'}
       />
       {/* tên */}
       <View style={[{flex: 1, marginLeft: SIZES.spacing}, textWrapperStyle]}>

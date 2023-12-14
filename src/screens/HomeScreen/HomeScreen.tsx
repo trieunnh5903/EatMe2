@@ -209,6 +209,7 @@ const HomeScreen = () => {
             <Text style={styles.headlineNearYou}>Quanh đây có gì ngon?</Text>
           </View>
         }
+        overScrollMode="never"
         estimatedItemSize={150}
         keyExtractor={item => item.id}
         data={allFoods?.pages.flat()}
