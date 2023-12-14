@@ -3,7 +3,7 @@ import OnBoardingScreen from './OnBoardingScreen';
 import RegisterScreen from './RegisterScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
 import ConfirmOtpScreen from './ConfirmOtpScreen';
-import HomeScreen from './HomeScreen';
+import HomeScreen from './HomeScreen/HomeScreen';
 import CartScreen from './CartScreen';
 import ProfileScreen from './ProfileScreen';
 import SearchScreen from './SearchScreen';
