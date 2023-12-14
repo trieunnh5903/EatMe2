@@ -14,7 +14,7 @@ import {
 import React from 'react';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {ButtonText, HorizontalFoodCard, Break} from '../components';
-import data from '../data';
+import data from '../dummy_data';
 import useSearchController from '../view-controllers/useSearchController';
 
 interface SearchInputProps {

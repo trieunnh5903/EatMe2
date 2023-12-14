@@ -10,7 +10,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import React, {useState} from 'react';
-import data from '../data';
+import data from '../dummy_data';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import useUserViewModel from '../view-models/useUserViewModel';
 

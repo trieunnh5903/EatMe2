@@ -7,7 +7,7 @@ import HomeScreen from './HomeScreen/HomeScreen';
 import CartScreen from './CartScreen';
 import ProfileScreen from './ProfileScreen';
 import SearchScreen from './SearchScreen';
-import DetailRestaurantScreen from './DetailRestaurantScreen';
+import DetailRestaurantScreen from './DetailRestaurantScreen/DetailRestaurantScreen';
 import FavoriteScreen from './FavoriteScreen';
 import EnterAddressScreen from './EnterAddressScreen';
 import DetailFoodScreen from './DetailFoodScreen';

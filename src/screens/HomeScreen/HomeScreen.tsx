@@ -22,7 +22,7 @@ import {
 } from '../../components';
 import {FlashList} from '@shopify/flash-list';
 import {Restaurant} from '../../types/types';
-import dummy_data from '../../data';
+import dummy_data from '../../dummy_data';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenProp} from '../../types/navigation.type';
 import {useSelectTotalCart} from '../../redux/hooks';

@@ -1,7 +1,7 @@
 import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {COLORS, FONTS, SIZES, images} from '../config';
-import data from '../data';
+import data from '../dummy_data';
 import Animated, {
   Extrapolate,
   interpolate,

@@ -39,6 +39,10 @@ export interface FoodWithQuantity extends Food {
   quantity: number;
 }
 
+export type MenuFood = {
+  label: string;
+  foods: Food[];
+};
 export type Restaurant = {
   id: string;
   name: string;
@@ -46,10 +50,7 @@ export type Restaurant = {
   address: string;
   allFoods: {
     bestSeller: Food[];
-    menuFoods: {
-      label: string;
-      foods: Food[];
-    }[];
+    menuFoods: MenuFood[];
   };
   // totalPrice?: number;
 };

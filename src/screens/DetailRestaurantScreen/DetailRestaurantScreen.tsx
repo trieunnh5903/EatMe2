@@ -2,29 +2,24 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   FlatList,
-  GestureResponderEvent,
   Image,
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
-  ColorValue,
   ViewToken,
   ActivityIndicator,
 } from 'react-native';
 import React, {useRef, useEffect, useCallback, memo, useState} from 'react';
-import {COLORS, SIZES, FONTS, icons} from '../config';
-import {Shadow} from 'react-native-shadow-2';
-import convertToVND from '../utils/convertToVND';
+import {COLORS, SIZES, FONTS, icons} from '../../config';
 import {
   Break,
   ButtonText,
   ButtonTextIcon,
   HeaderCustom,
   VerticalFoodCard,
-} from '../components';
+} from '../../components';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -32,20 +27,22 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {Food, FoodReduxType, Restaurant} from '../types/types';
+import {Food, FoodReduxType, Restaurant} from '../../types/types';
 import {
   CartScreenProp,
   DetailRestaurantNavigationProps,
-} from '../types/navigation.type';
+} from '../../types/navigation.type';
 import LinearGradient from 'react-native-linear-gradient';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {store, useAppDispatch} from '../redux/store';
-import {setRestaurant} from '../redux/slice/restaurant.slice';
-import {getTotalFoodCount, useSelectCartById} from '../redux/hooks';
+import {store, useAppDispatch} from '../../redux/store';
+import {setRestaurant} from '../../redux/slice/restaurant.slice';
+import {getTotalFoodCount, useSelectCartById} from '../../redux/hooks';
 import {useQuery} from '@tanstack/react-query';
-import {fetchRestaurantById} from '../services/restaurant.service';
+import {fetchRestaurantById} from '../../services/restaurant.service';
 import {useNavigation} from '@react-navigation/native';
+import AnimatedHeader from './AnimatedHeader';
+import convertToVND from '../../utils/convertToVND';
 
 interface MenuFood {
   label: string;
@@ -62,15 +59,6 @@ interface MenuFoodItemProp {
   foodItem: MenuFood;
   onFoodItemPress: (item: Food) => void;
   cart: FoodReduxType[] | undefined;
-}
-
-interface ButtonMenuProp {
-  buttonRef: React.LegacyRef<TouchableOpacity> | undefined;
-  textRef: React.LegacyRef<Text>;
-  onPress: ((event: GestureResponderEvent) => void) | undefined;
-  backgroundColor: ColorValue | undefined;
-  color?: ColorValue | undefined;
-  label: string;
 }
 
 interface MyDetailRestaurantProps {
@@ -268,63 +256,15 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
   return (
     <>
       {/* header sau khi cuon */}
-      <Animated.View style={[styles.headerWrapper, headerWrapperz]}>
-        <Shadow distance={5}>
-          <View style={styles.headerContainer}>
-            <TouchableOpacity
-              style={styles.buttonBackWrapper}
-              onPress={() => navigation.goBack()}>
-              <Image source={icons.arrow_back} style={styles.icon} />
-            </TouchableOpacity>
-            {/* tim kiem */}
-            <TouchableOpacity style={styles.searchContainer}>
-              <Image source={icons.search} style={styles.iconSearch} />
-              <TextInput
-                style={{width: '85%', color: COLORS.blackText}}
-                placeholderTextColor={COLORS.gray}
-                cursorColor={COLORS.gray}
-                numberOfLines={1}
-                placeholder={`Tìm món tại ${restaurant.name}`}
-              />
-            </TouchableOpacity>
-            {/* btn yeu thich */}
-            <TouchableOpacity
-              style={[styles.buttonFavoriteWrapper, {alignItems: 'center'}]}>
-              <Image
-                source={icons.favourite}
-                style={[styles.icon, {tintColor: COLORS.black}]}
-              />
-            </TouchableOpacity>
-          </View>
-          {/* menu */}
-          <FlatList
-            style={{height: '50%'}}
-            ref={menuListRef}
-            horizontal
-            contentContainerStyle={styles.menuListContentContainer}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.label}
-            data={menuFoods}
-            renderItem={({item, index}) => {
-              const backgroundColor =
-                index === 0 ? COLORS.primary : COLORS.white;
-              const color = index === 0 ? COLORS.white : COLORS.black;
-              return (
-                <ButtonMenu
-                  backgroundColor={backgroundColor}
-                  buttonRef={buttonRefs[index]}
-                  label={item.label}
-                  onPress={() => {
-                    onMenuListPress(index);
-                  }}
-                  textRef={textRefs[index]}
-                  color={color}
-                />
-              );
-            }}
-          />
-        </Shadow>
-      </Animated.View>
+      <AnimatedHeader
+        animatedStyle={headerWrapperz}
+        buttonMenuRefs={buttonRefs}
+        menuFoods={menuFoods}
+        onMenuListPress={onMenuListPress}
+        restaurant={restaurant}
+        textMenuRefs={textRefs}
+        flatlistButtonGroupRef={menuListRef}
+      />
       {/* header ban dau */}
       <Animated.View
         style={[
@@ -386,6 +326,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
       </View>
       {/* list detail menu */}
       <Animated.FlatList
+        overScrollMode={'never'}
         contentContainerStyle={{paddingTop: SIZES.height * 0.35}}
         ListHeaderComponent={
           <View style={{backgroundColor: COLORS.white}}>
@@ -577,21 +518,6 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
     </>
   );
 };
-
-const ButtonMenu: React.FC<ButtonMenuProp> = memo(
-  ({backgroundColor, buttonRef, label, textRef, onPress, color}) => {
-    return (
-      <TouchableOpacity
-        ref={buttonRef}
-        onPress={onPress}
-        style={[styles.menuItem, {backgroundColor}]}>
-        <Text ref={textRef} style={[{color}, FONTS.label_large]}>
-          {label}
-        </Text>
-      </TouchableOpacity>
-    );
-  },
-);
 
 // item food
 const MenuFoodItem: React.FC<MenuFoodItemProp> = memo(
