@@ -1,9 +1,9 @@
 import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {CodeField, Cursor} from 'react-native-confirmation-code-field';
-import {COLORS, SIZES, FONTS, images} from '../config';
-import {AuthLayout, ButtonText} from '../components';
-import useConfirmOtpController from '../view-controllers/useConfirmOtpController';
+import {COLORS, SIZES, FONTS, images} from '../../config';
+import {AuthLayout, ButtonText} from '../../components';
+import useConfirmOtpController from '../../view-controllers/useConfirmOtpController';
 
 const ConfirmOtpScreen = () => {
   const {

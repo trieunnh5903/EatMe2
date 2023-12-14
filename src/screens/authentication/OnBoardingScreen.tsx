@@ -1,15 +1,15 @@
 import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, SIZES, images} from '../config';
-import data from '../dummy_data';
+import {COLORS, FONTS, SIZES, images} from '../../config';
+import data from '../../dummy_data';
 import Animated, {
   Extrapolate,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import ButtonText from '../components/button/ButtonText';
-import useOnboardingController from '../view-controllers/useOnboardingController';
+import ButtonText from '../../components/button/ButtonText';
+import useOnboardingController from '../../view-controllers/useOnboardingController';
 
 interface ItemFlatlist {
   id: number;

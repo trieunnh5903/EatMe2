@@ -14,6 +14,7 @@ export interface RestaurantTopping {
   price: number;
   quantity: number;
 }
+
 export interface RestaurantToppings {
   title: string;
   maximum: number;

@@ -10,10 +10,10 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../config';
-import {ButtonIcon, QuantityInput, RadioButtonGroup} from '../components';
-import {DetailFoodNavigationProps} from '../types/navigation.type';
-import convertToVND from '../utils/convertToVND';
+import {COLORS, FONTS, SIZES, icons} from '../../config';
+import {QuantityInput, RadioButtonGroup} from '../../components';
+import {DetailFoodNavigationProps} from '../../types/navigation.type';
+import convertToVND from '../../utils/convertToVND';
 import Animated, {
   interpolate,
   interpolateColor,
@@ -24,13 +24,13 @@ import {
   FoodReduxType,
   RestaurantOption,
   RestaurantTopping,
-} from '../types/types';
-import {useAppDispatch, useAppSelector} from '../redux/store';
-import {addFood, createCart} from '../redux/slice/cart.slice';
+} from '../../types/types';
+import {useAppDispatch, useAppSelector} from '../../redux/store';
+import {addFood, createCart} from '../../redux/slice/cart.slice';
 import {nanoid} from '@reduxjs/toolkit';
-import {addRestaurant} from '../redux/slice/restaurant.slice';
-import {useQuery} from '@tanstack/react-query';
-import {fetchRestaurantById} from '../services/restaurant.service';
+import {addRestaurant} from '../../redux/slice/restaurant.slice';
+import ListHeaderComponent from './ListHeaderComponent';
+import ListFooterComponent from './ListFooterComponent';
 
 const HEADER_HEIGHT = 50;
 const AnimatedTouchableOpacity =
@@ -38,15 +38,7 @@ const AnimatedTouchableOpacity =
 const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
   console.log('DetalFoodScreen');
   const {foodItem} = route.params;
-  const restaurantId = foodItem.id;
-  const {data: restaurantData} = useQuery({
-    queryKey: ['restaurant', restaurantId],
-    queryFn: () => fetchRestaurantById(restaurantId),
-  });
-
-  console.log(restaurantData);
   const {toppings, options} = foodItem;
-  const onBackPress = () => navigation.goBack();
   const [foodQuantity, setFoodQuantity] = useState<number>(1);
   const scrollY = useSharedValue(0);
   const dispatch = useAppDispatch();
@@ -57,6 +49,8 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
   const restaurant = useAppSelector(
     state => state.restaurant.currentRestaurant,
   );
+
+  // event
   const bgColorIconClose = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       scrollY.value,
@@ -131,6 +125,8 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
     );
   };
 
+  const onBackPress = () => navigation.goBack();
+
   const onIncreaseToppingPress = useCallback(
     (name: string, price: number) => {
       const currentItem = selectedTopping.find(item => item.name === name);
@@ -198,9 +194,12 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
     dispatch(addRestaurant(restaurant));
     navigation.goBack();
   };
+
+  // render
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* navigation*/}
+      {/* animated header*/}
       <AnimatedTouchableOpacity
         onPress={onBackPress}
         style={[styles.buttonBackWrapper, bgColorIconClose]}>
@@ -216,7 +215,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
         </Text>
       </Animated.View>
 
-      {/* img food */}
+      {/* image food */}
       <View style={styles.imageFood}>
         <Image
           source={{
@@ -227,29 +226,10 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
       </View>
 
       <FlatList
+        overScrollMode="never"
         ListHeaderComponent={
-          // name, price
-          <View style={{backgroundColor: COLORS.white, padding: SIZES.padding}}>
-            <View style={styles.nameWrapper}>
-              <Text style={styles.name}>{foodItem.name}</Text>
-              <Text style={styles.mainPrice}>
-                {convertToVND(foodItem.price)}
-              </Text>
-            </View>
-
-            <Text style={[styles.description]}>{foodItem.description}</Text>
-
-            <TouchableOpacity style={{flexDirection: 'row'}}>
-              <Image
-                source={icons.note}
-                style={styles.iconNote}
-                resizeMode="contain"
-              />
-              <Text style={styles.note}>
-                Bạn có muốn nhắn gì đến cửa hàng không
-              </Text>
-            </TouchableOpacity>
-          </View>
+          // name, price food
+          <ListHeaderComponent foodItem={foodItem} />
         }
         onScroll={event => onScroll(event)}
         contentContainerStyle={{
@@ -258,6 +238,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
         showsVerticalScrollIndicator={true}
         data={options}
         renderItem={({item}) => (
+          // option item
           <View style={{backgroundColor: COLORS.white}}>
             <View style={styles.titleWrapper}>
               <Text style={styles.labelText}>{item.title}</Text>
@@ -276,101 +257,21 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
             />
           </View>
         )}
+        // list topping
         ListFooterComponent={
           toppings && (
-            <View style={{paddingBottom: SIZES.height * 0.1}}>
-              <View style={styles.toppingHeader}>
-                <Text style={styles.labelText}>{toppings.title}</Text>
-                <Text
-                  style={[
-                    styles.subLabelText,
-                    {color: COLORS.gray, marginVertical: SIZES.base},
-                  ]}>
-                  {'Chọn tối đa ' + toppings.maximum}
-                </Text>
-              </View>
-
-              {toppings.data.map((item: {name: string; price: number}) => {
-                const currentItem = selectedTopping?.find(
-                  toppingItem => toppingItem.name === item.name,
-                );
-                const maximum = toppings.maximum;
-                const isMaximum = quantityTopping >= maximum;
-                const textColor =
-                  isMaximum && (currentItem?.quantity || 0) > 0 === false
-                    ? COLORS.lightGray1
-                    : COLORS.blackText;
-
-                return (
-                  <View key={item.name} style={styles.toppingBody}>
-                    {currentItem?.quantity === undefined ||
-                    // quantity
-                    currentItem?.quantity === 0 ? (
-                      <ButtonIcon
-                        disabled={isMaximum}
-                        onPress={() =>
-                          onIncreaseToppingPress(item.name, item.price)
-                        }
-                        containerStyle={[
-                          styles.iconQuantityInputContainer,
-                          {
-                            backgroundColor: isMaximum
-                              ? COLORS.lightPrimary_05
-                              : COLORS.lightPrimary,
-                          },
-                        ]}
-                        icon={icons.add_wght700}
-                        iconStyle={[
-                          styles.iconQuantityInput,
-                          {
-                            tintColor: isMaximum
-                              ? COLORS.lightGray1
-                              : COLORS.primary,
-                          },
-                        ]}
-                      />
-                    ) : (
-                      <QuantityInput
-                        iconLeft={icons.remove_wght700}
-                        iconRight={icons.add_wght700}
-                        onAddPress={() =>
-                          onIncreaseToppingPress(item.name, item.price)
-                        }
-                        disableRight={isMaximum}
-                        iconRightStyle={{
-                          tintColor: isMaximum
-                            ? COLORS.lightGray1
-                            : COLORS.primary,
-                        }}
-                        onRemovePress={() => onDecreaseToppingPress(item.name)}
-                        labelStyle={[styles.labelQuantityInput]}
-                        iconContainerStyle={styles.iconQuantityInputContainer}
-                        quantity={currentItem.quantity}
-                        iconStyle={styles.iconQuantityInput}
-                      />
-                    )}
-                    {/* end quantity */}
-                    {/* name */}
-                    <View style={styles.toppingTextWrapper}>
-                      <Text
-                        style={{
-                          color: textColor,
-                          fontWeight:
-                            currentItem?.quantity || 0 > 0 ? 'bold' : 'normal',
-                        }}>
-                        {item.name}
-                      </Text>
-                      <Text style={{color: textColor, ...FONTS.body_medium}}>
-                        {convertToVND(item.price)}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
+            <ListFooterComponent
+              onDecreaseToppingPress={onDecreaseToppingPress}
+              onIncreaseToppingPress={onIncreaseToppingPress}
+              quantityTopping={quantityTopping}
+              selectedTopping={selectedTopping}
+              toppings={toppings}
+            />
           )
         }
       />
+
+      {/* footer quantity food */}
       <View style={styles.toppingFooter}>
         <QuantityInput
           minimumQuantity={1}
@@ -418,32 +319,8 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
 export default DetailFoodScreen;
 
 const styles = StyleSheet.create({
-  mainText: {color: COLORS.blackText, ...FONTS.body_large},
   labelText: {color: COLORS.blackText, ...FONTS.label_large},
   subLabelText: {color: COLORS.primary, ...FONTS.body_small},
-  toppingHeader: {
-    padding: SIZES.padding,
-    paddingBottom: 0,
-    backgroundColor: COLORS.lightPrimary,
-  },
-  toppingTextWrapper: {
-    marginLeft: SIZES.spacing,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-
-  note: {
-    color: COLORS.gray,
-    ...FONTS.body_large,
-    marginLeft: SIZES.base,
-    marginRight: SIZES.padding,
-  },
-  description: {
-    color: COLORS.gray,
-    ...FONTS.body_medium,
-    marginBottom: SIZES.padding,
-  },
 
   btnAddToCartWrapper: {
     flex: 1,
@@ -452,11 +329,6 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.radius,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  nameWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
 
@@ -472,12 +344,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     backgroundColor: COLORS.lightPrimary,
   },
-  name: {
-    width: '70%',
-    color: COLORS.blackText,
-    ...FONTS.headline_medium,
-    fontWeight: 'bold',
-  },
+
   toppingFooter: {
     height: SIZES.height * 0.15,
     borderColor: COLORS.lightGray2,
@@ -486,14 +353,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: SIZES.padding,
     alignItems: 'center',
-  },
-  toppingBody: {
-    backgroundColor: COLORS.white,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: COLORS.lightGray2,
-    padding: SIZES.padding,
   },
 
   labelQuantityInput: {
@@ -517,11 +376,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIZES.base,
   },
 
-  iconNote: {
-    width: 24,
-    height: 24,
-    tintColor: COLORS.black,
-  },
   iconQuantityInput: {
     width: 16,
     height: 16,
@@ -539,18 +393,6 @@ const styles = StyleSheet.create({
     top: 9,
     left: 10,
     position: 'absolute',
-  },
-
-  textPrice: {
-    color: COLORS.primary,
-    ...FONTS.title_medium,
-  },
-
-  mainPrice: {
-    textAlign: 'center',
-    width: '30%',
-    color: COLORS.blackText,
-    ...FONTS.title_large,
   },
 
   imageFood: {

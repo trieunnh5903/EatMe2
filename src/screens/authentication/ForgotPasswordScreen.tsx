@@ -7,15 +7,15 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../config';
+import {COLORS, FONTS, SIZES, icons} from '../../config';
 import {
   AuthLayout,
   ButtonText,
   HeaderCustom,
   TextInputCustom,
-} from '../components';
-import validate from '../utils/validate';
-import {ForgotPasswordNavigationProps} from '../types/navigation.type';
+} from '../../components';
+import validate from '../../utils/validate';
+import {ForgotPasswordNavigationProps} from '../../types/navigation.type';
 
 const ForgotPasswordScreen = ({navigation}: ForgotPasswordNavigationProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -87,7 +87,7 @@ const ForgotPasswordScreen = ({navigation}: ForgotPasswordNavigationProps) => {
             errorMsg={phoneNumberError}
           />
           {/* button send email */}
-          <View style={{flex: 1}}></View>
+          <View style={{flex: 1}} />
           <ButtonText
             disabled={isEnableButton() ? false : true}
             containerStyle={[
