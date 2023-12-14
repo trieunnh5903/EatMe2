@@ -16,7 +16,9 @@ import ButtonTextIcon from './button/ButtonTextIcon';
 import HorizontalRestaurantCard from './HorizontalRestaurantCard';
 import VerticalRestaurantCard from './VerticalRestaurantCard';
 import CountDown from './CountDown';
+import Carousel from './Carousel';
 export {
+  Carousel,
   CountDown,
   ButtonTextIcon,
   Dot,

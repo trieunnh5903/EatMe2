@@ -8,7 +8,6 @@ interface CountDownProps {
 const CountDown: React.FC<CountDownProps> = ({time = 3600}) => {
   const [remainingTime, setRemainingTime] = useState(time);
 
-  // Hàm này sẽ được gọi sau mỗi giây để cập nhật thời gian còn lại
   const updateTimer = useCallback(() => {
     if (remainingTime > 0) {
       setRemainingTime(remainingTime - 1);
@@ -17,7 +16,6 @@ const CountDown: React.FC<CountDownProps> = ({time = 3600}) => {
 
   useEffect(() => {
     const timer = setInterval(updateTimer, 1000);
-    // Clear interval khi component unmount
     return () => {
       clearInterval(timer);
     };
@@ -31,16 +29,16 @@ const CountDown: React.FC<CountDownProps> = ({time = 3600}) => {
       <Text
         style={{
           marginRight: 10,
-          color: COLORS.primary,
+          color: COLORS.orangeDark,
           ...FONTS.title_large,
           fontWeight: '900',
         }}>
         FLA
-        <Ionicons name="flash" size={16} color={COLORS.primary} />H SALE
+        <Ionicons name="flash" size={16} color={COLORS.orangeDark} />H SALE
       </Text>
 
       {/* count down */}
-      <View style={{backgroundColor: COLORS.primary, borderRadius: 4}}>
+      <View style={{backgroundColor: COLORS.orangeDark, borderRadius: 4}}>
         <Text
           style={{
             marginHorizontal: 6,
@@ -55,13 +53,13 @@ const CountDown: React.FC<CountDownProps> = ({time = 3600}) => {
       <Text
         style={{
           marginHorizontal: 4,
-          color: COLORS.primary,
+          color: COLORS.orangeDark,
           ...FONTS.title_large,
           fontWeight: 'bold',
         }}>
         :
       </Text>
-      <View style={{backgroundColor: COLORS.primary, borderRadius: 4}}>
+      <View style={{backgroundColor: COLORS.orangeDark, borderRadius: 4}}>
         <Text
           style={{
             marginHorizontal: 6,
@@ -76,13 +74,13 @@ const CountDown: React.FC<CountDownProps> = ({time = 3600}) => {
       <Text
         style={{
           marginHorizontal: 4,
-          color: COLORS.primary,
+          color: COLORS.orangeDark,
           ...FONTS.title_large,
           fontWeight: 'bold',
         }}>
         :
       </Text>
-      <View style={{backgroundColor: COLORS.primary, borderRadius: 4}}>
+      <View style={{backgroundColor: COLORS.orangeDark, borderRadius: 4}}>
         <Text
           style={{
             marginHorizontal: 6,

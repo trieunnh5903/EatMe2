@@ -6,55 +6,38 @@ import {
   FlatList,
   View,
   SafeAreaView,
-  GestureResponderEvent,
-  ViewStyle,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  Pressable,
 } from 'react-native';
-import React, {
-  ReactNode,
-  useRef,
-  useEffect,
-  memo,
-  useMemo,
-  useCallback,
-} from 'react';
-import {icons, COLORS, SIZES, FONTS, images} from '../config';
+import React, {useRef, useEffect, useCallback} from 'react';
+import {icons, COLORS, SIZES, FONTS} from '../../config';
 import {
   BadgeButton,
   Break,
-  ButtonIcon,
+  Carousel,
   CountDown,
   HeaderCustom,
   HorizontalCardSkeleton,
   HorizontalRestaurantCard,
-  VerticalRestaurantCard,
-} from '../components';
+} from '../../components';
 import {FlashList} from '@shopify/flash-list';
-import {Restaurant} from '../types/types';
-import dummy_data from '../data';
+import {Restaurant} from '../../types/types';
+import dummy_data from '../../data';
 import {useNavigation} from '@react-navigation/native';
-import {HomeScreenProp} from '../types/navigation.type';
-import {useSelectTotalCart} from '../redux/hooks';
-import {useAppSelector} from '../redux/store';
+import {HomeScreenProp} from '../../types/navigation.type';
+import {useSelectTotalCart} from '../../redux/hooks';
+import {useAppSelector} from '../../redux/store';
 import {useInfiniteQuery} from '@tanstack/react-query';
-import {fetchAllRestaurant} from '../services/restaurant.service';
+import {fetchAllRestaurant} from '../../services/restaurant.service';
 import {ActivityIndicator} from 'react-native';
-
-interface SectionProps {
-  title: string;
-  subtitle: string;
-  onPress: (event: GestureResponderEvent) => void;
-  children: ReactNode;
-  style?: ViewStyle;
-}
+import {FontAwesome5, Fontisto, Ionicons} from '../../utils';
+import ListFeaturedHorizontal from './ListFeaturedHorizontal';
 
 const HomeScreen = () => {
-  // console.log('HomeScreen');
   const navigation = useNavigation<HomeScreenProp['navigation']>();
   const carouselRef = useRef<FlatList>(null);
-  let carouselIndex = useRef(0);
+  const carouselIndex = useRef(0);
+  const carouselIntervalId = useRef<NodeJS.Timeout>();
   const totalIndex = dummy_data.carousel.length - 1;
   const totalCart = useAppSelector(useSelectTotalCart);
 
@@ -70,8 +53,20 @@ const HomeScreen = () => {
     },
   });
 
-  useEffect(() => {
-    let timer = setInterval(() => {
+  // event
+  const onRestaurantItemPress = (item: Restaurant) =>
+    navigation.navigate('DetailRestaurant', {
+      restaurantId: item.id,
+    });
+
+  const onEnterAddressPress = () =>
+    navigation.navigate('EnterAddressScreen', {enableGoogleMap: false});
+
+  const onListInvoicesPress = () => navigation.navigate('ListInvoices');
+
+  // carousel event
+  const startAutoScrollCarousel = useCallback(() => {
+    const id = setInterval(() => {
       if (carouselIndex.current < totalIndex) {
         carouselRef?.current?.scrollToIndex({
           index: carouselIndex.current + 1,
@@ -84,31 +79,17 @@ const HomeScreen = () => {
         });
       }
     }, 4000);
-
-    return () => clearInterval(timer);
+    carouselIntervalId.current = id;
   }, [totalIndex]);
 
-  const getItemLayoutCarousel = useMemo(
-    () => (index: number) => {
-      let itemWidth;
-      if (index === 0) {
-        itemWidth = SIZES.width - 2 * SIZES.padding + SIZES.padding;
-      } else if (index === dummy_data.carousel.length - 1) {
-        itemWidth = SIZES.width - 2 * SIZES.padding + 20;
-      } else {
-        itemWidth = SIZES.width - 2 * SIZES.padding + 10;
-      }
-      return {
-        length: itemWidth,
-        offset: itemWidth * index,
-        index,
-      };
-    },
-    [],
-  );
+  const restartAutoScrollCarousel = useCallback(() => {
+    clearInterval(carouselIntervalId.current);
+    startAutoScrollCarousel();
+  }, [startAutoScrollCarousel]);
 
   const onCarouselScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      restartAutoScrollCarousel();
       const scrollOffset = event.nativeEvent.contentOffset.x;
       const index = parseInt(
         (scrollOffset / (SIZES.width - 2 * SIZES.padding)).toString(),
@@ -116,9 +97,16 @@ const HomeScreen = () => {
       );
       carouselIndex.current = index;
     },
-    [],
+    [restartAutoScrollCarousel],
   );
 
+  useEffect(() => {
+    startAutoScrollCarousel();
+
+    return () => clearInterval(carouselIntervalId.current);
+  }, [startAutoScrollCarousel]);
+
+  // render
   const renderFooter = () => {
     return (
       isFetchingNextPage && (
@@ -131,78 +119,75 @@ const HomeScreen = () => {
     );
   };
 
-  const onRestaurantItemPress = (item: Restaurant) =>
-    navigation.navigate('DetailRestaurant', {
-      restaurantId: item.id,
-    });
+  const renderHeader = () => {
+    return (
+      <View>
+        <HeaderCustom
+          containerStyle={styles.headerContainer}
+          rightComponent={
+            <View style={{flexDirection: 'row', gap: 6}}>
+              <TouchableOpacity>
+                <Fontisto name="email" size={20} color={COLORS.black} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Ionicons name="menu" size={20} color={COLORS.black} />
+              </TouchableOpacity>
+            </View>
+          }
+          leftComponent={
+            <TouchableOpacity
+              style={[styles.deliveryTo, {gap: 6}]}
+              onPress={() => onEnterAddressPress()}>
+              <FontAwesome5
+                name="map-marker-alt"
+                color={COLORS.primary}
+                size={16}
+              />
+              <Text style={styles.deliveryAddress}>
+                {dummy_data?.myProfile?.address}
+              </Text>
+              <Image source={icons.chevron_right} style={styles.icon} />
+            </TouchableOpacity>
+          }
+        />
+      </View>
+    );
+  };
 
-  const onEnterAddressPress = () =>
-    navigation.navigate('EnterAddressScreen', {enableGoogleMap: false});
-
-  const onListInvoicesPress = () => navigation.navigate('ListInvoices');
+  const renderSearch = () => {
+    return (
+      <TouchableOpacity style={[styles.searchContainer]}>
+        {/* icon */}
+        <Image
+          source={icons.search}
+          style={{width: 16, height: 16}}
+          tintColor={COLORS.gray}
+        />
+        <Text style={[FONTS.body_medium, {color: COLORS.gray}]}>
+          Tìm nhà hàng, món ăn
+        </Text>
+        {/* text input */}
+      </TouchableOpacity>
+    );
+  };
   return (
     <SafeAreaView style={[styles.container]}>
       <FlashList
         ListHeaderComponent={
           <View>
             {/* header */}
-            <View style={styles.headerWrapper}>
-              <HeaderCustom
-                containerStyle={styles.headerContainer}
-                rightComponent={
-                  <BadgeButton
-                    icon={icons.notification}
-                    iconStyle={styles.icon}
-                    badgeContainerStyle={styles.badgeNotification}
-                  />
-                }
-                leftComponent={
-                  <View>
-                    <Image source={images.logo_02} style={styles.logo} />
-                  </View>
-                }
-              />
-            </View>
-            {/* delivery to */}
-            <View
-              style={{
-                marginHorizontal: SIZES.padding,
-              }}>
-              <Text
-                style={{
-                  color: COLORS.primary,
-                  ...FONTS.title_medium,
-                }}>
-                GIAO ĐẾN
-              </Text>
+            {renderHeader()}
 
-              <TouchableOpacity
-                onPress={() => onEnterAddressPress()}
-                style={styles.deliveryTo}>
-                <Text style={styles.deliveryAddress}>
-                  {dummy_data?.myProfile?.address}
-                </Text>
-                <Image source={icons.down_arrow} style={styles.icon} />
-              </TouchableOpacity>
-            </View>
+            {/* search */}
+            {renderSearch()}
+            <View style={{height: SIZES.padding}} />
+
             {/* carousel */}
-            <FlatList
-              onScroll={onCarouselScroll}
-              ref={carouselRef}
-              data={dummy_data.carousel}
-              style={{marginTop: SIZES.padding}}
-              keyExtractor={item => `${item.id}`}
-              horizontal
-              decelerationRate="fast"
-              snapToInterval={SIZES.width - 2 * SIZES.padding + 10}
-              getItemLayout={(_, index) => getItemLayoutCarousel(index)}
-              showsHorizontalScrollIndicator={false}
-              renderItem={({item, index}) => {
-                return <CarouselItem item={item} index={index} />;
-              }}
-            />
+            <Carousel innerRef={carouselRef} onScroll={onCarouselScroll} />
+
             {/* category */}
-            <Categories />
+            {renderCategories()}
+
             {/* list popular */}
             {dummy_data.featureCategory.map(feature => {
               return (
@@ -213,53 +198,10 @@ const HomeScreen = () => {
                       <CountDown time={7200} />
                     </View>
                   )}
-                  <Section
-                    subtitle={feature.subtitle}
-                    onPress={() => console.log(feature.title + 'pressed')}
-                    title={feature.title}>
-                    <FlatList
-                      data={feature.restaurants}
-                      keyExtractor={item => `${item.id}`}
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      renderItem={({item, index}) => {
-                        const marginRight =
-                          index === feature.restaurants.length - 1
-                            ? SIZES.padding
-                            : 0;
-                        return (
-                          <VerticalRestaurantCard
-                            onPress={() => onRestaurantItemPress(item)}
-                            item={item}
-                            containerStyle={[
-                              styles.popularContainer,
-                              {marginRight: marginRight},
-                            ]}
-                            imageStyle={styles.popularImage}
-                          />
-                        );
-                      }}
-                      ListFooterComponent={
-                        <View style={styles.footerHorizontalListWrapper}>
-                          <TouchableOpacity>
-                            <ButtonIcon
-                              disabled={true}
-                              containerStyle={styles.btnWatchAll}
-                              iconStyle={{tintColor: COLORS.primary}}
-                              icon={icons.chevron_right}
-                            />
-                            <Text
-                              style={{
-                                color: COLORS.primary,
-                                ...FONTS.title_medium,
-                              }}>
-                              Xem tất cả
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      }
-                    />
-                  </Section>
+                  <ListFeaturedHorizontal
+                    feature={feature}
+                    onRestaurantItemPress={onRestaurantItemPress}
+                  />
                 </View>
               );
             })}
@@ -304,14 +246,7 @@ const HomeScreen = () => {
           }
         }}
         ListFooterComponent={
-          <View
-            style={{
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            {renderFooter()}
-          </View>
+          <View style={styles.footerWrapper}>{renderFooter()}</View>
         }
         onEndReachedThreshold={0.5}
       />
@@ -330,27 +265,7 @@ const HomeScreen = () => {
   );
 };
 
-const Section: React.FC<SectionProps> = memo(
-  ({title, subtitle, onPress, children, style}) => {
-    return (
-      <Pressable onPress={onPress}>
-        <View style={[styles.section, style]}>
-          <View style={{flex: 1}}>
-            <Text style={styles.sectionHeadline}>{title}</Text>
-            <Text style={styles.sectionSubtitle}>{subtitle}</Text>
-          </View>
-          <Image
-            source={icons.chevron_right}
-            style={[styles.icon, {marginLeft: SIZES.spacing}]}
-          />
-        </View>
-        {children}
-      </Pressable>
-    );
-  },
-);
-
-const Categories = () => (
+const renderCategories = () => (
   <View style={styles.categoriesWrapper}>
     {dummy_data.categories.map(item => {
       return (
@@ -369,45 +284,15 @@ const Categories = () => (
   </View>
 );
 
-const CarouselItem = memo(
-  ({
-    item,
-    index,
-  }: {
-    item: {
-      id: number;
-      image: string;
-    };
-    index: number;
-  }) => {
-    const marginRight = index === dummy_data.carousel.length - 1 ? 10 : 0;
-    const marginLeft = index === 0 ? SIZES.padding : 10;
-    return (
-      <TouchableOpacity
-        onPress={() => console.log(item.id)}
-        style={{
-          width: SIZES.width - 2 * SIZES.padding,
-          height: SIZES.width / 2,
-          marginRight: marginRight,
-          marginLeft: marginLeft,
-        }}>
-        {item.image ? (
-          <Image
-            source={{uri: item.image}}
-            resizeMode="cover"
-            style={styles.carouselImage}
-          />
-        ) : (
-          <Image source={images.logo_03} />
-        )}
-      </TouchableOpacity>
-    );
-  },
-);
-
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  footerWrapper: {
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   textRestaurantWrapper: {
     height: SIZES.width * 0.25,
   },
@@ -474,6 +359,8 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingHorizontal: SIZES.padding,
     alignItems: 'center',
+    height: null,
+    paddingVertical: 10,
   },
   footerHorizontalListWrapper: {
     flex: 1,
@@ -487,7 +374,7 @@ const styles = StyleSheet.create({
     marginVertical: SIZES.padding,
     marginHorizontal: SIZES.padding,
   },
-  categoryImage: {width: 48, height: 48, resizeMode: 'contain'},
+  categoryImage: {width: 38, height: 38, resizeMode: 'contain'},
   sectionSubtitle: {
     ...FONTS.body_medium,
     color: COLORS.gray,
@@ -522,7 +409,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     top: 0,
     right: 0,
-    backgroundColor: COLORS.red,
+    backgroundColor: COLORS.black,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -530,7 +417,6 @@ const styles = StyleSheet.create({
   headerWrapper: {
     flex: 1,
     width: SIZES.width,
-    backgroundColor: COLORS.white,
   },
   profile: {
     width: 24,
@@ -583,12 +469,12 @@ const styles = StyleSheet.create({
 
   searchContainer: {
     flexDirection: 'row',
-    height: 40,
+    height: 34,
     backgroundColor: COLORS.lightGray2,
-    marginVertical: SIZES.radius,
     marginHorizontal: SIZES.padding,
     paddingHorizontal: 12,
     borderRadius: SIZES.padding,
     alignItems: 'center',
+    gap: 6,
   },
 });

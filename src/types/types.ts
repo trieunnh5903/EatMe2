@@ -79,3 +79,11 @@ export interface RestaurantInformation {
   name: string;
   bestSeller: Food[];
 }
+
+//
+export interface Feature {
+  id: string;
+  title: string;
+  subtitle: string;
+  restaurants: Restaurant[];
+}

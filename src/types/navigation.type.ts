@@ -1,5 +1,5 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Food, Restaurant} from './types';
+import {Food} from './types';
 
 export type RootStackParamList = {
   OnBoarding: undefined;

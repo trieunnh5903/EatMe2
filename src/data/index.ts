@@ -1,5 +1,6 @@
 import {images} from '../config';
 import icons from '../config/icons';
+import {Feature} from '../types/types';
 
 const myProfile = {
   id: 1,
@@ -1186,21 +1187,21 @@ const popularRestaurant = [
   },
 ];
 
-const featureCategory = [
+const featureCategory: Feature[] = [
   {
-    id: 1,
+    id: '1',
     title: 'Quán mới khao đến 50%',
     subtitle: 'Tổng hợp quán mới đang khao nóng dòn',
     restaurants: popularRestaurant,
   },
   {
-    id: 2,
+    id: '2',
     title: 'Deal đa tầng - khao nước xịn đến 90K',
     restaurants: popularRestaurant,
     subtitle: 'Áp dụng từ 2 voucher mỗi đơn',
   },
   {
-    id: 3,
+    id: '3',
     title: 'Deal đa tầng - khao ăn ngon đến 90K',
     restaurants: popularRestaurant,
     subtitle: 'Áp dụng từ 2 voucher mỗi đơn',

@@ -19,11 +19,9 @@ import {
 } from '../screens';
 import {RootStackParamList} from '../types/navigation.type';
 import SplashScreen from 'react-native-splash-screen';
-// import useUserViewModel from '../view-models/useUserViewModel';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const MainNavigator = () => {
-  // const {logged} = useUserViewModel().userState;
   const logged = true;
   React.useEffect(() => {
     SplashScreen.hide();
@@ -31,7 +29,7 @@ const MainNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {logged ? (
-        <>
+        <Stack.Group>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="DetailFood" component={DetailFoodScreen} />
           <Stack.Screen
@@ -52,9 +50,9 @@ const MainNavigator = () => {
             options={{presentation: 'fullScreenModal'}}
             component={ListInvoices}
           />
-        </>
+        </Stack.Group>
       ) : (
-        <>
+        <Stack.Group>
           <Stack.Screen name="OnBoarding" component={OnBoardingScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
@@ -63,7 +61,7 @@ const MainNavigator = () => {
             name="ForgotPassword"
             component={ForgotPasswordScreen}
           />
-        </>
+        </Stack.Group>
       )}
     </Stack.Navigator>
   );
