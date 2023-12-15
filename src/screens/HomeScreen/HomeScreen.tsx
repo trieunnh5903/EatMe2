@@ -125,12 +125,12 @@ const HomeScreen = () => {
         <HeaderCustom
           containerStyle={styles.headerContainer}
           rightComponent={
-            <View style={{flexDirection: 'row', gap: 6}}>
+            <View style={{flexDirection: 'row', gap: 10}}>
               <TouchableOpacity>
-                <Fontisto name="email" size={20} color={COLORS.black} />
+                <Fontisto name="email" size={18} color={COLORS.black} />
               </TouchableOpacity>
               <TouchableOpacity>
-                <Ionicons name="menu" size={20} color={COLORS.black} />
+                <Ionicons name="menu" size={18} color={COLORS.black} />
               </TouchableOpacity>
             </View>
           }
