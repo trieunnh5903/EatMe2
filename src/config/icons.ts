@@ -61,7 +61,7 @@ const icons = {
   person: require('../assets/icons/person_FILL0_wght400_GRAD0_opsz48.png'),
   chevron_right: require('../assets/icons/chevron_right_FILL0_wght400_GRAD0_opsz48.png'),
   baguette: require('../assets/icons/icons8-baguette-94.png'),
-  cola: require('../assets/icons/icons8-cola-94.png'),
+  cola: require('../assets/icons/icons8-drink-48.png'),
   cookies: require('../assets/icons/icons8-cookies-94.png'),
   hamburger: require('../assets/icons/icons8-hamburger-94.png'),
   hot_dog: require('../assets/icons/icons8-hot-dog-94.png'),
@@ -74,6 +74,8 @@ const icons = {
   bottle_plastic: require('../assets/icons/icons8-plastic-48.png'),
   soda: require('../assets/icons/icons8-soda-48.png'),
   coin: require('../assets/icons/icons8-coin-64.png'),
+  mart: require('../assets/icons/mart.png'),
+  kitchen: require('../assets/icons/kitchen.png'),
 };
 
 export default icons;

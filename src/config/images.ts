@@ -7,6 +7,7 @@ const images = {
   carousel_2: require('../assets/images/carousel/Rectangle2.png'),
   carousel_3: require('../assets/images/carousel/Rectangle3.png'),
   location_pin: require('../assets/images/location-pin.png'),
+  banner1: require('../assets/images/banner/subBanner.png'),
 };
 
 export default images;

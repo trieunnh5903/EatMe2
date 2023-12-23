@@ -36,6 +36,18 @@ export interface Food {
   toppings?: RestaurantToppings;
 }
 
+export interface FoodRedux {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  image: string;
+  quantity: number;
+  options?: RestaurantOption[];
+  toppings?: RestaurantTopping[];
+  // totalPrice: number;
+}
+
 export interface FoodWithQuantity extends Food {
   quantity: number;
 }
@@ -56,22 +68,10 @@ export type Restaurant = {
   // totalPrice?: number;
 };
 
-export interface FoodReduxType {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  image: string;
-  quantity: number;
-  options?: RestaurantOption[];
-  toppings?: RestaurantTopping[];
-  // totalPrice: number;
-}
-
 export interface Invoice extends Restaurant {
   totalPrice: number;
   numOfFood: number;
-  listFood: FoodReduxType[];
+  listFood: FoodRedux[];
 }
 
 export interface RestaurantInformation {

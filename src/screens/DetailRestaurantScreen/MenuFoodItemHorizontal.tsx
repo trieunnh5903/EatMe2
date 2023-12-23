@@ -1,14 +1,14 @@
 import {StyleSheet, Image, TouchableOpacity, Text, View} from 'react-native';
 import React, {memo} from 'react';
 import {SIZES, COLORS, FONTS} from '../../config';
-import {Food, FoodReduxType, MenuFood} from '../../types/types';
+import {Food, FoodRedux, MenuFood} from '../../types/types';
 import convertToVND from '../../utils/convertToVND';
 import {Break} from '../../components';
 
 interface MenuFoodItemHorizontailProps {
   foodItem: MenuFood;
   onFoodItemPress: (item: Food) => void;
-  cart: FoodReduxType[] | undefined;
+  cart: FoodRedux[] | undefined;
 }
 const MenuFoodItemHorizontail: React.FC<MenuFoodItemHorizontailProps> = memo(
   ({foodItem, cart, onFoodItemPress}) => {

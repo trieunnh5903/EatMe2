@@ -9,6 +9,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   DetailFood: {
     foodItem: Food;
+    foodId: string;
   };
   DetailRestaurant: {
     restaurantId: string;
@@ -21,8 +22,6 @@ export type RootStackParamList = {
   };
   HomeScreen: undefined;
   SearchScreen: undefined;
-  FavoriteScreen: undefined;
-  ProfileScreen: undefined;
   ListInvoices: undefined;
   CheckoutScreen: {
     restaurantId: string;
@@ -42,17 +41,10 @@ export type ListInvoicesScreenProp = NativeStackScreenProps<
   RootStackParamList,
   'ListInvoices'
 >;
-export type ProfileScreenProp = NativeStackScreenProps<
-  RootStackParamList,
-  'ProfileScreen'
->;
+
 export type SearchScreenProp = NativeStackScreenProps<
   RootStackParamList,
   'SearchScreen'
->;
-export type FavoriteScreenProp = NativeStackScreenProps<
-  RootStackParamList,
-  'FavoriteScreen'
 >;
 
 export type CartScreenProp = NativeStackScreenProps<

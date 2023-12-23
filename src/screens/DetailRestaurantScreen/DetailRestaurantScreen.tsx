@@ -153,7 +153,8 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
 
   const onFoodItemPress = (item: Food) => {
     navigation.navigate('DetailFood', {
-      foodItem: {...item},
+      foodId: item.id,
+      foodItem: item,
     });
   };
 

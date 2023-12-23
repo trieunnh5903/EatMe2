@@ -10,6 +10,12 @@ export default function setUpMirage(environment: string | undefined) {
         return restaurant;
       });
 
+      this.get('/food/:id', (_, request) => {
+        const foodId = request.params.id;
+        const food = FOODS_DATA.find(f => f.id === foodId) || {};
+        return food;
+      });
+
       this.get('/restaurant/all/:page', (_schema, request) => {
         let page = request.params.page;
         let offset: number = (Number(page) - 1) * 30;
@@ -20,11 +26,11 @@ export default function setUpMirage(environment: string | undefined) {
         return featureCategory;
       });
 
-      this.get('/shop/popular/:page', (_schema, request) => {
-        let page = request.params.page;
-        let offset: number = (Number(page) - 1) * 10;
-        return restaurants.slice(offset, offset + 10);
-      });
+      // this.get('/shop/popular/:page', (_schema, request) => {
+      //   let page = request.params.page;
+      //   let offset: number = (Number(page) - 1) * 10;
+      //   return restaurants.slice(offset, offset + 10);
+      // });
 
       // this.get('/shop/search', (_schema, request) => {
       //   let keywords = request.queryParams.q;
@@ -798,7 +804,7 @@ const FOODS_DATA = [
   },
 ];
 
-const THUC_DON = [
+const MENU = [
   {
     name: 'Thực đơn 1',
     id: '2db86e4-6591-11ee-8c99-0242ac120002',
@@ -2389,7 +2395,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2417,7 +2423,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2445,7 +2451,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2473,7 +2479,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2501,7 +2507,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2526,7 +2532,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2554,7 +2560,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2582,7 +2588,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2610,7 +2616,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2638,7 +2644,7 @@ const popularRestaurant = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2693,7 +2699,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2721,7 +2727,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2749,7 +2755,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2777,7 +2783,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2805,7 +2811,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2833,7 +2839,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2868,7 +2874,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2896,7 +2902,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2924,7 +2930,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2960,7 +2966,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -2988,7 +2994,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3016,7 +3022,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3044,7 +3050,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3072,7 +3078,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3100,7 +3106,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3128,7 +3134,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3156,7 +3162,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3184,7 +3190,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3212,7 +3218,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3240,7 +3246,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3268,7 +3274,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3296,7 +3302,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3324,7 +3330,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3352,7 +3358,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3380,7 +3386,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3408,7 +3414,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3436,7 +3442,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3464,7 +3470,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3492,7 +3498,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3520,7 +3526,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3548,7 +3554,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3576,7 +3582,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3604,7 +3610,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3632,7 +3638,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3660,7 +3666,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3688,7 +3694,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3716,7 +3722,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3744,7 +3750,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3772,7 +3778,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3800,7 +3806,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3828,7 +3834,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3856,7 +3862,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3884,7 +3890,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3912,7 +3918,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3940,7 +3946,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3968,7 +3974,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -3996,7 +4002,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4024,7 +4030,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4052,7 +4058,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4080,7 +4086,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4108,7 +4114,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4136,7 +4142,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4164,7 +4170,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4192,7 +4198,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4220,7 +4226,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4248,7 +4254,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4276,7 +4282,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4304,7 +4310,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4332,7 +4338,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4360,7 +4366,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4388,7 +4394,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4416,7 +4422,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4444,7 +4450,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4472,7 +4478,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4500,7 +4506,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4528,7 +4534,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4556,7 +4562,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4584,7 +4590,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4612,7 +4618,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4640,7 +4646,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4668,7 +4674,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4696,7 +4702,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4724,7 +4730,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4752,7 +4758,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4780,7 +4786,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4808,7 +4814,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4836,7 +4842,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4864,7 +4870,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4892,7 +4898,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4920,7 +4926,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4948,7 +4954,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -4976,7 +4982,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5004,7 +5010,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5032,7 +5038,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5060,7 +5066,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5088,7 +5094,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5116,7 +5122,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5144,7 +5150,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5172,7 +5178,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5200,7 +5206,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5228,7 +5234,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5256,7 +5262,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5284,7 +5290,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',
@@ -5312,7 +5318,7 @@ const restaurants = [
         },
         {
           label: 'Thực đơn',
-          foods: THUC_DON,
+          foods: MENU,
         },
         {
           label: 'Chọn thêm',

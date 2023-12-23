@@ -10,7 +10,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import React, {useRef, useEffect, useCallback} from 'react';
-import {icons, COLORS, SIZES, FONTS} from '../../config';
+import {icons, COLORS, SIZES, FONTS, images} from '../../config';
 import {
   BadgeButton,
   Break,
@@ -166,7 +166,6 @@ const HomeScreen = () => {
         <Text style={[FONTS.body_medium, {color: COLORS.gray}]}>
           Tìm nhà hàng, món ăn
         </Text>
-        {/* text input */}
       </TouchableOpacity>
     );
   };
@@ -187,6 +186,15 @@ const HomeScreen = () => {
 
             {/* category */}
             {renderCategories()}
+
+            {/* banner */}
+            <TouchableOpacity style={{alignItems: 'center'}}>
+              <Image
+                source={images.banner1}
+                resizeMode="contain"
+                style={{width: SIZES.width - 32}}
+              />
+            </TouchableOpacity>
 
             {/* list popular */}
             {dummy_data.featureCategory.map(feature => {
@@ -267,27 +275,46 @@ const HomeScreen = () => {
 };
 
 const renderCategories = () => (
-  <View style={styles.categoriesWrapper}>
-    {dummy_data.categories.map(item => {
-      return (
-        <TouchableOpacity key={item.id} style={styles.categoriesItem}>
-          <Image source={item.icon} style={styles.categoryImage} />
-          <Text
-            style={{
-              color: COLORS.blackText,
-              ...FONTS.label_large,
-            }}>
-            {item.name}
-          </Text>
-        </TouchableOpacity>
-      );
-    })}
+  <View style={{padding: 16, gap: 16}}>
+    <View style={{flexDirection: 'row'}}>
+      <TouchableOpacity>
+        <Image resizeMode="cover" source={icons.mart} style={styles.imgMart} />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Image
+          resizeMode="cover"
+          source={icons.kitchen}
+          style={{height: 60, width: 60 * (146 / 52)}}
+        />
+      </TouchableOpacity>
+    </View>
+    <View style={styles.categoriesWrapper}>
+      {dummy_data.categories.map(item => {
+        return (
+          <TouchableOpacity key={item.id} style={styles.categoriesItem}>
+            <Image source={item.icon} style={styles.categoryImage} />
+            <Text
+              style={{
+                color: COLORS.blackText,
+                ...FONTS.label_large,
+              }}>
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
   </View>
 );
 
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  imgMart: {
+    height: 60,
+    width: 60 * (120 / 52),
+  },
+
   footerWrapper: {
     height: 50,
     alignItems: 'center',
@@ -396,9 +423,6 @@ const styles = StyleSheet.create({
   categoriesWrapper: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: SIZES.padding,
-    paddingVertical: SIZES.radius,
-    marginTop: SIZES.padding,
     rowGap: 10,
     columnGap: 10,
   },

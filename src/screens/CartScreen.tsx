@@ -11,7 +11,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, FONTS, SIZES, icons} from '../config';
 import {HeaderCustom, QuantityInput} from '../components';
 import convertToVND from '../utils/convertToVND';
-import {FoodReduxType} from '../types/types';
+import {FoodRedux} from '../types/types';
 import {CartScreenProp} from '../types/navigation.type';
 import {useSelectCartById} from '../redux/hooks';
 import {useAppDispatch} from '../redux/store';
@@ -149,7 +149,7 @@ const CartScreen = ({route, navigation}: CartScreenProp) => {
 };
 
 interface FoodItemProp {
-  data: FoodReduxType;
+  data: FoodRedux;
   onIncreaseFoodFress: (id: string) => void;
   onDecreaseFoodFress: (id: string) => void;
 }

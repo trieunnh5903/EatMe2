@@ -21,7 +21,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {
-  FoodReduxType,
+  FoodRedux,
   RestaurantOption,
   RestaurantTopping,
 } from '../../types/types';
@@ -31,6 +31,8 @@ import {nanoid} from '@reduxjs/toolkit';
 import {addRestaurant} from '../../redux/slice/restaurant.slice';
 import ListHeaderComponent from './ListHeaderComponent';
 import ListFooterComponent from './ListFooterComponent';
+import {useQuery} from '@tanstack/react-query';
+import {fetchFoodById} from '../../services/restaurant.service';
 
 const HEADER_HEIGHT = 50;
 const AnimatedTouchableOpacity =
@@ -49,6 +51,11 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
   const restaurant = useAppSelector(
     state => state.restaurant.currentRestaurant,
   );
+
+  const {data: food} = useQuery({
+    queryKey: ['food', foodItem.id],
+    queryFn: () => fetchFoodById(foodItem.id),
+  });
 
   // event
   const bgColorIconClose = useAnimatedStyle(() => {
@@ -179,7 +186,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
   }, [foodQuantity]);
 
   const onAddToCartPress = () => {
-    const food: FoodReduxType = {
+    const food: FoodRedux = {
       id: nanoid(),
       image: foodItem.image,
       name: foodItem.name,

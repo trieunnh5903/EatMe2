@@ -3,10 +3,10 @@ import React from 'react';
 import {SIZES, FONTS, COLORS} from '../../config';
 import {Ionicons} from '../../utils';
 import convertToVND from '../../utils/convertToVND';
-import {FoodReduxType} from '../../types/types';
+import {FoodRedux} from '../../types/types';
 
 interface ListFoodInCart {
-  cartList: FoodReduxType[];
+  cartList: FoodRedux[];
   onAddMoreFoodPress: () => void | undefined;
 }
 const ListFoodInCart: React.FC<ListFoodInCart> = ({

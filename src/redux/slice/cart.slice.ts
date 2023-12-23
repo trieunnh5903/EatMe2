@@ -1,10 +1,10 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import {FoodReduxType} from '../../types/types';
+import {FoodRedux} from '../../types/types';
 
 // lưu danh sách món ăn
 interface CartState {
   byId: {
-    [id: string]: FoodReduxType[];
+    [id: string]: FoodRedux[];
   };
   allIds: string[];
 }
@@ -39,7 +39,7 @@ const cartSlice = createSlice({
 
     updateCart: (
       state,
-      action: PayloadAction<{listFood: FoodReduxType[]; restaurantId: string}>,
+      action: PayloadAction<{listFood: FoodRedux[]; restaurantId: string}>,
     ) => {
       const {restaurantId, listFood} = action.payload;
       if (state.byId[restaurantId] === undefined) {
@@ -67,7 +67,7 @@ const cartSlice = createSlice({
 
     addFood(
       state,
-      action: PayloadAction<{food: FoodReduxType; restaurantId: string}>,
+      action: PayloadAction<{food: FoodRedux; restaurantId: string}>,
     ) {
       const {food, restaurantId} = action.payload;
       const restaurant = state.byId[restaurantId];

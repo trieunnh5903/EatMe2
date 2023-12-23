@@ -12,14 +12,14 @@ import {
 import React, {memo} from 'react';
 import {COLORS, FONTS, SIZES} from '../config';
 import convertToVND from '../utils/convertToVND';
-import {Food, FoodReduxType} from '../types/types';
+import {Food, FoodRedux} from '../types/types';
 
 interface VerticalFoodCardProps {
   containerStyle?: StyleProp<ViewStyle>;
   item: Food;
   imageStyle?: StyleProp<ImageStyle>;
   onPress?: (event: GestureResponderEvent) => any;
-  foodChecked?: FoodReduxType | undefined;
+  foodChecked?: FoodRedux | undefined;
 }
 const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
   containerStyle,

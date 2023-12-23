@@ -7,13 +7,11 @@ import {
   DetailFoodScreen,
   DetailRestaurantScreen,
   EnterAddressScreen,
-  FavoriteScreen,
   ForgotPasswordScreen,
   HomeScreen,
   ListInvoices,
   LoginScreen,
   OnBoardingScreen,
-  ProfileScreen,
   RegisterScreen,
   SearchScreen,
 } from '../screens';
@@ -42,8 +40,6 @@ const MainNavigator = () => {
           />
           <Stack.Screen name="CartScreen" component={CartScreen} />
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
-          <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
-          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
           <Stack.Screen
             name="ListInvoices"
