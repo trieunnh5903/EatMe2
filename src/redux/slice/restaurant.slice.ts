@@ -1,7 +1,7 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import {RestaurantInformation} from '../../types/types';
 
-// lưu thông tin cửa hàng
+// save restaurant information
 interface RestaurantState {
   currentRestaurant: RestaurantInformation;
   byId: {

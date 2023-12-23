@@ -1,9 +1,10 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import {FoodRedux} from '../../types/types';
 
-// lưu danh sách món ăn
+// save food
 interface CartState {
   byId: {
+    // id restaurant : list food
     [id: string]: FoodRedux[];
   };
   allIds: string[];
