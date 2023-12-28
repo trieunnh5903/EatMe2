@@ -13,12 +13,7 @@ import {
 } from 'react-native';
 import React, {useRef, useEffect, useCallback, useState} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../../config';
-import {
-  Break,
-  ButtonText,
-  ButtonTextIcon,
-  VerticalFoodCard,
-} from '../../components';
+import {Break, ButtonText, ButtonTextIcon} from '../../components';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -32,8 +27,6 @@ import {
   DetailRestaurantNavigationProps,
 } from '../../types/navigation.type';
 import LinearGradient from 'react-native-linear-gradient';
-import Feather from 'react-native-vector-icons/Feather';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {store, useAppDispatch} from '../../redux/store';
 import {setRestaurant} from '../../redux/slice/restaurant.slice';
 import {getTotalFoodCount, useSelectCartById} from '../../redux/hooks';
@@ -43,6 +36,8 @@ import {useNavigation} from '@react-navigation/native';
 import AnimatedHeader, {HEADER_HEIGHT} from './AnimatedHeader';
 import BaseHeader from './BaseHeader';
 import MenuFoodItemHorizontail from './MenuFoodItemHorizontal';
+import ListHightLight from './ListHightLight';
+import CardInformation from './CardInformation';
 
 interface MyDetailRestaurantProps {
   restaurant: Restaurant;
@@ -93,6 +88,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
   const totalFood = getTotalFoodCount(store.getState(), restaurant.id);
   const cart = useSelectCartById(restaurant.id);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     // save current restaurant
     dispatch(
@@ -112,6 +108,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
     restaurant.image,
     restaurant.name,
   ]);
+
   const onListScroll = useAnimatedScrollHandler({
     onScroll: event => {
       scrollY.value = event.contentOffset.y;
@@ -233,11 +230,13 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
       zIndex,
     };
   });
+
   const onCartPress = () =>
     navigation.navigate('CartScreen', {restaurantId: restaurant.id});
 
   const onCheckoutPress = () =>
     navigation.navigate('CheckoutScreen', {restaurantId: restaurant.id});
+
   return (
     <>
       {/* Animated Header */}
@@ -286,148 +285,16 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
               backgroundColor: COLORS.white,
             }}>
             {/* card information restaurant */}
-            <View style={{margin: 2 * SIZES.spacing}}>
-              <View style={styles.mainInformation}>
-                <TouchableOpacity style={styles.btnInfo}>
-                  <Ionicons
-                    name="information-circle-outline"
-                    size={24}
-                    color={COLORS.black}
-                  />
-                </TouchableOpacity>
-                <View style={styles.partnerWrapper}>
-                  <Image
-                    source={icons.verified}
-                    style={{width: 20, height: 20}}
-                    resizeMode="contain"
-                  />
-                  <Text
-                    style={[
-                      {color: COLORS.primary, marginLeft: SIZES.base},
-                      FONTS.label_large,
-                    ]}>
-                    ĐỐI TÁC CỦA BAEMIN
-                  </Text>
-                </View>
-                <Text style={[FONTS.title_large, styles.foodName]}>
-                  {restaurant.name}
-                </Text>
-                <Text
-                  numberOfLines={1}
-                  style={{
-                    color: COLORS.darkGray,
-                    marginBottom: SIZES.base,
-                    ...FONTS.title_medium,
-                  }}>
-                  0.3km •
-                  <Text style={FONTS.body_large}>{restaurant.address}</Text>
-                </Text>
-              </View>
-
-              {/* sub info */}
-              <View style={styles.subInfo}>
-                <View style={styles.timeDeliveryWrapper}>
-                  <Feather
-                    name="clock"
-                    size={24}
-                    color={COLORS.black}
-                    style={{marginRight: 10}}
-                  />
-                  <View>
-                    <Text
-                      style={{
-                        color: COLORS.blackText,
-                        ...FONTS.title_medium,
-                      }}>
-                      Giao hàng tiêu chuẩn
-                    </Text>
-                    <Text
-                      style={{
-                        color: COLORS.blackText,
-                        ...FONTS.body_large,
-                      }}>
-                      Dự kiến giao hàng lúc 18:30
-                    </Text>
-                  </View>
-                </View>
-                <TouchableOpacity>
-                  <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
-                    Thay đổi
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.voucher}>
-                <View style={styles.voucherWrapper}>
-                  <Feather
-                    name="gift"
-                    size={24}
-                    color={COLORS.black}
-                    style={{marginRight: 10}}
-                  />
-                  <Text numberOfLines={1} style={styles.textVoucher}>
-                    Nhập "BANMOI" giảm 40k trên giá món
-                  </Text>
-                </View>
-                <TouchableOpacity>
-                  <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
-                    Xem thêm
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.voucher}>
-                <View style={styles.invoiceGroup}>
-                  <Feather
-                    name="users"
-                    size={24}
-                    color={COLORS.black}
-                    style={{marginRight: 10}}
-                  />
-                  <Text style={{color: COLORS.blackText, ...FONTS.label_large}}>
-                    Đơn nhóm
-                  </Text>
-                </View>
-
-                <TouchableOpacity>
-                  <Text style={{color: COLORS.primary, ...FONTS.label_large}}>
-                    Tạo đơn
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
+            <CardInformation
+              address={restaurant.address}
+              name={restaurant.name}
+            />
             <Break />
-
             {/* list hight light */}
-            <FlatList
-              ListHeaderComponent={
-                <Text style={styles.categoryWrapper}>Không thể bỏ qua</Text>
-              }
-              numColumns={2}
-              columnWrapperStyle={{
-                marginHorizontal: 2 * SIZES.spacing,
-                gap: 2 * SIZES.spacing,
-              }}
-              // eslint-disable-next-line react/no-unstable-nested-components
-              ItemSeparatorComponent={() => (
-                <View style={{height: 2 * SIZES.spacing}} />
-              )}
-              data={bestSeller}
-              keyExtractor={item => item.id}
-              renderItem={({item}) => {
-                const foodChecked = cart?.find(food => food.name === item.name);
-                return (
-                  <VerticalFoodCard
-                    foodChecked={foodChecked}
-                    onPress={() => onFoodItemPress(item)}
-                    imageStyle={{
-                      height: (SIZES.width - 6 * SIZES.spacing) / 2,
-                      width: (SIZES.width - 6 * SIZES.spacing) / 2,
-                    }}
-                    containerStyle={{flex: 1}}
-                    item={item}
-                  />
-                );
-              }}
+            <ListHightLight
+              bestSeller={bestSeller}
+              cart={cart}
+              onFoodItemPress={onFoodItemPress}
             />
           </View>
         }
