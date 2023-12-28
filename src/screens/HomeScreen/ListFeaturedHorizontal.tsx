@@ -1,9 +1,10 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Section from './Section';
 import {Feature, Restaurant} from '../../types/types';
 import {ButtonIcon, VerticalRestaurantCard} from '../../components';
 import {COLORS, FONTS, SIZES, icons} from '../../config';
+import {FlatList} from 'react-native-gesture-handler';
 
 interface ListFeaturedHorizontalProps {
   feature: Feature;

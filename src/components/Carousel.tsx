@@ -63,7 +63,7 @@ const CarouselItem = memo(
   }: {
     item: {
       id: number;
-      image: string;
+      image: any;
     };
     index: number;
   }) => {
@@ -71,6 +71,7 @@ const CarouselItem = memo(
     const marginLeft = index === 0 ? SIZES.padding : 10;
     return (
       <TouchableOpacity
+        activeOpacity={0.7}
         onPress={() => console.log(item.id)}
         style={{
           width: SIZES.width - 2 * SIZES.padding,
@@ -80,7 +81,7 @@ const CarouselItem = memo(
         }}>
         {item.image ? (
           <Image
-            source={{uri: item.image}}
+            source={item.image}
             resizeMode="cover"
             style={styles.carouselImage}
           />

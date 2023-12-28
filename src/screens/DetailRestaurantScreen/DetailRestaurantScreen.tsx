@@ -40,7 +40,7 @@ import {getTotalFoodCount, useSelectCartById} from '../../redux/hooks';
 import {useQuery} from '@tanstack/react-query';
 import {fetchRestaurantById} from '../../services/restaurant.service';
 import {useNavigation} from '@react-navigation/native';
-import AnimatedHeader from './AnimatedHeader';
+import AnimatedHeader, {HEADER_HEIGHT} from './AnimatedHeader';
 import BaseHeader from './BaseHeader';
 import MenuFoodItemHorizontail from './MenuFoodItemHorizontal';
 
@@ -79,6 +79,7 @@ const DetailRestaurantScreen = ({route}: DetailRestaurantNavigationProps) => {
 const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
   restaurant,
 }) => {
+  const navigation = useNavigation<CartScreenProp['navigation']>();
   const scrollY = useSharedValue(0);
   const {bestSeller, menuFoods} = restaurant.allFoods;
   const menuListRef = useRef<FlatList>(null);
@@ -93,6 +94,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
   const cart = useSelectCartById(restaurant.id);
   const dispatch = useAppDispatch();
   useEffect(() => {
+    // save current restaurant
     dispatch(
       setRestaurant({
         bestSeller: restaurant.allFoods.bestSeller,
@@ -119,11 +121,6 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
   const onMenuListPress = useCallback(
     (index: number) => {
       detailMenuRef.current?.scrollToIndex({
-        index: index,
-        animated: true,
-      });
-
-      menuListRef.current?.scrollToIndex({
         index: index,
         animated: true,
       });
@@ -163,10 +160,17 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
       if (viewableItems.length > 0) {
         const index = viewableItems[0].index;
         if (index !== null) {
-          menuListRef.current?.scrollToIndex({
-            index: index,
-            animated: true,
-          });
+          if (index === 0 || index === buttonRefs.length) {
+            menuListRef.current?.scrollToIndex({
+              index: index,
+              animated: true,
+            });
+          } else {
+            menuListRef.current?.scrollToIndex({
+              index: index - 1,
+              animated: true,
+            });
+          }
 
           for (let i = 0; i < buttonRefs.length; i++) {
             buttonRefs[i].current?.setNativeProps({
@@ -229,7 +233,6 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
       zIndex,
     };
   });
-  const navigation = useNavigation<CartScreenProp['navigation']>();
   const onCartPress = () =>
     navigation.navigate('CartScreen', {restaurantId: restaurant.id});
 
@@ -273,9 +276,15 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
       {/* list detail menu */}
       <Animated.FlatList
         overScrollMode={'never'}
-        contentContainerStyle={{paddingTop: SIZES.height * 0.35}}
+        contentContainerStyle={{
+          marginTop: HEADER_HEIGHT,
+          paddingTop: HEADER_HEIGHT,
+        }}
         ListHeaderComponent={
-          <View style={{backgroundColor: COLORS.white}}>
+          <View
+            style={{
+              backgroundColor: COLORS.white,
+            }}>
             {/* card information restaurant */}
             <View style={{margin: 2 * SIZES.spacing}}>
               <View style={styles.mainInformation}>
@@ -297,7 +306,7 @@ const MyDetailRestaurant: React.FC<MyDetailRestaurantProps> = ({
                       {color: COLORS.primary, marginLeft: SIZES.base},
                       FONTS.label_large,
                     ]}>
-                    ĐỐI TÁC CỦA EATME
+                    ĐỐI TÁC CỦA BAEMIN
                   </Text>
                 </View>
                 <Text style={[FONTS.title_large, styles.foodName]}>

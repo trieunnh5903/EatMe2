@@ -83,53 +83,43 @@ const categories = [
 const carousel = [
   {
     id: 1,
-    image:
-      'https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/364711022_263810839735558_1463842356255445927_n.png?stp=dst-jpg&_nc_cat=108&ccb=1-7&_nc_sid=9534ce&_nc_eui2=AeEhuhn2xISL2k6Jc5KOW7uYP7OqPGMwz5s_s6o8YzDPm2t8cgnnWt9CoLRfooyJf8GWRYmjyTDefAvHCHdOMnwg&_nc_ohc=GUsKFkvzNwQAX-cdTMf&_nc_ht=scontent-hkg4-1.xx&oh=00_AfAnXs1HBOusDcE9NWv3dCERhT4MWUwUUn_sPr5Zeuy15g&oe=657FEDF4',
+    image: require('../assets/images/carousel/245461687_6421584127882936_8616706086375949053_n.jpg'),
   },
   {
     id: 2,
-    image:
-      'https://scontent-hkg1-1.xx.fbcdn.net/v/t39.30808-6/369732770_315148754601766_5147059661462710992_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=9534ce&_nc_eui2=AeE9mMdQuKT7MUcnoR29wkl8UHbLj21P0dZQdsuPbU_R1oCY9ojvxv_3BUuv0uZBB8qTL1LxNbHDMRQI0ZKuoMUk&_nc_ohc=Fz_lHWZZVvQAX_u6RDN&_nc_ht=scontent-hkg1-1.xx&oh=00_AfDQBdMa4O4Ktbz_Rsz120b7jISQVcVvFcwbOtUgm6ZxOQ&oe=657FCCD8',
+    image: require('../assets/images/carousel/257466827_6591435480897799_200356277778856780_n.jpg'),
   },
   {
     id: 3,
-    image:
-      'https://scontent-hkg1-1.xx.fbcdn.net/v/t39.30808-6/323778723_1335688287165752_2189668165803964585_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=9534ce&_nc_eui2=AeF5MeJG2yutVsS0kfHmSOvTZ3Z67u8qP1Bndnru7yo_UKwH1-FDFQ6blJRLnFX9QscH8CAaooXuerUd11BdWT8M&_nc_ohc=zVxP5QIh8_wAX91t9bo&_nc_ht=scontent-hkg1-1.xx&oh=00_AfD-MAAychVMi_-RZw3YsjMzoWD7dbi80pzuOhk7YYYwtA&oe=65801357',
+    image: require('../assets/images/carousel/313254607_139801202136523_5989647723442435288_n.jpg'),
   },
   {
     id: 4,
-    image:
-      'https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/366513590_268805935902715_1550787352968725060_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=9534ce&_nc_eui2=AeHXpvBwF9u7dv8FOiReDG2jO8L8dTyACIc7wvx1PIAIh29MTp65aY35nd7r8hDvm9LkrN28jhVFnDlfHIT1wLDp&_nc_ohc=KK4ujctSoisAX9-aPVX&_nc_ht=scontent-hkg4-1.xx&oh=00_AfBWKqy68D3tQ2fZBKgVEYcA5tTrd_wxDimw4U0Pg0_r0w&oe=658958CB',
+    image: require('../assets/images/carousel/317833643_148515781265065_7105665798406950119_n.jpg'),
   },
   {
     id: 5,
-    image:
-      'https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/317833643_148515781265065_7105665798406950119_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=9534ce&_nc_eui2=AeFBclIs_uBbr1C_FMjFeRHAXo1ALeP8dnxejUAt4_x2fP_2CerImNY2nq4cBbzq1p_t1hGHJd5JomOSTre8yOmH&_nc_ohc=g6UQsZr9Dl8AX9c6Ec6&_nc_ht=scontent-hkg4-1.xx&oh=00_AfAgcT2KYS5fitsY8XgGB3F3-0OQtNV3x3I5mkKoAAClUA&oe=658A95F9',
+    image: require('../assets/images/carousel/319810799_509128661281138_690691115833937331_n.jpg'),
   },
   {
     id: 6,
-    image:
-      'https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/314337657_141749055275071_5981929347098915788_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=9534ce&_nc_eui2=AeGFLf6yb16ur1rKfh2YIguyXEFwG2jQ3RVcQXAbaNDdFZ2Bv1KY5ymXbKjxzdkwdRiVfAH7YuAcomWPw2cAsWPr&_nc_ohc=NFARkkGNQvAAX_UEeFK&_nc_ht=scontent-hkg1-2.xx&oh=00_AfCNB33fHqwnCmJAKI2Y097oaKRre6hYjDc0NM-OdkuDmg&oe=65899630',
+    image: require('../assets/images/carousel/334973489_579498870873834_2900974212242390940_n.jpg'),
   },
   {
     id: 7,
-    image:
-      'https://scontent-hkg4-2.xx.fbcdn.net/v/t39.30808-6/312062027_137628209020489_2764949067133159914_n.png?stp=dst-jpg&_nc_cat=111&ccb=1-7&_nc_sid=9534ce&_nc_eui2=AeGdsbxrz32etwp4JlhRKcDernlDwdmgbVyueUPB2aBtXDr-1YZVDuVv5n6AzN3p_ghE6fw8zJMMSg3M-1ho8n4E&_nc_ohc=UnyYpgW9IwIAX_ubeRs&_nc_ht=scontent-hkg4-2.xx&oh=00_AfBqBStIVpbU6kDAj2EvneSp8TwJ-O9chiG5_0DTzuT8EQ&oe=658A7D01',
+    image: require('../assets/images/carousel/364711022_263810839735558_1463842356255445927_n.jpg'),
   },
   {
     id: 8,
-    image:
-      'https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/313254607_139801202136523_5989647723442435288_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=9534ce&_nc_eui2=AeHGdgDTpU2Nxlex8LeY13T-dM-MoQj5Oht0z4yhCPk6GwGmYpJPDwBEGYtceLgfLDsaYGTJ5dCMHwuNK0Kt7fNG&_nc_ohc=8WW12cqXAbYAX-wUFEP&_nc_ht=scontent-hkg4-1.xx&oh=00_AfAvUnq1EwJ5zMn92t2EZn776umuwK7jU1D6IwrSVMsnZw&oe=6589843F',
+    image: require('../assets/images/carousel/366513590_268805935902715_1550787352968725060_n.jpg'),
   },
   {
     id: 9,
-    image:
-      'https://scontent-hkg4-2.xx.fbcdn.net/v/t39.30808-6/257466827_6591435480897799_200356277778856780_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=783fdb&_nc_eui2=AeGrnf9wEaXKLU_EkNQxXESDFo_XciJot3YWj9dyImi3dqMThezif3H-f5aSyAoerJOeDI7hsyQAzEzxcc5o6GGF&_nc_ohc=o_4VNND03B4AX80OC26&_nc_ht=scontent-hkg4-2.xx&oh=00_AfAKnVevc4G_QdwkT4wxwxY_Hi5jyzQxIunyoMswylDdjQ&oe=658AB7C3',
+    image: require('../assets/images/carousel/369732770_315148754601766_5147059661462710992_n.jpg'),
   },
   {
     id: 10,
-    image:
-      'https://images.foody.vn/delivery/collection/image-3b71bd4c-221230173415.png',
+    image: require('../assets/images/carousel/380891539_293960340053941_6303199240703349973_n.jpg'),
   },
 ];
 

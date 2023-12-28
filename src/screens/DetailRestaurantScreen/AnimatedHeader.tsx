@@ -36,7 +36,7 @@ interface AnimatedHeaderProps {
   onMenuListPress: (index: number) => void;
 }
 
-const HEADER_HEIGHT = SIZES.height * 0.15;
+export const HEADER_HEIGHT = SIZES.height * 0.15;
 const AnimatedHeader: React.FC<AnimatedHeaderProps> = ({
   animatedStyle,
   flatlistButtonGroupRef,

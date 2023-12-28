@@ -25,23 +25,6 @@ export default function setUpMirage(environment: string | undefined) {
       this.get('/featureCategory', () => {
         return featureCategory;
       });
-
-      // this.get('/shop/popular/:page', (_schema, request) => {
-      //   let page = request.params.page;
-      //   let offset: number = (Number(page) - 1) * 10;
-      //   return restaurants.slice(offset, offset + 10);
-      // });
-
-      // this.get('/shop/search', (_schema, request) => {
-      //   let keywords = request.queryParams.q;
-      //   if (!keywords) {
-      //     return [];
-      //   }
-      //   const filteredData = shopInfo.filter(item =>
-      //     item.name.toLowerCase().includes(keywords.toLowerCase()),
-      //   );
-      //   return filteredData;
-      // });
     },
   });
 }
@@ -2379,6 +2362,532 @@ const DO_UONG = [
   },
 ];
 
+const MON_MOI = [
+  {
+    name: 'Món mới 1',
+    id: '32db86e4-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Món mới 2',
+    id: '334eb8474-6591-11ee-8c99-0242ac10002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Món mới 3',
+    id: '33b47a1ea-6591-11ee-8c9-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Món mới 4',
+    id: '34139fbac-6591-11ee-8c99-242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Món mới 5',
+    id: '345a92334-659-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Món mới 6',
+    id: '381362aaa-6591-11ee-8c99-0242c120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Món mới 7',
+    id: '386cd918-6591-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Món mới 8',
+    id: '38bb25012-6591-11ee-8c99-0242ac10002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Món mới 9',
+    id: '3904ddfa6-651-11ee-8c99-0242ac120002',
+    description: 'Bao gồm: hộp, muỗng, đũa mang về',
+    price: 31000,
+    image:
+      'https://images.foody.vn/res/g2/11349/prof/s408x200/image-3111762a-200910114155.jpeg',
+    options: [
+      {
+        title: 'Size',
+        optionGroup: [
+          {option: 'Lớn', price: 5000},
+          {option: 'Nhỏ', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn sốt',
+        optionGroup: [
+          {option: 'Sốt mayonnaise', price: 0},
+          {option: 'Sốt bò', price: 0},
+        ],
+      },
+      {
+        title: 'Chọn độ cay',
+        optionGroup: [
+          {option: 'Không cay', price: 2000},
+          {option: 'Cay ít', price: 0},
+          {option: 'Siêu cay', price: 0},
+        ],
+      },
+    ],
+    toppings: {
+      title: 'Topping',
+      maximum: 5,
+      data: [
+        {
+          name: 'Sốt bò',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bò không cay',
+          price: 7000,
+        },
+        {
+          name: 'Sốt bơ cay',
+          price: 7000,
+        },
+        {
+          name: 'Muối tôm Tây Ninh (hũ sốt)',
+          price: 7000,
+        },
+        {
+          name: 'Trứng cút (3 trứng)',
+          price: 7000,
+        },
+      ],
+    },
+  },
+];
+
+// home screen
 const popularRestaurant = [
   {
     id: '97b27cbe-658e-11ee-8c99-0242ac120002',
@@ -2709,6 +3218,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -2736,6 +3249,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -2765,6 +3282,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -2792,6 +3313,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -2821,6 +3346,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -2848,6 +3377,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -2884,6 +3417,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -2912,6 +3449,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -2939,6 +3480,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -2976,6 +3521,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3003,6 +3552,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3032,6 +3585,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3059,6 +3616,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3088,6 +3649,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3115,6 +3680,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3144,6 +3713,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3171,6 +3744,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3200,6 +3777,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3227,6 +3808,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3256,6 +3841,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3283,6 +3872,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3312,6 +3905,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3339,6 +3936,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3368,6 +3969,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3395,6 +4000,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3424,6 +4033,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3451,6 +4064,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3480,6 +4097,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3507,6 +4128,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3536,6 +4161,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3563,6 +4192,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3592,6 +4225,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3619,6 +4256,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3648,6 +4289,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3675,6 +4320,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3704,6 +4353,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3731,6 +4384,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3760,6 +4417,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3787,6 +4448,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3816,6 +4481,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3843,6 +4512,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3872,6 +4545,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3899,6 +4576,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3928,6 +4609,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -3955,6 +4640,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -3984,6 +4673,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4011,6 +4704,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4040,6 +4737,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4067,6 +4768,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4096,6 +4801,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4123,6 +4832,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4152,6 +4865,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4179,6 +4896,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4208,6 +4929,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4235,6 +4960,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4264,6 +4993,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4291,6 +5024,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4320,6 +5057,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4347,6 +5088,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4376,6 +5121,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4403,6 +5152,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4432,6 +5185,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4459,6 +5216,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4488,6 +5249,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4515,6 +5280,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4544,6 +5313,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4571,6 +5344,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4600,6 +5377,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4627,6 +5408,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4656,6 +5441,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4683,6 +5472,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4712,6 +5505,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4739,6 +5536,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4768,6 +5569,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4795,6 +5600,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4824,6 +5633,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4851,6 +5664,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4880,6 +5697,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4907,6 +5728,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4936,6 +5761,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -4963,6 +5792,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -4992,6 +5825,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -5019,6 +5856,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -5048,6 +5889,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -5075,6 +5920,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -5104,6 +5953,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -5131,6 +5984,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -5160,6 +6017,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -5187,6 +6048,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -5216,6 +6081,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -5243,6 +6112,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
@@ -5272,6 +6145,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -5300,6 +6177,10 @@ const restaurants = [
           label: 'Đồ uống',
           foods: DO_UONG,
         },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
       ],
     },
   },
@@ -5327,6 +6208,10 @@ const restaurants = [
         {
           label: 'Đồ uống',
           foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
         },
       ],
     },
