@@ -76,7 +76,9 @@ const MyDetailFood: React.FC<MyDetailFoodProps> = ({food}) => {
   const cart = useSelectCartById(restaurantId);
   const foodRedux = cart?.find(i => i.id === foodReduxId);
 
-  const [foodQuantity, setFoodQuantity] = useState<number>(1);
+  const [foodQuantity, setFoodQuantity] = useState<number>(
+    foodRedux?.quantity || 1,
+  );
   const scrollY = useSharedValue(0);
   const dispatch = useAppDispatch();
   const [selectedOption, setSelectedOption] = useState<RestaurantOption[]>(
@@ -226,7 +228,7 @@ const MyDetailFood: React.FC<MyDetailFoodProps> = ({food}) => {
         price: totalPrice(),
         quantity: foodQuantity,
       };
-      dispatch(updateFood({newFood, restaurantId: foodRedux.id}));
+      dispatch(updateFood({newFood, restaurantId: restaurantId}));
       navigation.goBack();
       return;
     }

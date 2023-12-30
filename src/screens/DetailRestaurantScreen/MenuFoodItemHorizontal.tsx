@@ -23,9 +23,16 @@ const MenuFoodItemHorizontail: React.FC<MenuFoodItemHorizontailProps> = memo(
         <Text style={styles.categoryWrapper}>{foodItem.label}</Text>
         <View>
           {foodItem.foods.map((item, index) => {
-            const foodChecked = cart?.find(food => food.name === item.name);
-            const backgroundColor = foodChecked ? COLORS.primary : COLORS.white;
-            const fontWeight = foodChecked ? 'bold' : 'normal';
+            const foodChecked = cart?.filter(food => food.baseId === item.id);
+            const bought = foodChecked && foodChecked.length > 0;
+            const backgroundColor = bought ? COLORS.primary : COLORS.white;
+            const fontWeight = bought ? 'bold' : 'normal';
+            const boughtQuantity = foodChecked?.reduce((pre, curr) => {
+              if (curr.baseId === item.id) {
+                return (pre = pre + curr.quantity);
+              }
+              return 0;
+            }, 0);
             return (
               <TouchableOpacity
                 onPress={() => {
@@ -47,9 +54,9 @@ const MenuFoodItemHorizontail: React.FC<MenuFoodItemHorizontailProps> = memo(
                         FONTS.body_large,
                         {color: COLORS.blackText, fontWeight},
                       ]}>
-                      {foodChecked?.quantity && (
+                      {bought && boughtQuantity && boughtQuantity > 0 && (
                         <Text style={{color: COLORS.primary}}>
-                          {foodChecked?.quantity}x{' '}
+                          {boughtQuantity}x{' '}
                         </Text>
                       )}
                       {item.name}

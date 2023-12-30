@@ -19,7 +19,7 @@ interface VerticalFoodCardProps {
   item: Food;
   imageStyle?: StyleProp<ImageStyle>;
   onPress?: (event: GestureResponderEvent) => any;
-  foodChecked?: FoodRedux | undefined;
+  foodChecked?: FoodRedux[] | undefined;
 }
 const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
   containerStyle,
@@ -28,7 +28,14 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
   foodChecked,
   onPress,
 }) => {
-  const fontWeight = foodChecked ? 'bold' : 'normal';
+  const bought = foodChecked && foodChecked.length > 0;
+  const fontWeight = bought ? 'bold' : 'normal';
+  const boughtQuantity = foodChecked?.reduce((pre, curr) => {
+    if (curr.baseId === item.id) {
+      return (pre = pre + curr.quantity);
+    }
+    return 0;
+  }, 0);
   return (
     <TouchableOpacity onPress={onPress} style={[containerStyle]}>
       {/* image */}
@@ -40,10 +47,8 @@ const VerticalFoodCard: React.FC<VerticalFoodCardProps> = ({
       {/* info */}
       <View style={styles.info}>
         <Text style={[styles.name, {fontWeight}]}>
-          {foodChecked?.quantity && (
-            <Text style={{color: COLORS.primary}}>
-              {foodChecked?.quantity}x{' '}
-            </Text>
+          {bought && boughtQuantity && boughtQuantity > 0 && (
+            <Text style={{color: COLORS.primary}}>{boughtQuantity}x </Text>
           )}
           {item.name}
         </Text>

@@ -66,7 +66,11 @@ const ListFoodInCart: React.FC<ListFoodInCart> = ({
                   <Text style={styles.totalPrice}>
                     {convertToVND(food.price)}
                   </Text>
-                  <TouchableOpacity style={{marginLeft: SIZES.base}}>
+                  <TouchableOpacity
+                    style={{
+                      alignSelf: 'flex-start',
+                      padding: SIZES.base / 2,
+                    }}>
                     <Ionicons
                       name="close-circle-sharp"
                       color={COLORS.gray3}
@@ -133,7 +137,8 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: SIZES.spacing,
+    paddingVertical: SIZES.spacing,
+    paddingLeft: SIZES.spacing,
     borderBottomWidth: 1,
     borderColor: COLORS.lightGray2,
   },
@@ -156,5 +161,6 @@ const styles = StyleSheet.create({
   quantityWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 4,
   },
 });

@@ -15,6 +15,8 @@ const ListHightLight = ({
   onFoodItemPress,
   cart,
 }: ListHightLightPops) => {
+  console.log(cart);
+
   return (
     <FlatList
       ListHeaderComponent={
@@ -32,7 +34,7 @@ const ListHightLight = ({
       data={bestSeller}
       keyExtractor={item => item.id}
       renderItem={({item}) => {
-        const foodChecked = cart?.find(food => food.name === item.name);
+        const foodChecked = cart?.filter(i => i.baseId === item.id);
         return (
           <VerticalFoodCard
             foodChecked={foodChecked}
