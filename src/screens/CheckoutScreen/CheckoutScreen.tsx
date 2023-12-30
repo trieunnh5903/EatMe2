@@ -15,7 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import convertToVND from '../../utils/convertToVND';
 import {Shadow} from 'react-native-shadow-2';
 import {CheckoutScreenProp} from '../../types/navigation.type';
-import {store, useAppSelector} from '../../redux/store';
+import {store, useAppDispatch, useAppSelector} from '../../redux/store';
 import {
   getTotalFoodCount,
   getTotalFoodPriceOneInvoice,
@@ -28,10 +28,13 @@ import ListRecommend from './ListRecomend';
 import CaculateTheBill from './CaculateTheBill';
 import TipForTheDriver from './TipForTheDriver';
 import {FoodRedux} from '../../types/types';
+import {updateCart} from '../../redux/slice/cart.slice';
+import {deleteRestaurant} from '../../redux/slice/restaurant.slice';
 
 const HEADER_HEIGHT = 50;
 const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
   const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
   const idRestaurant = route.params.restaurantId;
   const restaurant = useAppSelector(
     state => state.restaurant.byId[idRestaurant],
@@ -42,17 +45,30 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
     store.getState(),
     idRestaurant,
   );
-
-  // event
-  const onBackPress = () => navigation.goBack();
-  const onChangeAddressPress = () =>
-    navigation.navigate('EnterAddressScreen', {enableGoogleMap: true});
   const [selectedTip, setSelectedTip] = useState(0);
+
+  const totalPrice = totalFoodPrice + selectedTip + 23000;
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 0);
   }, []);
+
+  useEffect(() => {
+    const onCartEmpty = () => {
+      if (cartList.length === 0) {
+        dispatch(deleteRestaurant([idRestaurant]));
+        navigation.navigate('DetailRestaurant', {restaurantId: idRestaurant});
+      }
+    };
+    onCartEmpty();
+  }, [cartList.length, dispatch, idRestaurant, navigation]);
+
+  // event
+  const onBackPress = () => navigation.goBack();
+  const onChangeAddressPress = () =>
+    navigation.navigate('EnterAddressScreen', {enableGoogleMap: true});
 
   const onAddMoreFoodPress = () => {
     navigation.push('DetailRestaurant', {restaurantId: idRestaurant});
@@ -75,6 +91,16 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
       });
     }
   };
+
+  const onDeleteFoodItemPress = (foodId: string) => {
+    updateStore(foodId);
+  };
+
+  const updateStore = (foodId: string) => {
+    const listFood = cartList.filter(i => i.id !== foodId);
+    dispatch(updateCart({listFood, restaurantId: idRestaurant}));
+  };
+
   // render
   const renderHeader = () => {
     return (
@@ -99,7 +125,6 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
     );
   };
 
-  const totalPrice = totalFoodPrice + selectedTip + 23000;
   return (
     <SafeAreaView style={styles.container}>
       {loading ? (
@@ -119,6 +144,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
               cartList={cartList}
               onAddMoreFoodPress={onAddMoreFoodPress}
               onFoodItemPress={onFoodItemPress}
+              onDeleteFoodItemPress={onDeleteFoodItemPress}
             />
 
             {/* recommmed food */}

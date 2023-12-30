@@ -29,7 +29,7 @@ const ListFooterComponent: React.FC<ListFooterComponentProps> = ({
         <Text
           style={[
             styles.subLabelText,
-            {color: COLORS.gray, marginVertical: SIZES.base},
+            {color: COLORS.primary, marginVertical: SIZES.base},
           ]}>
           {'Chọn tối đa ' + maximum}
         </Text>

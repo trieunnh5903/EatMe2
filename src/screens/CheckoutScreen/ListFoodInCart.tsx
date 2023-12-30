@@ -9,11 +9,13 @@ interface ListFoodInCart {
   cartList: FoodRedux[];
   onAddMoreFoodPress: () => void | undefined;
   onFoodItemPress: (food: FoodRedux) => void | undefined;
+  onDeleteFoodItemPress: (foddId: string) => void;
 }
 const ListFoodInCart: React.FC<ListFoodInCart> = ({
   cartList,
   onAddMoreFoodPress,
   onFoodItemPress,
+  onDeleteFoodItemPress,
 }) => {
   return (
     <View style={{padding: SIZES.padding}}>
@@ -64,9 +66,10 @@ const ListFoodInCart: React.FC<ListFoodInCart> = ({
                 </View>
                 <View style={styles.quantityWrapper}>
                   <Text style={styles.totalPrice}>
-                    {convertToVND(food.price)}
+                    {convertToVND(food.price * food.quantity)}
                   </Text>
                   <TouchableOpacity
+                    onPress={() => onDeleteFoodItemPress(food.id)}
                     style={{
                       alignSelf: 'flex-start',
                       padding: SIZES.base / 2,

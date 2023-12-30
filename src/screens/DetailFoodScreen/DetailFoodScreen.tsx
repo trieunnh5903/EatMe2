@@ -162,7 +162,7 @@ const MyDetailFood: React.FC<MyDetailFoodProps> = ({food}) => {
       return 0;
     }
 
-    return (totalPriceOptions + totalPriceTopping + food.price) * foodQuantity;
+    return totalPriceOptions + totalPriceTopping + food.price;
   };
 
   const onBackPress = () => navigation.goBack();
@@ -217,7 +217,6 @@ const MyDetailFood: React.FC<MyDetailFoodProps> = ({food}) => {
       setFoodQuantity(foodQuantity - 1);
     }
   }, [foodQuantity]);
-
   const onAddToCartPress = () => {
     // update exsiting food
     if (foodRedux) {
@@ -361,7 +360,7 @@ const MyDetailFood: React.FC<MyDetailFoodProps> = ({food}) => {
                 </Text>
                 <View style={styles.dot} />
                 <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
-                  {convertToVND(totalPrice())}
+                  {convertToVND(totalPrice() * foodQuantity)}
                 </Text>
               </>
             )

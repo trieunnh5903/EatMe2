@@ -27,7 +27,10 @@ const makeTotalPriceSelector = () =>
       if (!cart) {
         return 0;
       }
-      return cart.reduce((total, item) => total + item.price, 0);
+      return cart.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0,
+      );
     },
   );
 

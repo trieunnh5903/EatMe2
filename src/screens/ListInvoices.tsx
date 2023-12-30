@@ -20,7 +20,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import convertToVND from '../utils/convertToVND';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import {deleteFood} from '../redux/slice/cart.slice';
+import {deleteAllFoodPerRestaurant} from '../redux/slice/cart.slice';
 import {deleteRestaurant} from '../redux/slice/restaurant.slice';
 import {ListInvoicesScreenProp} from '../types/navigation.type';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -66,7 +66,7 @@ const ListInvoices = () => {
   const onBackPress = () => navigation.goBack();
   const onToggleDeletePress = () => setIsDelete(!isDelete);
   const onDeletePress = () => {
-    dispatch(deleteFood([...checkedId]));
+    dispatch(deleteAllFoodPerRestaurant([...checkedId]));
     dispatch(deleteRestaurant([...checkedId]));
   };
 

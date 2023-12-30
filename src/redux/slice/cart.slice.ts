@@ -85,14 +85,11 @@ const cartSlice = createSlice({
       state.byId[restaurantId] = newRestaurant;
     },
 
-    deleteFood: (state, action: PayloadAction<string[]>) => {
+    deleteAllFoodPerRestaurant: (state, action: PayloadAction<string[]>) => {
       const restaurantIdsToDelete = action.payload;
       restaurantIdsToDelete.forEach(restaurantId => {
-        // Kiểm tra xem nhà hàng có tồn tại
         if (state.byId[restaurantId]) {
-          // Xóa ID nhà hàng khỏi mảng allIds
           state.allIds = state.allIds.filter(id => id !== restaurantId);
-          // Xóa nhà hàng khỏi trạng thái
           delete state.byId[restaurantId];
         }
       });
@@ -101,5 +98,10 @@ const cartSlice = createSlice({
 });
 
 export default cartSlice.reducer;
-export const {addFood, updateFood, deleteFood, createCart, updateCart} =
-  cartSlice.actions;
+export const {
+  addFood,
+  updateFood,
+  deleteAllFoodPerRestaurant,
+  createCart,
+  updateCart,
+} = cartSlice.actions;
