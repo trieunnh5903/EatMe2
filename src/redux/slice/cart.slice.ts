@@ -53,19 +53,6 @@ const cartSlice = createSlice({
       state.byId[restaurantId] = listFood;
     },
 
-    deleteFood: (state, action: PayloadAction<string[]>) => {
-      const restaurantIdsToDelete = action.payload;
-      restaurantIdsToDelete.forEach(restaurantId => {
-        // Kiểm tra xem nhà hàng có tồn tại
-        if (state.byId[restaurantId]) {
-          // Xóa ID nhà hàng khỏi mảng allIds
-          state.allIds = state.allIds.filter(id => id !== restaurantId);
-          // Xóa nhà hàng khỏi trạng thái
-          delete state.byId[restaurantId];
-        }
-      });
-    },
-
     addFood(
       state,
       action: PayloadAction<{food: FoodRedux; restaurantId: string}>,
@@ -79,15 +66,40 @@ const cartSlice = createSlice({
           JSON.stringify(item.toppings) === JSON.stringify(food.toppings)
         );
       });
-
       if (existingFood === undefined) {
         restaurant.push(food);
       } else {
         existingFood.quantity += food.quantity;
       }
     },
+
+    updateFood: (
+      state,
+      action: PayloadAction<{restaurantId: string; newFood: FoodRedux}>,
+    ) => {
+      const {newFood, restaurantId} = action.payload;
+      const restaurant = state.byId[restaurantId];
+      const newRestaurant = restaurant.map(item =>
+        item.id === newFood.id ? newFood : item,
+      );
+      state.byId[restaurantId] = newRestaurant;
+    },
+
+    deleteFood: (state, action: PayloadAction<string[]>) => {
+      const restaurantIdsToDelete = action.payload;
+      restaurantIdsToDelete.forEach(restaurantId => {
+        // Kiểm tra xem nhà hàng có tồn tại
+        if (state.byId[restaurantId]) {
+          // Xóa ID nhà hàng khỏi mảng allIds
+          state.allIds = state.allIds.filter(id => id !== restaurantId);
+          // Xóa nhà hàng khỏi trạng thái
+          delete state.byId[restaurantId];
+        }
+      });
+    },
   },
 });
 
 export default cartSlice.reducer;
-export const {addFood, createCart, updateCart, deleteFood} = cartSlice.actions;
+export const {addFood, updateFood, deleteFood, createCart, updateCart} =
+  cartSlice.actions;

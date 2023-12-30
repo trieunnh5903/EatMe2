@@ -27,6 +27,7 @@ import ListFoodInCart from './ListFoodInCart';
 import ListRecommend from './ListRecomend';
 import CaculateTheBill from './CaculateTheBill';
 import TipForTheDriver from './TipForTheDriver';
+import {FoodRedux} from '../../types/types';
 
 const HEADER_HEIGHT = 50;
 const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
@@ -65,6 +66,15 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
     }
   };
 
+  const onFoodItemPress = (food: FoodRedux) => {
+    if (food.baseId) {
+      navigation.navigate('DetailFood', {
+        foodReduxId: food.id,
+        foodId: food.baseId,
+        restaurantId: idRestaurant,
+      });
+    }
+  };
   // render
   const renderHeader = () => {
     return (
@@ -108,6 +118,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
             <ListFoodInCart
               cartList={cartList}
               onAddMoreFoodPress={onAddMoreFoodPress}
+              onFoodItemPress={onFoodItemPress}
             />
 
             {/* recommmed food */}

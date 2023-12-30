@@ -38,6 +38,7 @@ export interface Food {
 
 export interface FoodRedux {
   id: string;
+  baseId: string | undefined;
   name: string;
   description?: string;
   price: number;

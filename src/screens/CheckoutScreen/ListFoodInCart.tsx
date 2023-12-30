@@ -8,10 +8,12 @@ import {FoodRedux} from '../../types/types';
 interface ListFoodInCart {
   cartList: FoodRedux[];
   onAddMoreFoodPress: () => void | undefined;
+  onFoodItemPress: (food: FoodRedux) => void | undefined;
 }
 const ListFoodInCart: React.FC<ListFoodInCart> = ({
   cartList,
   onAddMoreFoodPress,
+  onFoodItemPress,
 }) => {
   return (
     <View style={{padding: SIZES.padding}}>
@@ -21,7 +23,10 @@ const ListFoodInCart: React.FC<ListFoodInCart> = ({
       <View>
         {cartList.map(food => {
           return (
-            <TouchableOpacity key={food.id} style={styles.itemContainer}>
+            <TouchableOpacity
+              onPress={() => onFoodItemPress(food)}
+              key={food.id}
+              style={styles.itemContainer}>
               {/* content */}
               <View style={{flex: 1, flexDirection: 'row'}}>
                 <View style={styles.quantity}>

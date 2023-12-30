@@ -21,41 +21,73 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {
+  Food,
   FoodRedux,
   RestaurantOption,
   RestaurantTopping,
 } from '../../types/types';
 import {useAppDispatch, useAppSelector} from '../../redux/store';
-import {addFood, createCart} from '../../redux/slice/cart.slice';
+import {addFood, createCart, updateFood} from '../../redux/slice/cart.slice';
 import {nanoid} from '@reduxjs/toolkit';
 import {addRestaurant} from '../../redux/slice/restaurant.slice';
 import ListHeaderComponent from './ListHeaderComponent';
 import ListFooterComponent from './ListFooterComponent';
 import {useQuery} from '@tanstack/react-query';
 import {fetchFoodById} from '../../services/restaurant.service';
+import {ActivityIndicator} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useSelectCartById} from '../../redux/hooks';
+
+interface MyDetailFoodProps {
+  food: Food;
+}
 
 const HEADER_HEIGHT = 50;
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
-const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
+const DetailFoodScreen = ({route}: DetailFoodNavigationProps) => {
   console.log('DetalFoodScreen');
-  const {foodItem} = route.params;
-  const {toppings, options} = foodItem;
+  const {foodId} = route.params;
+
+  const {data} = useQuery({
+    queryKey: ['food', foodId],
+    queryFn: () => fetchFoodById(foodId),
+  });
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {data === undefined ? (
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+        </View>
+      ) : (
+        <MyDetailFood food={data} />
+      )}
+    </SafeAreaView>
+  );
+};
+
+const MyDetailFood: React.FC<MyDetailFoodProps> = ({food}) => {
+  const navigation = useNavigation<DetailFoodNavigationProps['navigation']>();
+
+  const {
+    params: {foodReduxId, restaurantId},
+  } = useRoute<DetailFoodNavigationProps['route']>();
+  const cart = useSelectCartById(restaurantId);
+  const foodRedux = cart?.find(i => i.id === foodReduxId);
+
   const [foodQuantity, setFoodQuantity] = useState<number>(1);
   const scrollY = useSharedValue(0);
   const dispatch = useAppDispatch();
-  const [selectedOption, setSelectedOption] = useState<RestaurantOption[]>([]);
+  const [selectedOption, setSelectedOption] = useState<RestaurantOption[]>(
+    foodRedux?.options || [],
+  );
   const [selectedTopping, setSelectedTopping] = useState<RestaurantTopping[]>(
-    [],
+    foodRedux?.toppings || [],
   );
   const restaurant = useAppSelector(
     state => state.restaurant.currentRestaurant,
   );
-
-  const {data: food} = useQuery({
-    queryKey: ['food', foodItem.id],
-    queryFn: () => fetchFoodById(foodItem.id),
-  });
 
   // event
   const bgColorIconClose = useAnimatedStyle(() => {
@@ -106,9 +138,10 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
 
   const canAddToCart = useMemo(() => {
     return (
-      selectedOption?.length === (options?.length || selectedOption?.length)
+      selectedOption?.length ===
+      (food.options?.length || selectedOption?.length)
     );
-  }, [selectedOption, options]);
+  }, [food.options?.length, selectedOption?.length]);
 
   const totalPriceOptions = useMemo(() => {
     return selectedOption.reduce((pre, curr) => {
@@ -127,9 +160,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
       return 0;
     }
 
-    return (
-      (totalPriceOptions + totalPriceTopping + foodItem.price) * foodQuantity
-    );
+    return (totalPriceOptions + totalPriceTopping + food.price) * foodQuantity;
   };
 
   const onBackPress = () => navigation.goBack();
@@ -186,23 +217,37 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
   }, [foodQuantity]);
 
   const onAddToCartPress = () => {
-    const food: FoodRedux = {
+    // update exsiting food
+    if (foodRedux) {
+      const newFood: FoodRedux = {
+        ...foodRedux,
+        options: selectedOption,
+        toppings: selectedTopping,
+        price: totalPrice(),
+        quantity: foodQuantity,
+      };
+      dispatch(updateFood({newFood, restaurantId: foodRedux.id}));
+      navigation.goBack();
+      return;
+    }
+
+    // add new food
+    const newFood: FoodRedux = {
       id: nanoid(),
-      image: foodItem.image,
-      name: foodItem.name,
+      baseId: food?.id,
+      image: food.image,
+      name: food.name,
       price: totalPrice(),
       quantity: foodQuantity,
-      description: foodItem.description,
+      description: food.description,
       options: selectedOption,
       toppings: selectedTopping,
     };
     dispatch(createCart(restaurant));
-    dispatch(addFood({food, restaurantId: restaurant.id}));
+    dispatch(addFood({food: newFood, restaurantId: restaurant.id}));
     dispatch(addRestaurant(restaurant));
     navigation.goBack();
   };
-
-  // render
 
   return (
     <SafeAreaView style={styles.container}>
@@ -218,7 +263,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
 
       <Animated.View style={[styles.headerContainer, headerAnimatedStyle]}>
         <Text style={{color: COLORS.blackText, ...FONTS.title_medium}}>
-          {foodItem.name}
+          {food.name}
         </Text>
       </Animated.View>
 
@@ -226,7 +271,7 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
       <View style={styles.imageFood}>
         <Image
           source={{
-            uri: foodItem.image,
+            uri: food.image,
           }}
           style={{width: '100%', height: '100%'}}
         />
@@ -236,14 +281,14 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
         overScrollMode="never"
         ListHeaderComponent={
           // name, price food
-          <ListHeaderComponent foodItem={foodItem} />
+          <ListHeaderComponent foodItem={food} />
         }
         onScroll={event => onScroll(event)}
         contentContainerStyle={{
           paddingTop: SIZES.height * 0.3 - HEADER_HEIGHT,
         }}
         showsVerticalScrollIndicator={true}
-        data={options}
+        data={food.options}
         renderItem={({item}) => (
           // option item
           <View style={{backgroundColor: COLORS.white}}>
@@ -266,13 +311,13 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
         )}
         // list topping
         ListFooterComponent={
-          toppings && (
+          food.toppings && (
             <ListFooterComponent
               onDecreaseToppingPress={onDecreaseToppingPress}
               onIncreaseToppingPress={onIncreaseToppingPress}
               quantityTopping={quantityTopping}
               selectedTopping={selectedTopping}
-              toppings={toppings}
+              toppings={food.toppings}
             />
           )
         }
@@ -303,15 +348,21 @@ const DetailFoodScreen = ({route, navigation}: DetailFoodNavigationProps) => {
             styles.btnAddToCartWrapper,
           ]}>
           {canAddToCart ? (
-            <>
+            foodRedux ? (
               <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
-                Thêm
+                Thay đổi
               </Text>
-              <View style={styles.dot} />
-              <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
-                {convertToVND(totalPrice())}
-              </Text>
-            </>
+            ) : (
+              <>
+                <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
+                  Thêm
+                </Text>
+                <View style={styles.dot} />
+                <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
+                  {convertToVND(totalPrice())}
+                </Text>
+              </>
+            )
           ) : (
             <Text style={{color: COLORS.white, ...FONTS.title_medium}}>
               Chọn thông tin
