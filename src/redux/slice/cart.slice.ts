@@ -61,9 +61,10 @@ const cartSlice = createSlice({
       const restaurant = state.byId[restaurantId];
       const existingFood = restaurant.find(item => {
         return (
-          item.name === food.name &&
-          JSON.stringify(item.options) === JSON.stringify(food.options) &&
-          JSON.stringify(item.toppings) === JSON.stringify(food.toppings)
+          item.baseId === food.baseId && item.id === food.id
+          // item.name === food.name &&
+          // JSON.stringify(item.options) === JSON.stringify(food.options) &&
+          // JSON.stringify(item.toppings) === JSON.stringify(food.toppings)
         );
       });
       if (existingFood === undefined) {
@@ -85,7 +86,7 @@ const cartSlice = createSlice({
       state.byId[restaurantId] = newRestaurant;
     },
 
-    deleteAllFoodPerRestaurant: (state, action: PayloadAction<string[]>) => {
+    deleteAllFoodByRestaurantId: (state, action: PayloadAction<string[]>) => {
       const restaurantIdsToDelete = action.payload;
       restaurantIdsToDelete.forEach(restaurantId => {
         if (state.byId[restaurantId]) {
@@ -101,7 +102,7 @@ export default cartSlice.reducer;
 export const {
   addFood,
   updateFood,
-  deleteAllFoodPerRestaurant,
+  deleteAllFoodByRestaurantId,
   createCart,
   updateCart,
 } = cartSlice.actions;
