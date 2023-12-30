@@ -1,28 +1,39 @@
 import {Image, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../config';
 import {Break, ButtonText, HeaderCustom} from '../components';
 import {EnterAddressScreenProps} from '../types/navigation.type';
 import SearchInput from '../components/SearchInput';
 import {FlashList} from '@shopify/flash-list';
-import MapView from 'react-native-maps';
+import MapView, {Region} from 'react-native-maps';
 import LottieView from 'lottie-react-native';
 import lottie from '../config/lottie';
-import useEnterAddressController from '../view-controllers/useEnterAddressController';
+import {useNavigation} from '@react-navigation/native';
 
 const EnterAddressScreen = ({route}: EnterAddressScreenProps) => {
   const {enableGoogleMap} = route.params;
-  const {
-    showGoogleMap,
-    onChangeTextKeyword,
-    onRegionChangeComplete,
-    onDeleteKeywordPress,
-    onToggleGoogleMapPress,
-    onBackPress,
-    animationRef,
-    region,
-    keyAddress,
-  } = useEnterAddressController(enableGoogleMap);
+  const navigation = useNavigation<EnterAddressScreenProps['navigation']>();
+  const [showGoogleMap, setShowGoogleMap] = useState(enableGoogleMap);
+  const [keyAddress, setKeyAddress] = useState('');
+  // const {address} = useAppSelector(state => state.user);
+  const animationRef = useRef<LottieView>(null);
+  const [region, setRegion] = useState({
+    latitude: 10.8356522,
+    longitude: 106.6769978,
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
+  });
+  const onBackPress = () => {
+    return navigation.goBack();
+  };
+
+  const onToggleGoogleMapPress = () => setShowGoogleMap(!showGoogleMap);
+  const onDeleteKeywordPress = () => setKeyAddress('');
+  const onChangeTextKeyword = (value: string) => setKeyAddress(value);
+  const onRegionChangeComplete = (newRegion: Region) => {
+    setRegion(newRegion);
+    animationRef.current?.play();
+  };
 
   return (
     <View style={styles.container}>

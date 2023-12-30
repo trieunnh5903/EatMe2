@@ -15,8 +15,6 @@ const ListHightLight = ({
   onFoodItemPress,
   cart,
 }: ListHightLightPops) => {
-  console.log(cart);
-
   return (
     <FlatList
       ListHeaderComponent={

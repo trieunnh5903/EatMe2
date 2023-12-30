@@ -218,7 +218,7 @@ const HomeScreen = () => {
           </View>
         }
         overScrollMode="never"
-        estimatedItemSize={150}
+        estimatedItemSize={100}
         keyExtractor={item => item.id}
         data={allFoods?.pages.flat()}
         showsVerticalScrollIndicator={false}

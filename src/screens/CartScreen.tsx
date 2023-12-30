@@ -100,8 +100,7 @@ const CartScreen = ({route, navigation}: CartScreenProp) => {
 
       {listFood.length > 0 ? (
         <>
-          {/* có sản phẩm trong giỏ hàng */}
-          {/* list */}
+          {/* have food */}
           <FlatList
             data={listFood}
             keyExtractor={item => {
@@ -115,7 +114,6 @@ const CartScreen = ({route, navigation}: CartScreenProp) => {
               />
             )}
           />
-          {/* nút thanh toán */}
           <View>
             <TouchableOpacity
               onPress={onCheckoutPress}
@@ -127,7 +125,7 @@ const CartScreen = ({route, navigation}: CartScreenProp) => {
           </View>
         </>
       ) : (
-        // không có sản phẩm trong giỏ hàng
+        // dont have food
         <>
           <View style={styles.emptyWrapper}>
             <Image style={styles.imageEmty} source={icons.cart_weight400} />
