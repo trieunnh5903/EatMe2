@@ -5,6 +5,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  NativeEventEmitter,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES, FONTS, icons} from '../../config';
@@ -31,6 +32,10 @@ import {FoodRedux} from '../../types/types';
 import {updateCart} from '../../redux/slice/cart.slice';
 import {deleteRestaurant} from '../../redux/slice/restaurant.slice';
 
+import {NativeModules} from 'react-native';
+import {createOrder} from '../../services/createOrder';
+import {LogBox} from 'react-native';
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 const HEADER_HEIGHT = 50;
 const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
   const [loading, setLoading] = useState(true);
@@ -64,6 +69,26 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
     };
     onCartEmpty();
   }, [cartList.length, dispatch, idRestaurant, navigation]);
+
+  useEffect(() => {
+    const payZaloBridgeEmitter = new NativeEventEmitter(NativeModules.ZPModule);
+    let payZaloBridgeListener = payZaloBridgeEmitter.addListener(
+      'EventPayZalo',
+      data => {
+        if (data.returnCode === '1') {
+          console.log('EventPayZalo success'); // "someValue"
+        } else if (data.returnCode === '0') {
+          console.log('EventPayZalo cancell');
+        } else {
+          console.log('EventPayZalo error');
+          console.log(data);
+        }
+      },
+    );
+    return () => {
+      payZaloBridgeListener.remove();
+    };
+  }, []);
 
   // event
   const onBackPress = () => navigation.goBack();
@@ -101,6 +126,19 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
     dispatch(updateCart({listFood, restaurantId: idRestaurant}));
   };
 
+  const onPaymentPress = () => {
+    // const {BatteryModule} = NativeModules;
+    // BatteryModule.getDeviceBatteryLevel()
+    //   .then((batteryLevel: number) => {
+    //     Alert.alert(`The battery level is ${batteryLevel * 100}%`);
+    //   })
+    //   .catch((err: any) => {
+    //     console.error('Failed to get battery level:', err);
+    //   });
+    // const {ZPModule} = NativeModules;
+    // ZPModule.payOrder(token);
+    createOrder();
+  };
   // render
   const renderHeader = () => {
     return (
@@ -266,6 +304,7 @@ const CheckoutScreen = ({navigation, route}: CheckoutScreenProp) => {
                   </View>
 
                   <ButtonText
+                    onPress={onPaymentPress}
                     containerStyle={{
                       width: '60%',
                       borderRadius: SIZES.radius,

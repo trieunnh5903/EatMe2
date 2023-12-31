@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {createServer} from 'miragejs';
 
 export default function setUpMirage(environment: string | undefined) {
@@ -25,6 +26,22 @@ export default function setUpMirage(environment: string | undefined) {
       this.get('/featureCategory', () => {
         return featureCategory;
       });
+
+      this.post(
+        'https://sb-openapi.zalopay.vn/v2/create',
+        (_schema, request) => {
+          let attrs = JSON.parse(request.requestBody);
+          axios
+            .post('https://sb-openapi.zalopay.vn/v2/create', {...attrs})
+            .then(function (response) {
+              console.log(response.data);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          return featureCategory;
+        },
+      );
     },
   });
 }
