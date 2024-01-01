@@ -26,22 +26,6 @@ export default function setUpMirage(environment: string | undefined) {
       this.get('/featureCategory', () => {
         return featureCategory;
       });
-
-      this.post(
-        'https://sb-openapi.zalopay.vn/v2/create',
-        (_schema, request) => {
-          let attrs = JSON.parse(request.requestBody);
-          axios
-            .post('https://sb-openapi.zalopay.vn/v2/create', {...attrs})
-            .then(function (response) {
-              console.log(response.data);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-          return featureCategory;
-        },
-      );
     },
   });
 }
@@ -3408,6 +3392,31 @@ const restaurants = [
     address: '32 Nguyễn Văn Lạc, P. 19, Bình Thạnh, TP. HCM',
     image:
       'https://images.foody.vn/res/g79/781832/prof/s460x300/foody-upload-api-foody-mobile-banhkembap1-jpg-181002153458.jpg',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: MENU,
+        },
+        {
+          label: 'Chọn thêm',
+          foods: CHON_THEM,
+        },
+        {
+          label: 'Đồ uống',
+          foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
+      ],
+    },
   },
   {
     id: 'dfd61104-658e-11ee-8c99-0242ac120002',
@@ -3512,6 +3521,31 @@ const restaurants = [
       '1779/21/6 Khu Phố 2A, Quốc Lộ 1A, P. Tân Thới Hiệp, Quận 12, TP. HCM',
     image:
       'https://images.foody.vn/res/g105/1043305/prof/s480x300/foody-upload-api-foody-mobile-89039049_10754428753-200820145636.jpg',
+    allFoods: {
+      bestSeller: [FOODS_DATA[0], FOODS_DATA[1], FOODS_DATA[2], FOODS_DATA[3]],
+      menuFoods: [
+        {
+          label: 'Khuyến mãi',
+          foods: FOODS_DATA.slice(4),
+        },
+        {
+          label: 'Thực đơn',
+          foods: MENU,
+        },
+        {
+          label: 'Chọn thêm',
+          foods: CHON_THEM,
+        },
+        {
+          label: 'Đồ uống',
+          foods: DO_UONG,
+        },
+        {
+          label: 'Món mới',
+          foods: MON_MOI,
+        },
+      ],
+    },
   },
   {
     id: 'f537d7c6-658e-11ee-8c99-0242ac120002',

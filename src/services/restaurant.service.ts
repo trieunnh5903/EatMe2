@@ -7,10 +7,10 @@ export const fetchAllRestaurant = async ({pageParam = 1}) => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log('error message: ', error.message);
+      console.log('fetchAllRestaurant error message: ', error.message);
       return Promise.reject(new Error(error.message));
     } else {
-      console.log('unexpected error: ', error);
+      console.log('fetchAllRestaurant unexpected error: ', error);
       return Promise.reject(new Error('unexpected error'));
     }
   }

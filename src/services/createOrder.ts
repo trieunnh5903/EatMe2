@@ -37,40 +37,14 @@ export const createOrder = async () => {
       'sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn',
     ).toString();
 
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://sb-openapi.zalopay.vn/v2/create',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      data: order,
-    };
-
-    axios
-      .post('https://sb-openapi.zalopay.vn/v2/create', {...order})
-      .then(function (response) {
-        // console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    // axios
-    //   .post('https://sb-openapi.zalopay.vn/v2/create', null, {params: order})
-    //   .then(result => {
-    //     console.log(result.data);
-    //   })
-    //   .catch(err => console.log(err));
+    const response = await axios.post(
+      'https://sb-openapi.zalopay.vn/v2/create',
+      {...order},
+    );
+    if (response.data) {
+      return response.data.zp_trans_token;
+    }
   } catch (error) {
     console.log('createOrder error', error);
   }
 };
-
-// axios(config)
-//   .then(response => {
-//     console.log(JSON.stringify(response.data));
-//   })
-//   .catch(error => {
-//     console.log(error);
-//   });
