@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  NativeEventEmitter,
 } from 'react-native';
 import React, {useRef, useEffect, useCallback} from 'react';
 import {icons, COLORS, SIZES, FONTS, images} from '../../config';
@@ -33,8 +32,6 @@ import {fetchAllRestaurant} from '../../services/restaurant.service';
 import {ActivityIndicator} from 'react-native';
 import {FontAwesome5, Fontisto, Ionicons} from '../../utils';
 import ListFeaturedHorizontal from './ListFeaturedHorizontal';
-import {NativeModules} from 'react-native';
-import {createOrder} from '../../services/createOrder';
 
 const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenProp['navigation']>();
@@ -109,26 +106,6 @@ const HomeScreen = () => {
     return () => clearInterval(carouselIntervalId.current);
   }, [startAutoScrollCarousel]);
 
-  useEffect(() => {
-    const payZaloBridgeEmitter = new NativeEventEmitter(NativeModules.ZPModule);
-    let payZaloBridgeListener = payZaloBridgeEmitter.addListener(
-      'EventPayZalo',
-      data => {
-        if (data.returnCode === '1') {
-          console.log('EventPayZalo success'); // "someValue"
-        } else if (data.returnCode === '0') {
-          console.log('EventPayZalo cancell');
-        } else {
-          console.log('EventPayZalo error');
-          console.log(data);
-        }
-      },
-    );
-    return () => {
-      payZaloBridgeListener.remove();
-    };
-  }, []);
-
   // render
   const renderFooter = () => {
     return (
@@ -142,11 +119,7 @@ const HomeScreen = () => {
     );
   };
 
-  const onMenuPress = async () => {
-    const token = await createOrder();
-    const payZP = NativeModules.ZPModule;
-    payZP.payOrder(token);
-  };
+  const onMenuPress = async () => {};
 
   const renderHeader = () => {
     return (
