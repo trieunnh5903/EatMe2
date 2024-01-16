@@ -121,6 +121,9 @@ const HomeScreen = () => {
 
   const onMenuPress = async () => {};
 
+  const handleEmailPress = () => {
+    navigation.navigate('Notification');
+  };
   const renderHeader = () => {
     return (
       <View>
@@ -128,7 +131,7 @@ const HomeScreen = () => {
           containerStyle={styles.headerContainer}
           rightComponent={
             <View style={{flexDirection: 'row', gap: 10}}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleEmailPress}>
                 <Fontisto name="email" size={18} color={COLORS.black} />
               </TouchableOpacity>
               <TouchableOpacity onPress={onMenuPress}>

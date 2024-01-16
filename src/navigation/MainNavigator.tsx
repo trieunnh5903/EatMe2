@@ -8,6 +8,7 @@ import {
   EnterAddressScreen,
   HomeScreen,
   ListInvoices,
+  NotificationScreen,
 } from '../screens';
 import {RootStackParamList} from '../types/navigation.type';
 import SplashScreen from 'react-native-splash-screen';
@@ -33,6 +34,7 @@ const MainNavigator = () => {
         options={{presentation: 'fullScreenModal'}}
         component={ListInvoices}
       />
+      <Stack.Screen name="Notification" component={NotificationScreen} />
     </Stack.Navigator>
   );
 };

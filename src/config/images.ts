@@ -5,6 +5,7 @@ const images = {
   on_boarding_bg2: require('../assets/images/on_boarding/background_02.png'),
   location_pin: require('../assets/images/location-pin.png'),
   banner1: require('../assets/images/banner/subBanner.png'),
+  placeholder: require('../assets/images/placeholder-image.png'),
 };
 
 export default images;

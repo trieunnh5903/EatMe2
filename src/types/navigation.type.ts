@@ -26,6 +26,7 @@ export type RootStackParamList = {
   CheckoutScreen: {
     restaurantId: string;
   };
+  Notification: undefined;
 };
 
 export type CheckoutScreenProp = NativeStackScreenProps<

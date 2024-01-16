@@ -5,7 +5,9 @@ import EnterAddressScreen from './EnterAddressScreen';
 import DetailFoodScreen from './DetailFoodScreen/DetailFoodScreen';
 import ListInvoices from './ListInvoices';
 import CheckoutScreen from './CheckoutScreen/CheckoutScreen';
+import NotificationScreen from './NotificationScreen';
 export {
+  NotificationScreen,
   ListInvoices,
   CheckoutScreen,
   DetailFoodScreen,

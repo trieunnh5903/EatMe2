@@ -9,7 +9,7 @@ import {
   ImageStyle,
 } from 'react-native';
 import React, {memo} from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../config';
+import {COLORS, FONTS, SIZES, icons, images} from '../config';
 import {Image} from 'react-native';
 import {Restaurant} from '../types/types';
 import Dot from './Dot';
@@ -34,6 +34,9 @@ const HorizontalRestaurantCard: React.FC<HorizontalRestaurantCardProps> = ({
       onPress={onPress}
       style={[styles.container, containerStyle]}>
       <Image
+        defaultSource={{
+          uri: images.placeholder,
+        }}
         style={[styles.image, imageStyle]}
         source={{uri: item.image}}
         resizeMode={'cover'}
