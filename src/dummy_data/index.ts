@@ -1,5 +1,5 @@
-import {images} from '../config';
-import icons from '../config/icons';
+import {images} from '../theme';
+import icons from '../theme/icons';
 import {Feature} from '../types/types';
 
 const myProfile = {

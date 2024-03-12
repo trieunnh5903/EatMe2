@@ -1,7 +1,7 @@
 import {StyleSheet, ViewStyle, View} from 'react-native';
 import React from 'react';
 import Skeleton from './Skeleton';
-import {SIZES} from '../../config';
+import {SIZES} from '../../theme';
 
 const VerticalCardSkeleton = ({style}: {style: ViewStyle}) => {
   return (

@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useRef, useEffect, useCallback, useState} from 'react';
-import {COLORS, SIZES, FONTS, icons} from '../../config';
+import {COLORS, SIZES, FONTS, icons} from '../../theme';
 import {Break, ButtonText, ButtonTextIcon} from '../../components';
 import Animated, {
   Extrapolate,

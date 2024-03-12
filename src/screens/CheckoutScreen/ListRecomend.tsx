@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {SIZES, FONTS, COLORS, icons} from '../../config';
+import {SIZES, FONTS, COLORS, icons} from '../../theme';
 import convertToVND from '../../utils/convertToVND';
 import {FlashList} from '@shopify/flash-list';
 import {Food} from '../../types/types';

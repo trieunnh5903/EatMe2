@@ -11,7 +11,7 @@ import {
   TextStyle,
 } from 'react-native';
 import React from 'react';
-import {SIZES, FONTS} from '../../config';
+import {SIZES, FONTS} from '../../theme';
 
 interface ButtonTextIconProp {
   label: string;

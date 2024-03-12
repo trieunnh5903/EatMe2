@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, {ReactNode} from 'react';
-import {SIZES} from '../config';
+import {SIZES} from '../theme';
 
 type AuthLayoutProps = {
   children: ReactNode;

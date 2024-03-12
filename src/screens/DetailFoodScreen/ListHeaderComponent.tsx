@@ -1,7 +1,7 @@
 import {StyleSheet, TouchableOpacity, Image, Text, View} from 'react-native';
 import React from 'react';
 import convertToVND from '../../utils/convertToVND';
-import {COLORS, FONTS, SIZES, icons} from '../../config';
+import {COLORS, FONTS, SIZES, icons} from '../../theme';
 import {Food} from '../../types/types';
 
 const ListHeaderComponent = ({foodItem}: {foodItem: Food}) => {

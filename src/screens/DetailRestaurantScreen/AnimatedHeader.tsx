@@ -12,7 +12,7 @@ import {
 import React, {memo} from 'react';
 import Animated, {StyleProps} from 'react-native-reanimated';
 import {Shadow} from 'react-native-shadow-2';
-import {icons, COLORS, SIZES, FONTS} from '../../config';
+import {icons, COLORS, SIZES, FONTS} from '../../theme';
 import {useNavigation} from '@react-navigation/native';
 import {DetailRestaurantNavigationProps} from '../../types/navigation.type';
 import {MenuFood, Restaurant} from '../../types/types';

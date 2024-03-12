@@ -1,6 +1,6 @@
 import {View} from 'react-native';
 import React from 'react';
-import {COLORS, SIZES} from '../config';
+import {COLORS, SIZES} from '../theme';
 
 const Dot = () => {
   return (

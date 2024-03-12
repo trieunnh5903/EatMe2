@@ -8,7 +8,7 @@ import {
   NativeEventEmitter,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {COLORS, SIZES, FONTS, icons} from '../../config';
+import {COLORS, SIZES, FONTS, icons} from '../../theme';
 import {Break, ButtonIcon, ButtonText} from '../../components';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';

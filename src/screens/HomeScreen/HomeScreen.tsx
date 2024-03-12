@@ -10,7 +10,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import React, {useRef, useEffect, useCallback} from 'react';
-import {icons, COLORS, SIZES, FONTS, images} from '../../config';
+import {icons, COLORS, SIZES, FONTS, images} from '../../theme';
 import {
   BadgeButton,
   Break,
@@ -22,19 +22,20 @@ import {
 } from '../../components';
 import {FlashList} from '@shopify/flash-list';
 import {Restaurant} from '../../types/types';
-import dummy_data from '../../dummy_data';
 import {useNavigation} from '@react-navigation/native';
-import {HomeScreenProp} from '../../types/navigation.type';
 import {useSelectTotalCart} from '../../redux/hooks';
 import {useAppSelector} from '../../redux/store';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {fetchAllRestaurant} from '../../services/restaurant.service';
 import {ActivityIndicator} from 'react-native';
-import {FontAwesome5, Fontisto, Ionicons} from '../../utils';
 import ListFeaturedHorizontal from './ListFeaturedHorizontal';
+import {FontAwesome5, Fontisto, Ionicons} from '@/utils';
+import dummy_data from '@/dummy_data';
+import {RootStackScreenProps} from '@/types/navigation.type';
 
 const HomeScreen = () => {
-  const navigation = useNavigation<HomeScreenProp['navigation']>();
+  const navigation =
+    useNavigation<RootStackScreenProps<'HomeScreen'>['navigation']>();
   const carouselRef = useRef<FlatList>(null);
   const carouselIndex = useRef(0);
   const carouselIntervalId = useRef<NodeJS.Timeout>();

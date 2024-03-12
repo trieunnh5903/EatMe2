@@ -1,13 +1,13 @@
 import {Image, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import React, {useRef, useState} from 'react';
-import {COLORS, SIZES, FONTS, icons} from '../config';
+import {COLORS, SIZES, FONTS, icons} from '../theme';
 import {Break, ButtonText, HeaderCustom} from '../components';
 import {EnterAddressScreenProps} from '../types/navigation.type';
 import SearchInput from '../components/SearchInput';
 import {FlashList} from '@shopify/flash-list';
 import MapView, {Region} from 'react-native-maps';
 import LottieView from 'lottie-react-native';
-import lottie from '../config/lottie';
+import lottie from '../theme/lottie';
 import {useNavigation} from '@react-navigation/native';
 
 const EnterAddressScreen = ({route}: EnterAddressScreenProps) => {

@@ -8,7 +8,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import React, {memo} from 'react';
-import {COLORS, FONTS} from '../../config';
+import {COLORS, FONTS} from '../../theme';
 
 interface ButtonTextProps {
   label: string;

@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {COLORS, SIZES, FONTS, icons} from '../../config';
+import {COLORS, SIZES, FONTS, icons} from '../../theme';
 import {ButtonIcon, QuantityInput} from '../../components';
 import convertToVND from '../../utils/convertToVND';
 import {RestaurantTopping, RestaurantToppings} from '../../types/types';

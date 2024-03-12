@@ -1,6 +1,6 @@
 import {Text, View} from 'react-native';
 import React, {memo, useCallback, useEffect, useState} from 'react';
-import {COLORS, FONTS} from '../config';
+import {COLORS, FONTS} from '../theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 interface CountDownProps {
   time: number;

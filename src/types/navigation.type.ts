@@ -29,66 +29,69 @@ export type RootStackParamList = {
   Notification: undefined;
 };
 
-export type CheckoutScreenProp = NativeStackScreenProps<
-  RootStackParamList,
-  'CheckoutScreen'
->;
+export type RootStackScreenProps<T extends keyof RootStackParamList> =
+  NativeStackScreenProps<RootStackParamList, T>;
 
-export type HomeScreenProp = NativeStackScreenProps<
-  RootStackParamList,
-  'HomeScreen'
->;
-export type ListInvoicesScreenProp = NativeStackScreenProps<
-  RootStackParamList,
-  'ListInvoices'
->;
+// export type CheckoutScreenProp = NativeStackScreenProps<
+//   RootStackParamList,
+//   'CheckoutScreen'
+// >;
 
-export type SearchScreenProp = NativeStackScreenProps<
-  RootStackParamList,
-  'SearchScreen'
->;
+// export type HomeScreenProp = NativeStackScreenProps<
+//   RootStackParamList,
+//   'HomeScreen'
+// >;
+// export type ListInvoicesScreenProp = NativeStackScreenProps<
+//   RootStackParamList,
+//   'ListInvoices'
+// >;
 
-export type CartScreenProp = NativeStackScreenProps<
-  RootStackParamList,
-  'CartScreen'
->;
+// export type SearchScreenProp = NativeStackScreenProps<
+//   RootStackParamList,
+//   'SearchScreen'
+// >;
 
-export type OnBoardingNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
-  'OnBoarding'
->;
+// export type CartScreenProp = NativeStackScreenProps<
+//   RootStackParamList,
+//   'CartScreen'
+// >;
 
-export type EnterAddressScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'EnterAddressScreen'
->;
+// export type OnBoardingNavigationProps = NativeStackScreenProps<
+//   RootStackParamList,
+//   'OnBoarding'
+// >;
 
-export type DetailFoodNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
-  'DetailFood'
->;
+// export type EnterAddressScreenProps = NativeStackScreenProps<
+//   RootStackParamList,
+//   'EnterAddressScreen'
+// >;
 
-export type DetailRestaurantNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
-  'DetailRestaurant'
->;
+// export type DetailFoodNavigationProps = NativeStackScreenProps<
+//   RootStackParamList,
+//   'DetailFood'
+// >;
 
-export type LoginNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
-  'Login'
->;
+// export type DetailRestaurantNavigationProps = NativeStackScreenProps<
+//   RootStackParamList,
+//   'DetailRestaurant'
+// >;
 
-export type RegisterNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
-  'Register'
->;
+// export type LoginNavigationProps = NativeStackScreenProps<
+//   RootStackParamList,
+//   'Login'
+// >;
 
-export type ConfirmOtpNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
-  'ConfirmOtp'
->;
+// export type RegisterNavigationProps = NativeStackScreenProps<
+//   RootStackParamList,
+//   'Register'
+// >;
 
-export type ForgotPasswordNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
-  'ForgotPassword'
->;
+// export type ConfirmOtpNavigationProps = NativeStackScreenProps<
+//   RootStackParamList,
+//   'ConfirmOtp'
+// >;
+
+// export type ForgotPasswordNavigationProps = NativeStackScreenProps<
+//   RootStackParamList,
+//   'ForgotPassword'
+// >;

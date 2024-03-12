@@ -10,7 +10,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../../config';
+import {COLORS, FONTS, SIZES, icons} from '../../theme';
 import {QuantityInput, RadioButtonGroup} from '../../components';
 import {DetailFoodNavigationProps} from '../../types/navigation.type';
 import convertToVND from '../../utils/convertToVND';

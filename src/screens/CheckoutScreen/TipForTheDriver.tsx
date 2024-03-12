@@ -1,7 +1,7 @@
 import {StyleSheet, Image, Text, View} from 'react-native';
 import React from 'react';
 import {Chip} from 'react-native-paper';
-import {SIZES, COLORS, FONTS, icons} from '../../config';
+import {SIZES, COLORS, FONTS, icons} from '../../theme';
 import convertToVND from '../../utils/convertToVND';
 
 interface TipForTheDriverProps {

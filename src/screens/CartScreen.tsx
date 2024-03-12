@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useState, useMemo} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS, FONTS, SIZES, icons} from '../config';
+import {COLORS, FONTS, SIZES, icons} from '../theme';
 import {HeaderCustom, QuantityInput} from '../components';
 import convertToVND from '../utils/convertToVND';
 import {FoodRedux} from '../types/types';

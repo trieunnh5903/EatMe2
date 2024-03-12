@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {Break, ButtonIcon, ButtonText, Dot, HeaderCustom} from '../components';
-import {COLORS, FONTS, SIZES, icons} from '../config';
+import {COLORS, FONTS, SIZES, icons} from '../theme';
 import {RestaurantInformation} from '../types/types';
 import {store, useAppDispatch, useAppSelector} from '../redux/store';
 import {

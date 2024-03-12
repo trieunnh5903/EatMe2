@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {memo} from 'react';
 import ButtonIcon from './button/ButtonIcon';
-import {COLORS} from '../config';
+import {COLORS} from '../theme';
 
 interface QuantityInputProps {
   containerStyle?: StyleProp<ViewStyle>;

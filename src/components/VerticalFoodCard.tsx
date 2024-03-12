@@ -10,7 +10,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import React, {memo} from 'react';
-import {COLORS, FONTS, SIZES} from '../config';
+import {COLORS, FONTS, SIZES} from '../theme';
 import convertToVND from '../utils/convertToVND';
 import {Food, FoodRedux} from '../types/types';
 

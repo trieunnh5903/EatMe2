@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, SIZES} from '../../config';
+import {COLORS, FONTS, SIZES} from '../../theme';
 import {Feather} from '../../utils';
 
 interface InformationAddressProps {

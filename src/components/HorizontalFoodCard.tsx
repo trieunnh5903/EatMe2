@@ -10,7 +10,7 @@ import {
   ImageStyle,
 } from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../config';
+import {COLORS, FONTS, SIZES, icons} from '../theme';
 import convertToVND from '../utils/convertToVND';
 import {Food} from '../types/types';
 

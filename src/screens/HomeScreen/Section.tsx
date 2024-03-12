@@ -1,7 +1,7 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import React, {ReactNode, memo} from 'react';
 import {Image} from 'react-native';
-import {SIZES, FONTS, COLORS, icons} from '../../config';
+import {SIZES, FONTS, COLORS, icons} from '../../theme';
 import {GestureResponderEvent} from 'react-native';
 import {ViewStyle} from 'react-native';
 

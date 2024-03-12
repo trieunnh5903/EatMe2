@@ -11,7 +11,7 @@ import {
   GestureResponderEvent,
   Pressable,
 } from 'react-native';
-import {COLORS} from '../../config';
+import {COLORS} from '../../theme';
 
 interface BadgeButtonProps {
   containerStyle?: StyleProp<ViewStyle>;

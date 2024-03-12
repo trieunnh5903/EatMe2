@@ -1,6 +1,6 @@
 import {StyleSheet, View} from 'react-native';
 import React, {memo} from 'react';
-import {SIZES} from '../../config';
+import {SIZES} from '../../theme';
 import Skeleton from './Skeleton';
 
 const HorizontalCardSkeleton = () => {

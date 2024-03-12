@@ -1,7 +1,7 @@
 import {StyleSheet, Image, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {Feather, Ionicons} from '../../utils';
-import {SIZES, COLORS, FONTS, icons} from '../../config';
+import {SIZES, COLORS, FONTS, icons} from '../../theme';
 
 interface CardInformationProps {
   name: string;

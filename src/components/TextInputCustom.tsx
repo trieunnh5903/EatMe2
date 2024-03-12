@@ -7,7 +7,7 @@ import {
   KeyboardTypeOptions,
 } from 'react-native';
 import React, {useState} from 'react';
-import {COLORS, FONTS, SIZES} from '../config';
+import {COLORS, FONTS, SIZES} from '../theme';
 
 interface TextInputCustomProps {
   value?: string;

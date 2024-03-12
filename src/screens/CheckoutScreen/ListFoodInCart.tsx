@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {SIZES, FONTS, COLORS} from '../../config';
+import {SIZES, FONTS, COLORS} from '../../theme';
 import {Ionicons} from '../../utils';
 import convertToVND from '../../utils/convertToVND';
 import {FoodRedux} from '../../types/types';

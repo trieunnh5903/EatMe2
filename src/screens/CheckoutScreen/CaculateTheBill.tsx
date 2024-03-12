@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {SIZES, FONTS, COLORS} from '../../config';
+import {SIZES, FONTS, COLORS} from '../../theme';
 import convertToVND from '../../utils/convertToVND';
 
 interface CaculateTheBillProps {

@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, SIZES} from '../../config';
+import {COLORS, FONTS, SIZES} from '../../theme';
 import {FlatList} from 'react-native';
 import {VerticalFoodCard} from '../../components';
 import {Food, FoodRedux} from '../../types/types';

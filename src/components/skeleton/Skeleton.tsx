@@ -6,7 +6,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
-import {COLORS} from '../../config';
+import {COLORS} from '../../theme';
 
 const Skeleton = ({style, width}: {style: ViewStyle; width: number}) => {
   const translateX = useSharedValue<number>(-width);

@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {memo} from 'react';
-import {COLORS, FONTS} from '../config';
+import {COLORS, FONTS} from '../theme';
 
 interface HeaderCustomProps {
   title?: string;

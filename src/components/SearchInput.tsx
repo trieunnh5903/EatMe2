@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, SIZES, icons} from '../config';
+import {COLORS, FONTS, SIZES, icons} from '../theme';
 
 interface SearchInputProps {
   placeholder?: string;

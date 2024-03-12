@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import Animated, {StyleProps} from 'react-native-reanimated';
 import {HeaderCustom} from '../../components';
-import {icons, COLORS, SIZES} from '../../config';
+import {icons, COLORS, SIZES} from '../../theme';
 import {Feather} from '../../utils';
 
 interface BaseHeaderProps {

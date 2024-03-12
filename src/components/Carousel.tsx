@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import React, {memo, useMemo} from 'react';
 import dummy_data from '../dummy_data';
-import {SIZES, images} from '../config';
+import {SIZES, images} from '../theme';
 import {TouchableOpacity} from 'react-native';
 import {Image} from 'react-native';
 import {ListRenderItem} from 'react-native';
