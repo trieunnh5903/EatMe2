@@ -1,25 +1,32 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+import SplashScreen from 'react-native-splash-screen';
+import {RootStackParamList} from '@/types/navigation.type';
 import {
   CartScreen,
   CheckoutScreen,
   DetailFoodScreen,
   DetailRestaurantScreen,
   EnterAddressScreen,
+  EnterPhoneNumberScreen,
   HomeScreen,
   ListInvoices,
   NotificationScreen,
-} from '../screens';
-import {RootStackParamList} from '../types/navigation.type';
-import SplashScreen from 'react-native-splash-screen';
+} from '@/screens';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const MainNavigator = () => {
+const ApplicationNavigator = () => {
   React.useEffect(() => {
     SplashScreen.hide();
   }, []);
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen
+        name="EnterPhoneNumber"
+        component={EnterPhoneNumberScreen}
+      />
+
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="DetailFood" component={DetailFoodScreen} />
       <Stack.Screen
@@ -39,4 +46,4 @@ const MainNavigator = () => {
   );
 };
 
-export default MainNavigator;
+export default ApplicationNavigator;

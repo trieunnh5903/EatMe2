@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import MainNavigator from './src/navigation/MainNavigator';
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import setUpMirage from './miragejs/mirage.server';
 import {enableLatestRenderer} from 'react-native-maps';
 import notifee, {EventType} from '@notifee/react-native';
+import ApplicationNavigator from './src/navigators';
 
 if (__DEV__) {
   setUpMirage('development');
@@ -36,7 +36,7 @@ const App: React.FC = () => {
       <Provider store={store}>
         <GestureHandlerRootView style={{flex: 1}}>
           <NavigationContainer>
-            <MainNavigator />
+            <ApplicationNavigator />
           </NavigationContainer>
         </GestureHandlerRootView>
       </Provider>
