@@ -1,4 +1,7 @@
 const images = {
+  // login
+  logo_white: require('../assets/images/login/logo.png'),
+  driver: require('../assets/images/login/driver.png'),
   logo_02: require('../assets/images/on_boarding/logo_02.png'),
   logo_03: require('../assets/images/on_boarding/logo_3.png'),
   on_boarding_bg1: require('../assets/images/on_boarding/background_01.png'),

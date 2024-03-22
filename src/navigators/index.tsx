@@ -9,7 +9,6 @@ import {
   DetailFoodScreen,
   DetailRestaurantScreen,
   EnterAddressScreen,
-  EnterPhoneNumberScreen,
   HomeScreen,
   ListInvoices,
   NotificationScreen,
@@ -22,11 +21,6 @@ const ApplicationNavigator = () => {
   }, []);
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen
-        name="EnterPhoneNumber"
-        component={EnterPhoneNumberScreen}
-      />
-
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="DetailFood" component={DetailFoodScreen} />
       <Stack.Screen
